@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Маргарита  Попова](https://up.htmlacademy.ru/yii/4/user/230166).
-* Наставник: `Неизвестно`.
+* Наставник: [Даниил Стерликов](https://htmlacademy.ru/profile/id1588317).
 
 ---
 
