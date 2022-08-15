@@ -4,56 +4,102 @@ namespace TaskForce\models;
 
 class Task
 {
-    public const STATUS_NEW = 'new'; // новое задание
-    public const STATUS_CANCELED = 'canceled'; // задание отменено
-    public const STATUS_INPROGRESS = 'in_progress'; // задание в работе
-    public const STATUS_DONE = 'done'; // задание готово
-    public const STATUS_FAILED = 'failed'; // задание провалено
+    public const STATUS_NEW = 'new';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_INPROGRESS = 'in_progress';
+    public const STATUS_DONE = 'done';
+    public const STATUS_FAILED = 'failed';
 
-    public const ACTION_CANCEL = 'cancel'; // Отменить задание (заказчик)
-    public const ACTION_RESPOND = 'respond'; // Откликнуться на задание (исполнитель)
-    public const ACTION_COMPLETE = 'complete'; // Завершить задание (заказчик)
-    public const ACTION_QUIT = 'quit'; // Отказаться от задания (исполнитель)
-    public const ACTION_START = 'start'; // Начать задание (исполнитель)
+    public const ACTION_START= 'start'; // заказчик
+    public const ACTION_CANCEL = 'cancel'; // заказчик
+    public const ACTION_COMPLETE = 'complete'; // заказчик
+    public const ACTION_RESPOND = 'respond'; // исполнитель
+    public const ACTION_QUIT = 'quit'; // исполнитель
 
     private const STATUSES_RU = [
-        self::STATUS_NEW => 'Новая задача',
-        self::STATUS_CANCELED => 'Отменено',
-        self::STATUS_INPROGRESS => 'В работе',
-        self::STATUS_DONE => 'Выполнено',
-        self::STATUS_FAILED => 'Не выполнено'
+        self::STATUS_NEW => 'Новое задание',
+        self::STATUS_CANCELED => 'Задание отменено',
+        self::STATUS_INPROGRESS => 'Задание в работе',
+        self::STATUS_DONE => 'Задание выполнено',
+        self::STATUS_FAILED => 'Задание провалено',
     ];
 
     private const ACTIONS_RU = [
-        self::ACTION_CANCEL => 'Отменить',
-        self::ACTION_RESPOND => 'Откликнуться',
-        self::ACTION_COMPLETE => 'Завершить',
-        self::ACTION_QUIT => 'Отказаться',
-        self::ACTION_START => 'Начать',
+        self::ACTION_START => 'Запуск задания',
+        self::ACTION_CANCEL => 'Отменить задание',
+        self::ACTION_COMPLETE => 'Завершить задание',
+        self::ACTION_RESPOND => 'Откликнуться на задание',
+        self::ACTION_QUIT => 'Отказаться от задания',
     ];
 
-    private const STATUSES_AFTER = [
-        self::ACTION_CANCEL => self::STATUS_CANCELED,
-        self::ACTION_RESPOND => self::STATUS_NEW,
-        self::ACTION_COMPLETE => self::STATUS_DONE,
-        self::ACTION_QUIT => self::STATUS_FAILED,
+    private const ACTIONS_TO_STATUSES = [
         self::ACTION_START => self::STATUS_INPROGRESS,
+        self::ACTION_CANCEL => self::STATUS_CANCELED,
+        self::ACTION_COMPLETE => self::STATUS_DONE,
+        self::ACTION_RESPOND => self::STATUS_NEW,
+        self::ACTION_QUIT => self::STATUS_FAILED,
+    ];
+
+    private const CUSTOMER_ACTIONS = [
+        self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_START],
+        self::STATUS_DONE => [self::ACTION_COMPLETE],
+        self::STATUS_INPROGRESS => null,
+        self::STATUS_CANCELED => null,
+        self::STATUS_FAILED => null,
+    ];
+
+    private const EXECUTOR_ACTIONS = [
+        self::STATUS_NEW => [self::ACTION_RESPOND],
+        self::STATUS_INPROGRESS => [self::ACTION_QUIT],
+        self::STATUS_CANCELED => null,
+        self::STATUS_DONE => null,
+        self::STATUS_FAILED => null,
     ];
 
     /**
      * __construct конструктор для получения новой задачи
      *
      * @param int $customerId - id заказчика
-     * @param int|null $executorid - id исполнителя, по умолчанию null
+     * @param int|null $executorId - id исполнителя, по умолчанию null
      * @param string $status - Статус заказа, по умолчанию new
      *
      * @return void
      */
     public function __construct(
         private int $customerId,
-        private int|null $executorId = null,
+        private ?int $executorId = null,
         private string $status = self::STATUS_NEW
     ) {}
+
+    /**
+     * getCustomerId - возвращает id заказчика
+     *
+     * @return int
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
+
+    /**
+     * getExecutprId - возвращает id исполнителя
+     *
+     * @return ?int
+     */
+    public function getExecutorId()
+    {
+        return $this->executorId;
+    }
+
+    /**
+     * getStatus - возвращает текущий статус
+     *
+     * @return ?string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * getStatusesRu - метод для получения массива со статусами на русском языке
@@ -81,56 +127,32 @@ class Task
      * @param  mixed $action - название действия
      * @return string|null
      */
-    public function getNextStatus(string $action):string|null
+    public function getNextStatus(string $action):?string
     {
-        return isset(self::STATUSES_AFTER[$action]) ? self::STATUSES_AFTER[$action] : null;
+        return self::ACTIONS_TO_STATUSES[$action] ?? null;
     }
 
     /**
      * getAvailableActions - метов принимает статус и id пользователя
-     * если id равен id заказчика, то возвращает массив с возможными действиями заказчика,
-     * если нет то массив с действиями исполнителя
+     * если $userId равен id заказчика, то возвращает массив с возможными действиями заказчика,
+     * если $userId равен id исполнителя, то массив с действиями исполнителя
+     * по умолчанию возвращает null
      *
-     * @param string $status - статус задачи
-     * @param int $userId - id пользователя
+     * @param int $userId - id получателя
      *
-     * @return array
+     * @return ?array
      */
-    public function getAvailableActions(string $status, int $userId):array
+    public function getAvailableActions(int $userId):?array
     {
-        $actions = [];
-
         if ($userId === $this->customerId) {
-            switch($status) {
-                case 'new':
-                    $actions[] = self::ACTION_CANCEL;
-                    break;
-                case 'in_progress':
-                    $actions[] = self::ACTION_CANCEL;
-                    break;
-                case 'done':
-                    $actions[] = self::ACTION_COMPLETE;
-                    break;
-                default:
-                    print('Список действий пуст');
-            }
-
-            return $actions;
+            return self::CUSTOMER_ACTIONS;
         }
 
-        switch($status) {
-            case 'new':
-                $actions[] = self::ACTION_RESPOND;
-                break;
-            case 'in_progress':
-                $actions[] = self::ACTION_START;
-                $actions[] = self::ACTION_QUIT;
-                break;
-            default:
-                print('Список действий пуст');
+        if ($userId === $this->executorId) {
+            return self::EXECUTOR_ACTIONS;
         }
 
-        return $actions;
+        return null;
     }
 }
 
