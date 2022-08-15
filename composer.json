@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "TaskForce\\": "src/TaskForce"
+            "TaskForce\\models\\": "src/models"
         }
     },
     "require": {}
