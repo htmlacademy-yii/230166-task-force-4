@@ -1,0 +1,59 @@
+
+DROP DATABASE IF EXISTS task_force;
+
+CREATE DATABASE task_force
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_general_ci;
+
+USE task_force;
+
+CREATE TABLE user (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_customer TINYINT(1) DEFAULT 0,
+  email VARCHAR(128) NOT NULL,
+  login VARCHAR(255) NOT NULL,
+  password CHAR(255) NOT NULL,
+  avatar VARCHAR(255) NULL DEFAULT NULL,
+  date_of_birth TIMESTAMP DEFAULT NULL,
+  phone CHAR(11) DEFAULT NULL,
+  telegram CHAR(64) DEFAULT NULL,
+
+  UNIQUE INDEX user_email (email),
+  UNIQUE INDEX user_login (login)
+);
+
+CREATE TABLE task (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  user_id INT(11),
+  category_id INT(11),
+  status VARCHAR(32) DEFAULT 'new',
+  title VARCHAR(500) NOT NULL,
+  text TEXT NOT NULL,
+  files VARCHAR(500) NULL DEFAULT NULL,
+  lat INT(11) NULL DEFAULT NULL,
+  lng INT(11) NULL DEFAULT NULL,
+  budget INT(11) UNSIGNED NULL DEFAULT NULL,
+  deadline TIMESTAMP DEFAULT NULL,
+
+  FULLTEXT INDEX post_text (title, text),
+
+  CONSTRAINT task_fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT task_fk_category_id FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+created TABLE category (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  text TINYTEXT NOT NULL
+);
+
+create TABLE user_category (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  user_id INT(11),
+  category_id INT(11),
+
+  CONSTRAINT uc_fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT uc_fk_category_id FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
+)
+
