@@ -10,11 +10,11 @@ class Task
     public const STATUS_DONE = 'done';
     public const STATUS_FAILED = 'failed';
 
-    public const ACTION_START= 'start'; // заказчик
-    public const ACTION_CANCEL = 'cancel'; // заказчик
-    public const ACTION_COMPLETE = 'complete'; // заказчик
-    public const ACTION_RESPOND = 'respond'; // исполнитель
-    public const ACTION_QUIT = 'quit'; // исполнитель
+    public const ACTION_START= 'start';
+    public const ACTION_CANCEL = 'cancel';
+    public const ACTION_COMPLETE = 'complete';
+    public const ACTION_RESPOND = 'respond';
+    public const ACTION_QUIT = 'quit';
 
     private const STATUSES_RU = [
         self::STATUS_NEW => 'Новое задание',
@@ -42,18 +42,18 @@ class Task
 
     private const CUSTOMER_ACTIONS = [
         self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_START],
-        self::STATUS_DONE => [self::ACTION_COMPLETE],
-        self::STATUS_INPROGRESS => null,
-        self::STATUS_CANCELED => null,
-        self::STATUS_FAILED => null,
+        self::STATUS_INPROGRESS => [self::ACTION_COMPLETE],
+        self::STATUS_DONE => [],
+        self::STATUS_CANCELED => [],
+        self::STATUS_FAILED => [],
     ];
 
     private const EXECUTOR_ACTIONS = [
         self::STATUS_NEW => [self::ACTION_RESPOND],
         self::STATUS_INPROGRESS => [self::ACTION_QUIT],
-        self::STATUS_CANCELED => null,
-        self::STATUS_DONE => null,
-        self::STATUS_FAILED => null,
+        self::STATUS_CANCELED => [],
+        self::STATUS_DONE => [],
+        self::STATUS_FAILED => [],
     ];
 
     /**
@@ -88,7 +88,7 @@ class Task
      */
     public function getExecutorId()
     {
-        return $this->executorId;
+        return $this->executorId ?? print('Исполнитель не назначен');
     }
 
     /**
@@ -133,26 +133,119 @@ class Task
     }
 
     /**
-     * getAvailableActions - метов принимает статус и id пользователя
-     * если $userId равен id заказчика, то возвращает массив с возможными действиями заказчика,
-     * если $userId равен id исполнителя, то массив с действиями исполнителя
-     * по умолчанию возвращает null
+     * метод принимает статус, возвращает массив с возможными действиями заказчика
      *
-     * @param int $userId - id получателя
+     * @param string $status
      *
      * @return ?array
      */
-    public function getAvailableActions(int $userId):?array
+    public function getAvailableCustomerActions(string $status):array
     {
-        if ($userId === $this->customerId) {
-            return self::CUSTOMER_ACTIONS;
+        if ($this->checkAvailableActions($status, self::CUSTOMER_ACTIONS[$status])) {
+            return self::CUSTOMER_ACTIONS[$status];
+        }
+    }
+
+    /**
+     * метод принимает статус, возвращает массив с возможными действиями исполнителя
+     *
+     * @param string $status
+     *
+     * @return ?array
+     */
+    public function getAvailableExecutorsActions(string $status):?array
+    {
+        if ($this->executorId && $this->checkAvailableActions($status, self::EXECUTOR_ACTIONS[$status])) {
+            return self::EXECUTOR_ACTIONS[$status];
+        }
+    }
+
+    /**
+     * метод назначает исполнителя
+     *
+     * @param int $userId
+     *
+     * @return void
+     */
+    public function setExecutorId(int $userId)
+    {
+        if ($userId) {
+            $this->executorId = $userId;
+        }
+    }
+
+    /**
+     * метод проверяет id заказчика
+     *
+     * @param int $userId
+     *
+     * @return boolean
+     */
+    public function checkCustomerId(int $userId):bool
+    {
+        if (!$userId) {
+            print('Передан пустой id');
+            return false;
         }
 
-        if ($userId === $this->executorId) {
-            return self::EXECUTOR_ACTIONS;
+        if ($this->executorId !== $userId) {
+            print('Переданный id не равен id заказчика');
+            return false;
         }
 
-        return null;
+        print('Переданный id равен id заказчика');
+        return true;
+    }
+
+    /**
+     * метод проверяет id исполнителя
+     *
+     * @param int $userId
+     *
+     * @return boolean
+     */
+    public function checkExecutorId(int $userId):bool
+    {
+        if (!$this->executorId) {
+            print('Исполнитель не назначен');
+            return false;
+        }
+
+        if (!$userId) {
+            print('Передан пустой id');
+            return false;
+        }
+
+        if ($this->executorId !== $userId) {
+            print('Переданный id не равен id исполнителя');
+            return false;
+        }
+
+        print('Переданный id равен id исполнителя');
+        return true;
+    }
+
+     /**
+     * метод проверяет доступные действия по статусу
+     *
+     * @param string $status
+     * @param array $actions
+     *
+     * @return boolean
+     */
+    public function checkAvailableActions(string $status, $actions):bool
+    {
+        if (!isset($actions[$status])) {
+            print('Нет такого статуса');
+            return false;
+        }
+
+        if (empty($actions[$status])) {
+            print('Список действий пуст');
+            return false;
+        }
+
+        return true;
     }
 }
 

@@ -1,12 +1,15 @@
 <?php
 require_once 'vendor/autoload.php';
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use TaskForce\models\Task;
 use PHPUnit\Framework\TestCase;
 
 $customerId = 1;
+$executorId = 2;
 $task = new Task($customerId);
 $status = 'done';
+// $task->setExecutorId($executorId);
 
 class Test extends TestCase
 {
@@ -32,7 +35,7 @@ class Test extends TestCase
      */
     public static function checkCustomerId($task, $id)
     {
-        return $task->getCustomerId() === $id;
+        return $task->checkCustomerId($id);
     }
 
     /**
@@ -52,3 +55,4 @@ class Test extends TestCase
 var_dump(Test::testNextStatus($task));
 var_dump(Test::checkCustomerId($task, $customerId));
 var_dump(Test::checkStatus($task, $status));
+var_dump($task->checkExecutorId(2));
