@@ -6,22 +6,36 @@ CREATE DATABASE task_force
 
 USE task_force;
 
+CREATE TABLE category (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(32) NOT NULL,
+
+  UNIQUE INDEX category_name (name)
+);
+
+CREATE TABLE location (
+  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  city VARCHAR(100),
+  lat DECIMAL (9, 6) NOT NULL,
+  lng DECIMAL (9, 6) NOT NULL
+);
+
 CREATE TABLE user (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   is_customer TINYINT(1) DEFAULT 0,
   raiting TINYINT DEFAULT NULL,
-  email VARCHAR(128) NOT NULL,
-  login VARCHAR(255) NOT NULL,
-  password CHAR(255) NOT NULL,
-  avatar VARCHAR(255) NULL DEFAULT NULL,
+  email VARCHAR(64) NOT NULL,
+  login VARCHAR(64) NOT NULL,
+  password CHAR(128) NOT NULL,
+  avatar VARCHAR(128) NULL DEFAULT NULL,
   date_of_birth TIMESTAMP DEFAULT NULL,
   phone CHAR(11) DEFAULT NULL,
   telegram CHAR(64) DEFAULT NULL,
-  location_id INT(11) DEFAULT NULL
+  location_id INT(11) DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
-  UNIQUE INDEX user_login (login)
+  UNIQUE INDEX user_login (login),
 
   FOREIGN KEY (location_id) REFERENCES location(id)
 );
@@ -34,20 +48,13 @@ CREATE TABLE task (
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
   text VARCHAR(1000) NOT NULL,
-  budget DECIMAL UNSIGNED NULL DEFAULT NULL,
+  budget DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
   deadline TIMESTAMP DEFAULT NULL,
 
   FULLTEXT INDEX post_text (title, text),
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE category (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  name TINYTEXT NOT NULL,
-
-  UNIQUE INDEX category_name (name)
 );
 
 CREATE TABLE user_category (
@@ -74,10 +81,10 @@ CREATE TABLE feedback (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   task_id INT(11),
   mark TINYINT NOT NULL,
-  text VARCHAR(500) NULL DEFAULT NULL
+  text VARCHAR(500) NULL DEFAULT NULL,
 
   FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE CASCADE
-)
+);
 
 CREATE TABLE file (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -90,9 +97,3 @@ CREATE TABLE file (
   FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE location (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  city VARCHAR(100),
-  lat DECIMAL (6, 5) NOT NULL,
-  lng DECIMAL (6, 5) NOT NULL
-);
