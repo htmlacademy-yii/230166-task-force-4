@@ -2,7 +2,7 @@
 require_once 'vendor/autoload.php';
 
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
-use TaskForce\models\Task;
+use TaskForce\Models\Task;
 use PHPUnit\Framework\TestCase;
 
 $customerId = 1;
