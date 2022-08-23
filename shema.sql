@@ -30,9 +30,9 @@ CREATE TABLE user (
   password CHAR(128) NOT NULL,
   avatar VARCHAR(128) NULL DEFAULT NULL,
   date_of_birth TIMESTAMP DEFAULT NULL,
-  phone CHAR(11) DEFAULT NULL,
-  telegram CHAR(64) DEFAULT NULL,
-  location_id INT(11) DEFAULT NULL,
+  phone CHAR(11) NULL DEFAULT NULL,
+  telegram CHAR(64) NULL DEFAULT NULL,
+  location_id INT(11) NULL DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
   UNIQUE INDEX user_login (login),

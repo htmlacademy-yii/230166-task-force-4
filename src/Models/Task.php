@@ -135,29 +135,22 @@ class Task
     /**
      * метод принимает статус, возвращает массив с возможными действиями заказчика
      *
-     * @param string $status
+     * @param int $user_id
      *
      * @return ?array
      */
-    public function getAvailableCustomerActions(string $status):array
+    public function getAvailableActions(int $user_id):?array
     {
-        if ($this->checkAvailableActions($status, self::CUSTOMER_ACTIONS[$status])) {
-            return self::CUSTOMER_ACTIONS[$status];
+        if ($user_id === $this->customerId && $this->checkAvailableActions($this->status, self::CUSTOMER_ACTIONS)) {
+            return self::CUSTOMER_ACTIONS[$this->status];
         }
-    }
 
-    /**
-     * метод принимает статус, возвращает массив с возможными действиями исполнителя
-     *
-     * @param string $status
-     *
-     * @return ?array
-     */
-    public function getAvailableExecutorsActions(string $status):?array
-    {
-        if ($this->executorId && $this->checkAvailableActions($status, self::EXECUTOR_ACTIONS[$status])) {
-            return self::EXECUTOR_ACTIONS[$status];
+        if ($user_id === $this->executorId && $this->checkAvailableActions($this->status, self::EXECUTOR_ACTIONS)) {
+            return self::EXECUTOR_ACTIONS[$this->status];
         }
+
+        print('С таким статусом для этого юзера ничего нет');
+        return null;
     }
 
     /**
