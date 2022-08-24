@@ -1,0 +1,14 @@
+{
+    "name": "projects/task-force",
+    "description": "php2",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\Models\\": "src/Models"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

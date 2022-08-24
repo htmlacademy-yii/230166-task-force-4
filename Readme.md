@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Маргарита  Попова](https://up.htmlacademy.ru/yii/4/user/230166).
-* Наставник: [Александр Смиркин](https://htmlacademy.ru/profile/id1411277).
+* Наставник: [Сергей Парфенов](https://htmlacademy.ru/profile/id926645).
 
 ---
 
