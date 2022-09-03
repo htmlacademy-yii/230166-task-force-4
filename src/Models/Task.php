@@ -76,7 +76,7 @@ class Task
      *
      * @return int
      */
-    public function getCustomerId()
+    public function getCustomerId():int
     {
         return $this->customerId;
     }
@@ -86,7 +86,7 @@ class Task
      *
      * @return ?int
      */
-    public function getExecutorId()
+    public function getExecutorId():?int
     {
         return $this->executorId ?? print('Исполнитель не назначен');
     }
@@ -96,7 +96,7 @@ class Task
      *
      * @return ?string
      */
-    public function getStatus()
+    public function getStatus():?string
     {
         return $this->status;
     }
