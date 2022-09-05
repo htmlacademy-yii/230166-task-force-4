@@ -65,11 +65,11 @@ class Task
      *
      * @return void
      */
-    public function __construct(
-        private int $customerId,
-        private ?int $executorId = null,
-        private string $status = self::STATUS_NEW
-    ) {}
+    // public function __construct(
+    //     private int $customerId,
+    //     private ?int $executorId = null,
+    //     private string $status = self::STATUS_NEW
+    // ) {}
 
     /**
      * getCustomerId - возвращает id заказчика
@@ -239,6 +239,11 @@ class Task
         }
 
         return true;
+    }
+
+    function foo()
+    {
+        echo "Task";
     }
 }
 
