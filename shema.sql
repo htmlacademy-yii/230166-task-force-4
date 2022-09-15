@@ -7,22 +7,22 @@ CREATE DATABASE task_force
 USE task_force;
 
 CREATE TABLE category (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(32) NOT NULL,
 
   UNIQUE INDEX category_name (name)
 );
 
 CREATE TABLE city (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  city_id INT(11) NOT NULL,
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  city_id INT NOT NULL,
   address VARCHAR(256) NOT NULL,
   lat DECIMAL (9, 6) NOT NULL,
   lng DECIMAL (9, 6) NOT NULL
 );
 
 CREATE TABLE user (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   is_customer TINYINT(1) DEFAULT 0,
   raiting FLOAT DEFAULT 0,
@@ -30,10 +30,10 @@ CREATE TABLE user (
   name VARCHAR(64) NOT NULL,
   password CHAR(60) NOT NULL,
   avatar VARCHAR(128) NULL DEFAULT NULL,
-  date_of_birth TIMESTAMP DEFAULT NULL,
+  date_of_birth DATE DEFAULT NULL,
   phone CHAR(11) NULL DEFAULT NULL,
   telegram CHAR(64) NULL DEFAULT NULL,
-  location_id INT(11) NULL DEFAULT NULL,
+  location_id INT NULL DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
 
@@ -41,11 +41,11 @@ CREATE TABLE user (
 );
 
 CREATE TABLE task (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  customer_id INT(11),
-  executor_id INT(11),
-  category_id INT(11),
+  customer_id INT,
+  executor_id INT,
+  category_id INT,
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
   text VARCHAR(1000) NOT NULL,
@@ -60,19 +60,19 @@ CREATE TABLE task (
 );
 
 CREATE TABLE user_category (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  user_id INT(11),
-  category_id INT(11),
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  category_id INT,
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE response (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  task_id INT(11),
-  user_id INT(11),
+  task_id INT,
+  user_id INT,
   message VARCHAR(256) NULL DEFAULT NULL,
   price DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
 
@@ -81,9 +81,9 @@ CREATE TABLE response (
 );
 
 CREATE TABLE feedback (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  task_id INT(11),
+  task_id INT,
   mark TINYINT NOT NULL,
   text VARCHAR(500) NULL DEFAULT NULL,
 
@@ -91,10 +91,10 @@ CREATE TABLE feedback (
 );
 
 CREATE TABLE file (
-  id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  task_id INT(11),
-  user_id INT(11),
+  task_id INT,
+  user_id INT,
   url VARCHAR(128) NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
