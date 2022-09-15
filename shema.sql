@@ -13,9 +13,10 @@ CREATE TABLE category (
   UNIQUE INDEX category_name (name)
 );
 
-CREATE TABLE location (
+CREATE TABLE city (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
-  city VARCHAR(100),
+  city_id INT(11) NOT NULL,
+  address VARCHAR(256) NOT NULL,
   lat DECIMAL (9, 6) NOT NULL,
   lng DECIMAL (9, 6) NOT NULL
 );
@@ -24,10 +25,10 @@ CREATE TABLE user (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   is_customer TINYINT(1) DEFAULT 0,
-  raiting TINYINT DEFAULT NULL,
+  raiting FLOAT DEFAULT 0,
   email VARCHAR(64) NOT NULL,
-  login VARCHAR(64) NOT NULL,
-  password CHAR(128) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  password CHAR(60) NOT NULL,
   avatar VARCHAR(128) NULL DEFAULT NULL,
   date_of_birth TIMESTAMP DEFAULT NULL,
   phone CHAR(11) NULL DEFAULT NULL,
@@ -35,7 +36,6 @@ CREATE TABLE user (
   location_id INT(11) NULL DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
-  UNIQUE INDEX user_login (login),
 
   FOREIGN KEY (location_id) REFERENCES location(id)
 );
@@ -43,17 +43,19 @@ CREATE TABLE user (
 CREATE TABLE task (
   id INT(11) AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  user_id INT(11),
+  customer_id INT(11),
+  executor_id INT(11),
   category_id INT(11),
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
   text VARCHAR(1000) NOT NULL,
-  budget DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
+  price DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
   deadline TIMESTAMP DEFAULT NULL,
 
   FULLTEXT INDEX post_text (title, text),
 
-  FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (customer_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (executor_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -71,6 +73,8 @@ CREATE TABLE response (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   task_id INT(11),
   user_id INT(11),
+  message VARCHAR(256) NULL DEFAULT NULL,
+  price DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE CASCADE
