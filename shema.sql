@@ -73,6 +73,7 @@ CREATE TABLE response (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   task_id INT,
   user_id INT,
+  is_approved TINYINT(1) DEFAULT 0,
   message VARCHAR(256) NULL DEFAULT NULL,
   price DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
 
