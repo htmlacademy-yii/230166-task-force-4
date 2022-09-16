@@ -7,7 +7,7 @@ use TaskForce\TaskActions\Cancel;
 
 $customerId = 1;
 $executorId = 2;
-$currentUserId = 1;
+$currentUserId = 2;
 
 $task = new Task($customerId, $executorId);
 $cancel = new Cancel();
@@ -16,4 +16,5 @@ var_dump($cancel->getAction());
 var_dump($cancel->check($task, $currentUserId));
 var_dump($cancel->getAction());
 var_dump($task->getNextStatus($cancel));
+var_dump($task->getAvailableActions($currentUserId));
 
