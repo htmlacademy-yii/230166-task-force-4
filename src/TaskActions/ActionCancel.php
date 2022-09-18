@@ -5,10 +5,10 @@ namespace TaskForce\TaskActions;
 use TaskForce\TaskActions\AbstractAction;
 use TaskForce\Models\Task;
 
-class Start extends AbstractAction
+class ActionCancel extends AbstractAction
 {
-    protected $action = 'start';
-    protected $actionPresentation = 'Запуск задания';
+    protected $action = 'cencel';
+    protected $actionPresentation = 'Отменить задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {

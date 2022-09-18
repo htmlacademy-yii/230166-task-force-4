@@ -5,15 +5,15 @@ namespace TaskForce\TaskActions;
 use TaskForce\TaskActions\AbstractAction;
 use TaskForce\Models\Task;
 
-class Quit extends AbstractAction
+class ActionComplete extends AbstractAction
 {
-    protected $action = 'quit';
-    protected $actionPresentation = 'Отказаться от задания';
+    protected $action = 'complete';
+    protected $actionPresentation = 'Завершить задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {
         return
             $task->getStatus() === Task::STATUS_INPROGRESS
-            && $currentUserId === $task->getExecutorId();
+            && $currentUserId === $task->getCustomerId();
     }
 }

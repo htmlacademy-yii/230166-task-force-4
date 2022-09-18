@@ -5,15 +5,15 @@ namespace TaskForce\TaskActions;
 use TaskForce\TaskActions\AbstractAction;
 use TaskForce\Models\Task;
 
-class Cancel extends AbstractAction
+class ActionRespond extends AbstractAction
 {
-    protected $action = 'cencel';
-    protected $actionPresentation = 'Отменить задание';
+    protected $action = 'respond';
+    protected $actionPresentation = 'Откликнуться на задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {
         return
             $task->getStatus() === Task::STATUS_NEW
-            && $currentUserId === $task->getCustomerId();
+            && $currentUserId === $task->getExecutorId();
     }
 }

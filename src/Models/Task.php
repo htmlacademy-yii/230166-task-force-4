@@ -3,11 +3,11 @@
 namespace TaskForce\Models;
 
 use TaskForce\TaskActions\AbstractAction;
-use TaskForce\TaskActions\Cancel;
-use TaskForce\TaskActions\Complete;
-use TaskForce\TaskActions\Quit;
-use TaskForce\TaskActions\Respond;
-use TaskForce\TaskActions\Start;
+use TaskForce\TaskActions\ActionCancel;
+use TaskForce\TaskActions\ActionComplete;
+use TaskForce\TaskActions\ActionQuit;
+use TaskForce\TaskActions\ActionRespond;
+use TaskForce\TaskActions\ActionStart;
 
 class Task
 {
@@ -17,11 +17,11 @@ class Task
     public const STATUS_DONE = 'done';
     public const STATUS_FAILED = 'failed';
 
-    public const ACTION_START= Start::class;
-    public const ACTION_CANCEL = Cancel::class;
-    public const ACTION_COMPLETE = Complete::class;
-    public const ACTION_RESPOND = Respond::class;
-    public const ACTION_QUIT = Quit::class;
+    public const ACTION_START= ActionStart::class;
+    public const ACTION_CANCEL = ActionCancel::class;
+    public const ACTION_COMPLETE = ActionComplete::class;
+    public const ACTION_RESPOND = ActionRespond::class;
+    public const ACTION_QUIT = ActionQuit::class;
 
     private const STATUSES_PRESENTATION = [
         self::STATUS_NEW => 'Новое задание',
