@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "TaskForce\\Models\\": "src/Models",
-            "TaskForce\\TaskActions\\": "src/TaskActions"
+            "TaskForce\\TaskActions\\": "src/TaskActions",
+            "TaskForce\\Exceptions\\": "src/Exceptions"
         }
     },
     "require-dev": {

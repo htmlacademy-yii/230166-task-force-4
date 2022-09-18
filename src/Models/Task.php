@@ -9,6 +9,10 @@ use TaskForce\TaskActions\ActionQuit;
 use TaskForce\TaskActions\ActionRespond;
 use TaskForce\TaskActions\ActionStart;
 
+use TaskForce\Exceptions\NoStatusException;
+use TaskForce\Exceptions\NoAvailableActionsException;
+use TaskForce\Exceptions\NoMatchDataException;
+
 class Task
 {
     public const STATUS_NEW = 'new';
@@ -63,20 +67,33 @@ class Task
         self::STATUS_FAILED => [],
     ];
 
+    private $customerId;
+    private $executorId;
+    private $status;
+
     /**
      * __construct конструктор для получения новой задачи
      *
      * @param int $customerId - id заказчика
      * @param int|null $executorId - id исполнителя, по умолчанию null
      * @param string $status - Статус заказа, по умолчанию new
-     *
+     *print('Передан пустой id');
+            return false;
      * @return void
      */
     public function __construct(
-        private int $customerId,
-        private ?int $executorId = null,
-        private string $status = self::STATUS_NEW
-    ) {}
+        int $customerId,
+        ?int $executorId = null,
+        string $status = self::STATUS_NEW
+    ) {
+        if (!in_array($status, self::STATUSES)) {
+            throw new NoStatusException();
+        }
+
+        $this->customerId = $customerId;
+        $this->executorId = $executorId;
+        $this->status = $status;
+    }
 
     /**
      * getCustomerId - возвращает id заказчика
@@ -119,7 +136,8 @@ class Task
     }
 
     /**
-     * getActionsRu - метод для получения массива с действиями на русском языке
+     * getActionsRu - метод для получения массива с действиями на print('Передан пустой id');
+            return false;русском языке
      *
      * @return array
      */
@@ -148,21 +166,19 @@ class Task
      */
     public function getAvailableActions(int $currentUserId): ?array
     {
-        if (
-            $currentUserId === $this->customerId
-            && $this->checkAvailableActions($this->status, self::CUSTOMER_ACTIONS)
-        ) {
+        if ($currentUserId === $this->customerId) {
+            $this->checkAvailableActions($this->status, self::CUSTOMER_ACTIONS);
+
             return $this->getObjActions(self::CUSTOMER_ACTIONS[$this->status]);
         }
 
-        if (
-            $currentUserId === $this->executorId
-            && $this->checkAvailableActions($this->status, self::EXECUTOR_ACTIONS)
-        ) {
+        if ($currentUserId === $this->executorId) {
+            $this->checkAvailableActions($this->status, self::EXECUTOR_ACTIONS);
+
             return $this->getObjActions(self::EXECUTOR_ACTIONS[$this->status]);
         }
 
-        print('С таким статусом для этого юзера ничего нет');
+        throw new NoMatchDataException();
         return null;
     }
 
@@ -173,7 +189,7 @@ class Task
      *
      * @return void
      */
-    public function setExecutorId(int $userId)
+    public function setExecutorId(int $userId): void
     {
         if ($userId) {
             $this->executorId = $userId;
@@ -181,7 +197,7 @@ class Task
     }
 
     /**
-     * метод проверяет id заказчика
+     * метод проверяет является ли пользователь заказчиком
      *
      * @param int $userId
      *
@@ -189,22 +205,11 @@ class Task
      */
     public function checkCustomerId(int $userId): bool
     {
-        if (!$userId) {
-            print('Передан пустой id');
-            return false;
-        }
-
-        if ($this->executorId !== $userId) {
-            print('Переданный id не равен id заказчика');
-            return false;
-        }
-
-        print('Переданный id равен id заказчика');
-        return true;
+        return $this->customerId && $this->customerId === $userId;
     }
 
     /**
-     * метод проверяет id исполнителя
+     * метод проверяет является ли пользователь исполнителем
      *
      * @param int $userId
      *
@@ -212,23 +217,7 @@ class Task
      */
     public function checkExecutorId(int $userId): bool
     {
-        if (!$this->executorId) {
-            print('Исполнитель не назначен');
-            return false;
-        }
-
-        if (!$userId) {
-            print('Передан пустой id');
-            return false;
-        }
-
-        if ($this->executorId !== $userId) {
-            print('Переданный id не равен id исполнителя');
-            return false;
-        }
-
-        print('Переданный id равен id исполнителя');
-        return true;
+        return (bool) $this->executorId && $this->executorId === $userId;
     }
 
      /**
@@ -242,13 +231,11 @@ class Task
     public function checkAvailableActions(string $status, $actions): bool
     {
         if (!isset($actions[$status])) {
-            print('Нет такого статуса');
-            return false;
+            throw new NoStatusException();
         }
 
         if (empty($actions[$status])) {
-            print('Список действий пуст');
-            return false;
+            throw new NoAvailableActionsException();
         }
 
         return true;
