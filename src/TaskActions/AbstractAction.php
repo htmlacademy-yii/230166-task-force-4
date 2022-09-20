@@ -6,31 +6,11 @@ use TaskForce\Models\Task;
 
 abstract class AbstractAction
 {
-    protected $action;
-    protected $actionPresentation;
+    const NAME = self::NAME;
+    const EXTERNAL_NAME = self::EXTERNAL_NAME;
 
     /**
-     * возвращает внутреннее название действия
-     *
-     * @return string
-     */
-    public function getAction(): string
-    {
-        return $this->action;
-    }
-
-    /**
-     *возвращает название действия
-     *
-     * @return string
-     */
-    public function getActionPresentation(): string
-    {
-        return $this->actionPresentation;
-    }
-
-    /**
-     * проверяет права пользователя
+     * check проверяет права пользователя
      *
      * @param Task $task - объект класса Task
      * @param $currentUserId -id текущего пользователя

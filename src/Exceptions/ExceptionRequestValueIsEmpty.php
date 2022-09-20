@@ -2,9 +2,9 @@
 
 namespace TaskForce\Exceptions;
 
-class NoMatchCustomerException extends \Exception
+class ExceptionRequestValueIsEmpty extends \Exception
 {
-    const MESSAGE = 'Нет доступных действий';
+    const MESSAGE = 'Запрашиваемое значение отсутствует';
     const CODE = 500;
 
     public function __construct()

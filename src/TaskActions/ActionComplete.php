@@ -7,8 +7,8 @@ use TaskForce\Models\Task;
 
 class ActionComplete extends AbstractAction
 {
-    protected $action = 'complete';
-    protected $actionPresentation = 'Завершить задание';
+    const NAME = 'complete';
+    const EXTERNAL_NAME = 'Завершить задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {

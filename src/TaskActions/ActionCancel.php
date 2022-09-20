@@ -7,8 +7,8 @@ use TaskForce\Models\Task;
 
 class ActionCancel extends AbstractAction
 {
-    protected $action = 'cencel';
-    protected $actionPresentation = 'Отменить задание';
+    const NAME = 'cancel';
+    const EXTERNAL_NAME = 'Отменить задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {
