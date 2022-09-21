@@ -7,8 +7,8 @@ use TaskForce\Models\Task;
 
 class ActionQuit extends AbstractAction
 {
-    protected $action = 'quit';
-    protected $actionPresentation = 'Отказаться от задания';
+    const NAME = 'quit';
+    const EXTERNAL_NAME = 'Отказаться от задания';
 
     public static function check(Task $task, int $currentUserId): bool
     {
