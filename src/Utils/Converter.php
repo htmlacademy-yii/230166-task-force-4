@@ -10,48 +10,27 @@ class Converter {
     private object $inputFile;
     private string $outputPath = 'data/queries.sql';
 
-
-    protected function getData()
-    {
-        foreach ($this->getLines() as $line) {
-            $data[] = $line;
-        }
-
-
-        return $data;
-    }
-
-
-
     public function convertData(string $path, string $table)
     {
         $data = [];
 
         $this->inputFile = new SplFileObject($path);
+        $this->inputFile->setFlags(SplFileObject::SKIP_EMPTY);
 
         foreach ($this->generateLines() as $line) {
-            $data[] = $line;
+            if ($line) {
+                $data[] = '(' . $line . ')';
+            }
         }
 
-        $outputFile = fopen($this->outputPath, 'w');
-        $outputFile = new SplFileObject($this->outputPath, 'a');
-
         $fields = array_shift($data);
+        $data = implode(',', $data);
+        $sql = "INSERT INTO $table $fields VALUES $data;";
 
-        var_dump($data);
-        var_dump($fields);
-
-        $sql = "INSERT INTO $table ($fields) VALUES($data);";
-
-        var_dump($sql);
-
-        // $outputFile->fwrite($sql);
-
-        // foreach ($this->getLines() as $line) {
-        //     $outputFile->fwrite($line);
-        // }
-
-        // fclose($this->outputPath);
+        $outputFile = fopen($this->outputPath, 'w');
+        $outputFileObject = new SplFileObject($this->outputPath, 'w');
+        $outputFileObject->fwrite($sql);
+        fclose($outputFile);
     }
 
     protected function generateLines()
@@ -60,13 +39,5 @@ class Converter {
             yield $this->inputFile->fgets();
         }
     }
-
-
-
-    // protected function createOutputFile()
-    // {
-    //     $outputFile = fopen($this->outputPath, 'w');
-    //     $outputFile = new SplFileObject($this->outputPath, 'a');
-    // }
 }
 

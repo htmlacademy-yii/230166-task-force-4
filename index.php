@@ -4,26 +4,14 @@ require_once 'vendor/autoload.php';
 
 use TaskForce\Utils\Converter;
 
-$pathCategories = 'data/categories.csv';
-$path = 'data/categories.sql';
+$path = 'data/categories.csv';
 $table = 'category';
-
 $file = new Converter();
 
-$file->convertData($pathCategories, $table);
-// $outputFile = fopen($path, 'w');
-// $outputFile = new SplFileObject($path, 'w');
-// var_dump($outputFile);
+$file->convertData($path, $table);
 
-// $outputFile->fwrite('sdfdsf');
+$path = 'data/cities.csv';
+$table = 'city';
 
-// var_dump(explode('.', $pathCategories)[0] . '.sql');
+$file->convertData($path, $table);
 
-// $file = new \SplFileObject($pathCategories);
-// $file->setFlags(SplFileObject::READ_CSV);
-
-// var_dump($file);
-
-// foreach ($file as $row) {
-//     var_dump($row);
-// }
