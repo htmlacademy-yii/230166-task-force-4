@@ -5,39 +5,113 @@ namespace Taskforce\Utils;
 use \SplFileObject;
 use \RuntimeException;
 
+use TaskForce\Exceptions\ExceptionWrongParameter;
+use TaskForce\Exceptions\ExceptionFailedToOpenFile;
 
 class Converter {
     private object $inputFile;
-    private string $outputPath = 'data/queries.sql';
+    private string $outputPath = 'data/insert.sql';
 
-    public function convertData(string $path, string $table)
+    public function convertData(string $path, string $table): void
+    {
+        if (!file_exists($path)) {
+            throw new ExceptionWrongParameter($path, 'convertData');
+        }
+
+        try {
+            $this->inputFile = new SplFileObject($path);
+        }
+        catch (RuntimeException $exception) {
+            throw new ExceptionFailedToOpenFile($path);
+        }
+
+        $query = $this->createQuery($table);
+        $this->writeQuery($query);
+    }
+
+    /**
+     * generateLines генерируем строки из файла
+     *
+     * @return object
+     */
+    protected function generateLines(): object
+    {
+        while (!$this->inputFile->eof()) {
+            yield $this->inputFile->fgetcsv();
+        }
+    }
+
+    /**
+     * getData получаем массив из генератора
+     *
+     * @return array
+     */
+    protected function getData(): array
     {
         $data = [];
 
-        $this->inputFile = new SplFileObject($path);
-        $this->inputFile->setFlags(SplFileObject::SKIP_EMPTY);
-
         foreach ($this->generateLines() as $line) {
-            if ($line) {
-                $data[] = '(' . $line . ')';
+            if ($this->validateLine($line)) {
+                $data[] = $line;
             }
         }
 
-        $fields = array_shift($data);
-        $data = implode(',', $data);
-        $sql = "INSERT INTO $table $fields VALUES $data;";
+        return $data;
+    }
 
+    /**
+     * createQuery создаем запрос для добавления данных в таблицу
+     *
+     * @param  string $table название таблицы
+     * @return string
+     */
+    protected function createQuery(string $table): string
+    {
+        $data = $this->getData();
+        $headerData = implode(',', array_shift($data));
+
+        foreach ($data as $line) {
+            $values[] = '(\'' . implode('\', \'', $line) . '\')';
+        }
+
+        $values = implode(',', $values);
+
+        return 'INSERT INTO ' . $table . ' (' . preg_replace('/\s+|[[:^print:]]/', '', $headerData) .') VALUES ' . $values . ';';
+    }
+
+    /**
+     * writeQuery создаем файл, добавляем в него запрос
+     *
+     * @param  string $query
+     * @return void
+     */
+    protected function writeQuery(string $query): void
+    {
         $outputFile = fopen($this->outputPath, 'w');
-        $outputFileObject = new SplFileObject($this->outputPath, 'w');
-        $outputFileObject->fwrite($sql);
+        fwrite($outputFile, $query);
         fclose($outputFile);
     }
 
-    protected function generateLines()
+    /**
+     * validateLine возвращает что строка это не пустой массив
+     * и что каждое значение массива это строка
+     *
+     * @param  array $line
+     * @return bool
+     */
+    protected function validateLine(array $line): bool
     {
-        while (!$this->inputFile->eof()) {
-            yield $this->inputFile->fgets();
+        if (!count($line)) {
+            return false;
         }
+
+        foreach ($line as $value) {
+            if (!is_string($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
