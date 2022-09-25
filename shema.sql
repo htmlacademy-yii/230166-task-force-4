@@ -9,6 +9,7 @@ USE task_force;
 CREATE TABLE category (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(32) NOT NULL,
+  icon VARCHAR(128) NULL DEFAULT NULL,
 
   UNIQUE INDEX category_name (name)
 );
