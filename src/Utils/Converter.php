@@ -9,8 +9,8 @@ use TaskForce\Exceptions\ExceptionWrongParameter;
 use TaskForce\Exceptions\ExceptionFailedToOpenFile;
 
 class Converter {
-    private object $inputFile;
-    private string $outputPath = 'data/insert.sql';
+    private SplFileObject $inputFile;
+    private string $outputPath = 'data/sql/';
 
     public function convertData(string $path, string $table): void
     {
@@ -26,7 +26,18 @@ class Converter {
         }
 
         $query = $this->createQuery($table);
-        $this->writeQuery($query);
+        $this->writeQuery($query, $table);
+    }
+
+    /**
+     * setOutputPath меняет путь до папки с выходными данными
+     *
+     * @param  string $outputPath
+     * @return void
+     */
+    public function setOutputPath(string $outputPath): void
+    {
+        $this->outputPath = $outputPath;
     }
 
     /**
@@ -34,7 +45,7 @@ class Converter {
      *
      * @return object
      */
-    protected function generateLines(): object
+    protected function generateLines(): \Iterator
     {
         while (!$this->inputFile->eof()) {
             yield $this->inputFile->fgetcsv();
@@ -68,7 +79,8 @@ class Converter {
     protected function createQuery(string $table): string
     {
         $data = $this->getData();
-        $headerData = implode(',', array_shift($data));
+        $headerData = array_shift($data);
+        $headerData = implode(',', $headerData);
 
         foreach ($data as $line) {
             $values[] = '(\'' . implode('\', \'', $line) . '\')';
@@ -85,9 +97,9 @@ class Converter {
      * @param  string $query
      * @return void
      */
-    protected function writeQuery(string $query): void
+    protected function writeQuery(string $query, string $table): void
     {
-        $outputFile = fopen($this->outputPath, 'w');
+        $outputFile = fopen($this->outputPath . $table . '.sql', 'w');
         fwrite($outputFile, $query);
         fclose($outputFile);
     }
