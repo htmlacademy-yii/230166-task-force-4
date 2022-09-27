@@ -71,5 +71,13 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\Models\\": "src/Models",
+            "TaskForce\\TaskActions\\": "src/TaskActions",
+            "TaskForce\\Exceptions\\": "src/Exceptions",
+            "TaskForce\\Utils\\": "src/Utils"
+        }
+    }
 }
