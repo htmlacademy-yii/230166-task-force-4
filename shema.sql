@@ -8,17 +8,19 @@ USE task_force;
 
 CREATE TABLE category (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name VARCHAR(32) NOT NULL,
+  icon VARCHAR(128) NULL DEFAULT NULL,
 
   UNIQUE INDEX category_name (name)
 );
 
 CREATE TABLE city (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  city_id INT NOT NULL,
-  address VARCHAR(256) NOT NULL,
-  lat DECIMAL (9, 6) NOT NULL,
-  lng DECIMAL (9, 6) NOT NULL
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  name VARCHAR(32) NOT NULL,
+  lat DECIMAL(9, 6) NULL,
+  lng DECIMAL(9, 6) NULL
 );
 
 CREATE TABLE user (
@@ -33,11 +35,11 @@ CREATE TABLE user (
   date_of_birth DATE DEFAULT NULL,
   phone CHAR(11) NULL DEFAULT NULL,
   telegram CHAR(64) NULL DEFAULT NULL,
-  location_id INT NULL DEFAULT NULL,
+  city_id INT NULL DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
 
-  FOREIGN KEY (location_id) REFERENCES location(id)
+  FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 CREATE TABLE task (
