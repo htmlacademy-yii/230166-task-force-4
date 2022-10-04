@@ -18,8 +18,8 @@ $this->title = 'Tasks';
                 <p class="info-text"><span class="current-time"><?= get_relative_date($task['created_at']) ?> </span>назад</p>
                 <p class="task-text"><?= $task['text'] ?></p>
                 <div class="footer-task">
-                    <p class="info-text town-text">Санкт-Петербург, Центральный район</p>
-                    <p class="info-text category-text">Переводы</p>
+                    <p class="info-text town-text"><?= $task['city'] ?></p>
+                    <p class="info-text category-text"><?= $task['category_name'] ?></p>
                     <a href="#" class="button button--black">Смотреть Задание</a>
                 </div>
             </div>

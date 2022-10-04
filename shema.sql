@@ -45,9 +45,9 @@ CREATE TABLE user (
 CREATE TABLE task (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  customer_id INT,
+  customer_id INT NOT NULL,
   executor_id INT,
-  category_id INT,
+  category_id INT NOT NULL,
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
   text VARCHAR(1000) NOT NULL,
