@@ -15,7 +15,7 @@ $this->title = 'Tasks';
                     <a  href="#" class="link link--block link--big"><?= $task['title'] ?></a>
                     <p class="price price--task"><?= $task['price'] ?> ₽</p>
                 </div>
-                <p class="info-text"><span class="current-time"><?= $task['created_at'] ?> </span>назад</p>
+                <p class="info-text"><span class="current-time"><?= get_relative_date($task['created_at']) ?> </span>назад</p>
                 <p class="task-text"><?= $task['text'] ?></p>
                 <div class="footer-task">
                     <p class="info-text town-text">Санкт-Петербург, Центральный район</p>

@@ -3,6 +3,11 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+/**
+ * Часовой пояс по умолчанию
+*/
+date_default_timezone_set("Europe/Moscow");
+
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
