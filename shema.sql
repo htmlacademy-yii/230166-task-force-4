@@ -51,7 +51,7 @@ CREATE TABLE task (
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
   text VARCHAR(1000) NOT NULL,
-  price DECIMAL(10, 2) UNSIGNED NULL DEFAULT NULL,
+  price DECIMAL(10, 2) UNSIGNED DEFAULT 0,
   deadline TIMESTAMP DEFAULT NULL,
 
   FULLTEXT INDEX post_text (title, text),
