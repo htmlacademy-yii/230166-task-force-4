@@ -1,10 +1,3 @@
-<?php
-
-/** @var yii\web\View $this */
-
-$this->title = 'Tasks';
-?>
-
 <main class="main-content container">
     <div class="left-column">
         <h3 class="head-main head-task">Новые задания</h3>

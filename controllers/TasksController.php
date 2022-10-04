@@ -44,6 +44,7 @@ class TasksController extends Controller
 
         $tasks = $query->all();
 
+        $this->view->title = 'Список задач';
         return $this->render('index', [
             'tasks' => $tasks,
         ]);
