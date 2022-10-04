@@ -1,0 +1,1 @@
+INSERT INTO task (customer_id, title,text,price,category_id) VALUES ('1', 'Title 1', ' Text 1', ' 10', '1'),('2', 'Title 2', ' Text 2', ' 20', '2'),('1', 'Title 3', ' Text 3', ' 30', '3'),('1', 'Title 4', ' Text 4', ' 40', '4'),('3', 'Title 5', ' Text 5', ' 50', '5');

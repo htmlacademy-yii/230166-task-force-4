@@ -1,6 +1,12 @@
-title, text, price
-Title 1, Text 1, 10
-Title 2, Text 2, 20
-Title 3, Text 3, 30
-Title 4, Text 4, 40
-Title 5, Text 5, 50
+customer_id, category_id, title, text, price, status
+1, 1, Title 1, Text 1, 10, 'new'
+2, 2, Title 2, Text 2, 20, 'cencelled'
+1, 3, Title 3, Text 3, 30, 'in_progress'
+3, 4, Title 4, Text 4, 40, 'done'
+1, 5, Title 5, Text 5, 50, 'failed'
+1, 1, Title 6, Text 6, 10, 'new'
+2, 2, Title 7, Text 7, 20, 'cencelled'
+4, 3, Title 8, Text 8, 30, 'in_progress'
+3, 4, Title 9, Text 9, 40, 'done'
+1, 5, Title 10, Text 10, 50, 'failed'
+

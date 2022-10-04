@@ -74,10 +74,10 @@
     ],
     "autoload": {
         "psr-4": {
-            "TaskForce\\Models\\": "../src/Models",
-            "TaskForce\\TaskActions\\": "../src/TaskActions",
-            "TaskForce\\Exceptions\\": "../src/Exceptions",
-            "TaskForce\\Utils\\": "../src/Utils"
+            "TaskForce\\Models\\": "src/Models",
+            "TaskForce\\TaskActions\\": "src/TaskActions",
+            "TaskForce\\Exceptions\\": "src/Exceptions",
+            "TaskForce\\Utils\\": "src/Utils"
         }
     }
 }

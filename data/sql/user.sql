@@ -1,0 +1,1 @@
+INSERT INTO user (email,name,password,city_id) VALUES ('test1@test.ru', ' Эльвира', ' 123456', '1'),('test2@test.ru', ' Дмитрий', ' 123456', '2'),('test3@test.ru', ' Марк', ' 123456', '3'),('test4@test.ru', ' Елена', ' 123456', '4'),('test5@test.ru', ' Ольга', ' 123456', '5');
