@@ -39,6 +39,7 @@ class TasksController extends Controller
             ->join('INNER JOIN', 'category', 'task.category_id = category.id')
             ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
             ->join('INNER JOIN', 'city', 'user.city_id = city.id')
+            ->where(['task.status' => 'new'])
             ->orderBy('created_at ASC');
 
         $tasks = $query->all();
