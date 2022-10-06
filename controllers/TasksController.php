@@ -4,10 +4,12 @@ namespace app\controllers;
 
 use app\models\Task;
 use yii\base\Controller;
-use yii\db\Query;
+use yii\data\Pagination;
 
 class TasksController extends Controller
 {
+    const PAGE_SIZE = 3;
+
     /**
      * Displays homepage.
      *
@@ -15,8 +17,11 @@ class TasksController extends Controller
      */
     public function actionIndex()
     {
-        $tasks = Task::find()
+        $this->view->title = 'Список задач';
+
+        $query = Task::find()
             ->select([
+                'task.id',
                 'task.created_at',
                 'task.title',
                 'task.price',
@@ -30,13 +35,14 @@ class TasksController extends Controller
             ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
             ->join('INNER JOIN', 'city', 'user.city_id = city.id')
             ->where(['task.status' => 'new'])
-            ->asArray()
+            ->asArray();
+
+        $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => self::PAGE_SIZE]);
+        $tasks = $query->offset($pages->offset)
+            ->limit($pages->limit)
             ->all();
 
-        $this->view->title = 'Список задач';
-        return $this->render('index', [
-            'tasks' => $tasks,
-        ]);
+        return $this->render('index', compact('tasks', 'pages'));
     }
 
 }

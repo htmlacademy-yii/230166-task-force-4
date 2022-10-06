@@ -1,40 +1,35 @@
+<?php
+use yii\widgets\LinkPager;
+?>
+
 <main class="main-content container">
     <div class="left-column">
         <h3 class="head-main head-task">Новые задания</h3>
 
-        <?php foreach($tasks as $task) : ?>
-            <div class="task-card">
-                <div class="header-task">
-                    <a  href="#" class="link link--block link--big"><?= $task['title'] ?></a>
-                    <p class="price price--task"><?= $task['price'] ?> ₽</p>
-                </div>
-                <p class="info-text"><span class="current-time"><?= get_relative_date($task['created_at']) ?> </span>назад</p>
-                <p class="task-text"><?= $task['text'] ?></p>
-                <div class="footer-task">
-                    <p class="info-text town-text"><?= $task['city'] ?></p>
-                    <p class="info-text category-text"><?= $task['category_name'] ?></p>
-                    <a href="#" class="button button--black">Смотреть Задание</a>
-                </div>
-            </div>
-        <? endforeach ?>
+        <!-- список задач -->
+        <?php foreach ($tasks as $task) : ?>
+            <?= $this->render('_task', ['task' => $task]) ?>
+        <? endforeach; ?>
+
+        <!-- пагинация -->
         <div class="pagination-wrapper">
-            <ul class="pagination-list">
-                <li class="pagination-item mark">
-                    <a href="#" class="link link--page"></a>
-                </li>
-                <li class="pagination-item">
-                    <a href="#" class="link link--page">1</a>
-                </li>
-                <li class="pagination-item pagination-item--active">
-                    <a href="#" class="link link--page">2</a>
-                </li>
-                <li class="pagination-item">
-                    <a href="#" class="link link--page">3</a>
-                </li>
-                <li class="pagination-item mark">
-                    <a href="#" class="link link--page"></a>
-                </li>
-            </ul>
+            <?= LinkPager::widget([
+                    'pagination' => $pages,
+                    'options' => [
+                        'class' => 'pagination-list',
+                    ],
+                    'linkOptions' => [
+                        'class' => 'link link--page',
+                    ],
+                    'pageCssClass' => 'pagination-item',
+                    'activePageCssClass' => 'pagination-item--active',
+                    'prevPageCssClass' => 'pagination-item mark',
+                    'nextPageCssClass' => 'pagination-item mark',
+                    'prevPageLabel' => '',
+                    'nextPageLabel' => '',
+                    'maxButtonCount' => 10
+                ]);
+            ?>
         </div>
     </div>
     <div class="right-column">
