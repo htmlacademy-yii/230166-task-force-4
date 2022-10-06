@@ -1,1 +1,0 @@
-<ul class="pagination-list"></ul>
