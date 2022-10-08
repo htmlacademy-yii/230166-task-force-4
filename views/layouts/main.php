@@ -72,9 +72,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
     </div>
 </header>
 
-<main class="main-container" role="main">
-    <?= $content ?>
-</main>
+<?= $content ?>
 
 <?php $this->endBody() ?>
 </body>

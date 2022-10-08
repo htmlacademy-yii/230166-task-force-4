@@ -1581,3 +1581,8 @@ form .has-error textarea:hover {
   display: block; }
 
 /*# sourceMappingURL=style.css.map */
+
+.pagination-item.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
