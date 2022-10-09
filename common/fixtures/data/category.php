@@ -2,43 +2,43 @@
 
 return [
     'category0' => [
-        'name' => 'pqzk',
-        'label' => 'hwuc',
+        'name' => 'ipsa',
+        'label' => 'atque',
     ],
     'category1' => [
-        'name' => 'ofzr',
-        'label' => 'becn',
+        'name' => 'maiores',
+        'label' => 'et',
     ],
     'category2' => [
-        'name' => 'sadj',
-        'label' => 'udzs',
+        'name' => 'quis',
+        'label' => 'maxime',
     ],
     'category3' => [
-        'name' => 'uopt',
-        'label' => 'vxgv',
+        'name' => 'accusamus',
+        'label' => 'deleniti',
     ],
     'category4' => [
-        'name' => 'hfuc',
-        'label' => 'crzh',
+        'name' => 'sint',
+        'label' => 'tempore',
     ],
     'category5' => [
-        'name' => 'rxuz',
-        'label' => 'cpbx',
+        'name' => 'esse',
+        'label' => 'nemo',
     ],
     'category6' => [
-        'name' => 'hqli',
-        'label' => 'fyrh',
+        'name' => 'cupiditate',
+        'label' => 'rerum',
     ],
     'category7' => [
-        'name' => 'odat',
-        'label' => 'ikez',
+        'name' => 'delectus',
+        'label' => 'esse',
     ],
     'category8' => [
-        'name' => 'bspt',
-        'label' => 'szyi',
+        'name' => 'tempora',
+        'label' => 'porro',
     ],
     'category9' => [
-        'name' => 'quye',
-        'label' => 'rfbz',
+        'name' => 'in',
+        'label' => 'et',
     ],
 ];

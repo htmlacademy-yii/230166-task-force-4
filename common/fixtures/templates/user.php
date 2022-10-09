@@ -7,7 +7,7 @@ return [
     'is_customer' => $faker->randomElement([0, 1]),
     'raiting' => $faker->numberBetween(1,5),
     'email' => $faker->unique()->email(),
-    'name' => $faker->name($gender = null|'male'|'female') ,
+    'name' => $faker->name() ,
     'password' => $faker->password(),
     'avatar' => $faker->randomElement([
         '@app/web/img/avatars/1.png',
