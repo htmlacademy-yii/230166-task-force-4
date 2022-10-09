@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use TaskForce\Models\Task as BaseTask;
 
 /**
  * This is the model class for table "task".
@@ -140,5 +141,30 @@ class Task extends \yii\db\ActiveRecord
     public static function find()
     {
         return new TaskQuery(get_called_class());
+    }
+
+    public static function getNewTasksQuery(): \yii\db\ActiveQuery
+    {
+        return self::find()
+        ->select([
+            'task.id',
+            'task.created_at',
+            'task.customer_id',
+            'task.executor_id',
+            'task.deadline',
+            'task.title',
+            'task.price',
+            'task.text',
+            'task.status',
+            'task.category_id',
+            'category.name as category_name',
+            'category.label as category_label',
+            'city.name as city'
+        ])
+        ->join('INNER JOIN', 'category', 'task.category_id = category.id')
+        ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
+        ->join('INNER JOIN', 'city', 'user.city_id = city.id')
+        ->where(['task.status' => BaseTask::STATUS_NEW])
+        ->asArray();
     }
 }

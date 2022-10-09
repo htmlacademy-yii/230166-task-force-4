@@ -6,6 +6,7 @@ use app\models\forms\FilterForm;
 use yii\base\Controller;
 use yii\data\Pagination;
 use Yii;
+use app\models\Task;
 
 class TasksController extends Controller
 {
@@ -20,7 +21,7 @@ class TasksController extends Controller
     {
         $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
-        $query = $filterForm->getNewTaskQuery();
+        $query = Task::getNewTasksQuery();
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
@@ -36,6 +37,11 @@ class TasksController extends Controller
             ->all();
 
         return $this->render('index', compact('tasks', 'pages', 'filterForm'));
+    }
+
+    public function actionView()
+    {
+        return $this->render('view');
     }
 
 }
