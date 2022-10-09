@@ -24,7 +24,7 @@
             <?= Html::encode($task['city']) ?>
         </p>
         <p class="info-text category-text">
-            <?= Html::encode($task['category_name']) ?>
+            <?= Html::encode($task['category_label']) ?>
         </p>
         <a href="#" class="button button--black">
             Смотреть Задание
