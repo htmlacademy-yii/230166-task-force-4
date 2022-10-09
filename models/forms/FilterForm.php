@@ -9,7 +9,7 @@ use TaskForce\Models\Task;
 
 class FilterForm extends Model
 {
-    public array $categories = [];
+    public $categories = [];
     public bool $noExecutor = false;
     public string $period = self::PERIOD_ALL;
 
