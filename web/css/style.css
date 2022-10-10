@@ -1193,25 +1193,22 @@ select {
   background-size: 20px 12px;
   background-position: 260px 14px; }
 
-.search-form .head-card:not(.head-card:first-child) {
-  margin-top: 33px;
-  margin-bottom: 0; }
+.search-form .form-group:not(:last-child) {
+  margin-bottom: 33px;
+}
 
-.search-form .head-card:first-child {
-  margin-bottom: 0; }
+.search-form .head-card {
+  margin: 0;
+}
 
 .search-form select {
   margin-top: 20px;
   width: 100%;
   padding: 13px 16px;
-  margin-bottom: 25px;
   font-size: 15px;
   color: #8f9bb3;
   border-radius: 4px;
   background-position: 205px 18px; }
-
-.search-form {
-  padding-bottom: 80px; }
 
 .checkbox-wrapper {
   display: -webkit-box;
@@ -1415,7 +1412,7 @@ input[type=submit] {
   font-size: 19px;
   width: 221px;
   display: inline-block;
-  float: right; }
+}
 
 .add-task-form input[type=submit] {
   width: 171px;
@@ -1427,7 +1424,11 @@ input[type=submit] {
   margin-top: 56px; }
 
 .search-form input[type=submit] {
-  width: 171px; }
+  display: block;
+  width: 171px;
+  margin: 0;
+  margin-left: auto;
+}
 
 .has-error .help-block {
   visibility: visible; }

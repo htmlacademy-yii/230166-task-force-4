@@ -3,11 +3,11 @@
 namespace app\models;
 
 /**
- * This is the ActiveQuery class for [[Response]].
+ * This is the ActiveQuery class for [[UserCategory]].
  *
- * @see Response
+ * @see UserCategory
  */
-class ResponseQuery extends \yii\db\ActiveQuery
+class UserCategoryQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class ResponseQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return Response[]|array
+     * @return UserCategory[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class ResponseQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return Response|array|null
+     * @return UserCategory|array|null
      */
     public function one($db = null)
     {

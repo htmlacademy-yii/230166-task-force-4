@@ -10,7 +10,7 @@ CREATE TABLE category (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name VARCHAR(32) NOT NULL,
-  icon VARCHAR(128) NULL DEFAULT NULL,
+  label VARCHAR(32) NOT NULL,
 
   UNIQUE INDEX category_name (name)
 );
@@ -46,7 +46,7 @@ CREATE TABLE task (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   customer_id INT NOT NULL,
-  executor_id INT,
+  executor_id INT NULL DEFAULT NULL,
   category_id INT NOT NULL,
   status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(500) NOT NULL,
