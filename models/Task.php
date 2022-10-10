@@ -46,7 +46,7 @@ class Task extends \yii\db\ActiveRecord
             [['customer_id', 'executor_id', 'category_id'], 'integer'],
             [['status'], 'string'],
             [['title', 'text'], 'required'],
-            [['price'], 'number'],
+            [['price', 'id'], 'number'],
             [['title'], 'string', 'max' => 500],
             [['text'], 'string', 'max' => 1000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
@@ -134,29 +134,11 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasMany(Response::class, ['task_id' => 'id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return TaskQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new TaskQuery(get_called_class());
-    }
-
     public static function getNewTasksQuery(): \yii\db\ActiveQuery
     {
         return self::find()
         ->select([
-            'task.id',
-            'task.created_at',
-            'task.customer_id',
-            'task.executor_id',
-            'task.deadline',
-            'task.title',
-            'task.price',
-            'task.text',
-            'task.status',
-            'task.category_id',
+            'task.*',
             'category.name as category_name',
             'category.label as category_label',
             'city.name as city'
