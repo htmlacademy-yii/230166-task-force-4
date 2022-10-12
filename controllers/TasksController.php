@@ -2,44 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\forms\FilterForm;
-use yii\base\Controller;
+use yii\web\Controller;
 use yii\data\Pagination;
 use Yii;
 use app\models\Task;
 use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use app\models\forms\FilterForm;
 
 class TasksController extends Controller
 {
     const PAGE_SIZE = 3;
-
-        /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * {@inheritdoc}
@@ -80,12 +52,9 @@ class TasksController extends Controller
         return $this->render('index', compact('tasks', 'pages', 'filterForm'));
     }
 
-    public function actionView(int $id): string
+    public function actionView($id)
     {
-        $id = intval($id);
-
-        var_dump($id);
-        $task = Task::findOne(1);
+        $task = Task::findOne($id);
 
         if (!$task) {
             throw new NotFoundHttpException("Контакт с ID $id не найден");

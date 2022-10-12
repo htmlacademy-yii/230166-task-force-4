@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\LinkPager;
+use yii\helpers\Html;
 ?>
 
 <main class="main-content container">

@@ -3,11 +3,6 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
-/**
- * Часовой пояс по умолчанию
-*/
-date_default_timezone_set("Europe/Moscow");
-
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
@@ -16,12 +11,10 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'language' => 'ru',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'CNYubAHht_36NbftKmzT4TU_MvlfZfwv',
-            // 'baseUrl' => '',
+            'cookieValidationKey' => 'BYsZYK6GVFucxYv4cBuHD73Q8mRi5ZGD',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -34,9 +27,10 @@ $config = [
             'errorAction' => 'error/index',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
+            'class' => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure transport
+            // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
         'log' => [
@@ -54,8 +48,8 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                'tasks/view/<id:\d+>' => 'tasks/view',
-                'user/view/<id:\d+>' => 'user',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
     ],

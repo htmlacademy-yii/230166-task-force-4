@@ -1,11 +1,15 @@
+<?php
+    use yii\helpers\Html;
+?>
+
 <main class="main-content container">
     <div class="left-column">
         <div class="head-wrapper">
-            <h3 class="head-main"><?= $task['title'] ?></h3>
-            <p class="price price--big"><?= $task['price'] ?> ₽</p>
+            <h3 class="head-main"><?= Html::encode($task['price']) ?></h3>
+            <p class="price price--big"><?= Html::encode($task['price']) ?> ₽</p>
         </div>
         <p class="task-description">
-            <?= $task['text'] ?>
+            <?= Html::encode($task['text']) ?>
         </p>
         <a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>
         <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
