@@ -5,7 +5,7 @@
 <main class="main-content container">
     <div class="left-column">
         <div class="head-wrapper">
-            <h3 class="head-main"><?= Html::encode($task['price']) ?></h3>
+            <h3 class="head-main"><?= Html::encode($task['title']) ?></h3>
             <p class="price price--big"><?= Html::encode($task['price']) ?> ₽</p>
         </div>
         <p class="task-description">
