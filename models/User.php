@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property string|null $created_at
  * @property int|null $is_executor
- * @property float|null $raiting
+ * @property float|null $rating
  * @property string $email
  * @property string $name
  * @property string $password
@@ -47,7 +47,7 @@ class User extends \yii\db\ActiveRecord
         return [
             [['created_at', 'date_of_birth'], 'safe'],
             [['is_executor', 'city_id'], 'integer'],
-            [['raiting'], 'number'],
+            [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
             [['email'], 'string', 'max' => 20, 'message' => 'Максимальное количество символов 20'],
             [['name'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
@@ -70,7 +70,7 @@ class User extends \yii\db\ActiveRecord
             'id' => 'ID',
             'created_at' => 'Created At',
             'is_executor' => 'Я собираюсь откликаться на заказы',
-            'raiting' => 'Рейтинг',
+            'rating' => 'Рейтинг',
             'email' => 'Email',
             'name' => 'Ваше имя',
             'password' => 'Пароль',

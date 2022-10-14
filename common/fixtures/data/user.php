@@ -3,7 +3,7 @@
 return [
     'user0' => [
         'is_executor' => 0,
-        'raiting' => 1,
+        'rating' => 1,
         'email' => 'rartemeva@gmail.com',
         'name' => 'Спартак Андреевич Игнатьева',
         'password' => '=wH*!n^(ydU',
@@ -15,7 +15,7 @@ return [
     ],
     'user1' => [
         'is_executor' => 0,
-        'raiting' => 3,
+        'rating' => 3,
         'email' => 'tarasov.timofej@inbox.ru',
         'name' => 'Юдина Кристина Романовна',
         'password' => '6%k*ieL[@2{&PNJoAu',
@@ -27,7 +27,7 @@ return [
     ],
     'user2' => [
         'is_executor' => 0,
-        'raiting' => 2,
+        'rating' => 2,
         'email' => 'valerian02@rambler.ru',
         'name' => 'Анисимоваа Мальвина Ивановна',
         'password' => '*OY*wzM+KoA\'',
@@ -39,7 +39,7 @@ return [
     ],
     'user3' => [
         'is_executor' => 1,
-        'raiting' => 2,
+        'rating' => 2,
         'email' => 'tarasova.konstantin@orlov.org',
         'name' => 'Силина Прохор Владимирович',
         'password' => 'I#6l$w',
@@ -51,7 +51,7 @@ return [
     ],
     'user4' => [
         'is_executor' => 0,
-        'raiting' => 1,
+        'rating' => 1,
         'email' => 'stepan.kononov@narod.ru',
         'name' => 'Дьячкова Богдан Алексеевич',
         'password' => 's2cjPI?4',
@@ -63,7 +63,7 @@ return [
     ],
     'user5' => [
         'is_executor' => 0,
-        'raiting' => 2,
+        'rating' => 2,
         'email' => 'klim.gorbacev@mail.ru',
         'name' => 'Овчинникова Алексей Сергеевич',
         'password' => 'RacUu__n<',
@@ -75,7 +75,7 @@ return [
     ],
     'user6' => [
         'is_executor' => 1,
-        'raiting' => 5,
+        'rating' => 5,
         'email' => 'maja.subbotin@ya.ru',
         'name' => 'Алексеев Адам Борисович',
         'password' => 'ctG#-ty',
@@ -87,7 +87,7 @@ return [
     ],
     'user7' => [
         'is_executor' => 0,
-        'raiting' => 1,
+        'rating' => 1,
         'email' => 'filatova.oleg@hotmail.com',
         'name' => 'Вячеслав Алексеевич Киселёв',
         'password' => 'nXW5-{{DIuY5#0:C*',
@@ -99,7 +99,7 @@ return [
     ],
     'user8' => [
         'is_executor' => 0,
-        'raiting' => 3,
+        'rating' => 3,
         'email' => 'inessa80@narod.ru',
         'name' => 'Журавлёв Валериан Борисович',
         'password' => '%v&xs"[:aUF\'h',
@@ -111,7 +111,7 @@ return [
     ],
     'user9' => [
         'is_executor' => 1,
-        'raiting' => 5,
+        'rating' => 5,
         'email' => 'pmatveev@hotmail.com',
         'name' => 'Владлен Львович Харитонов',
         'password' => 'SazK\\(\'IwhvW&\'',

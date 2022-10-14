@@ -5,7 +5,7 @@
  */
 return [
     'is_executor' => $faker->randomElement([0, 1]),
-    'raiting' => $faker->numberBetween(1,5),
+    'rating' => $faker->numberBetween(1,5),
     'email' => $faker->unique()->email(),
     'name' => $faker->name() ,
     'password' => $faker->password(),
