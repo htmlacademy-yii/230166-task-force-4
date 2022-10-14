@@ -24,7 +24,6 @@ use Yii;
  * @property File[] $files
  * @property Response[] $responses
  * @property Task[] $tasks
- * @property Task[] $tasks0
  * @property UserCategory[] $userCategories
  */
 class User extends \yii\db\ActiveRecord
