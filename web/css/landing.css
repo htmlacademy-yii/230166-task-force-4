@@ -4,10 +4,9 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: normal;
-  background-color: #f1f2f6;
   color: #333438; }
   body.landing {
-    background-image: url("../img/polygon.png");
+    background-image: url("../img/_polygon.png");
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y: -413px; }
@@ -1683,7 +1682,7 @@ footer {
   left: 411px; }
 
 .clipart-message {
-  background-image: url("../img/oval.png");
+  background-image: url("../img/_oval.png");
   background-repeat: no-repeat;
   background-position: center;
   width: 456px;
@@ -2088,10 +2087,11 @@ footer {
   background-color: #ffffff;
   background-image: url("../img/woman-wrench.png");
   background-repeat: no-repeat;
-  background-position: -125px 45px;
+  background-position: -125px bottom;
   min-height: 374px;
   padding-left: 360px;
   padding-top: 45px;
+  padding-bottom: 50px;
   width: 650px;
   margin: 0 auto; }
   .landing-top h1 {
