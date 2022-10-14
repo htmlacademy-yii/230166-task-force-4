@@ -79,12 +79,4 @@ class Response extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return ResponseQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new ResponseQuery(get_called_class());
-    }
 }

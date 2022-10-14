@@ -63,14 +63,7 @@ class City extends \yii\db\ActiveRecord
         return $this->hasMany(User::class, ['city_id' => 'id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return CityQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CityQuery(get_called_class());
-    }
+
 
     public static function getNames(): array
     {

@@ -73,15 +73,6 @@ class Category extends \yii\db\ActiveRecord
         return $this->hasMany(UserCategory::class, ['category_id' => 'id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return CategoryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CategoryQuery(get_called_class());
-    }
-
     public static function getCategories()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'name', 'label');

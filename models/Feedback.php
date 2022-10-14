@@ -63,12 +63,4 @@ class Feedback extends \yii\db\ActiveRecord
         return $this->hasOne(Task::class, ['id' => 'task_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return FeedbackQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new FeedbackQuery(get_called_class());
-    }
 }

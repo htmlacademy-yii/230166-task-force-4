@@ -67,13 +67,4 @@ class UserCategory extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
-
-    /**
-     * {@inheritdoc}
-     * @return UserCategoryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new UserCategoryQuery(get_called_class());
-    }
 }
