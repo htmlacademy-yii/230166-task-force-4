@@ -2,7 +2,7 @@
 
 return [
     'user0' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 1,
         'email' => 'rartemeva@gmail.com',
         'name' => 'Спартак Андреевич Игнатьева',
@@ -14,7 +14,7 @@ return [
         'city_id' => 2,
     ],
     'user1' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 3,
         'email' => 'tarasov.timofej@inbox.ru',
         'name' => 'Юдина Кристина Романовна',
@@ -26,7 +26,7 @@ return [
         'city_id' => 6,
     ],
     'user2' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 2,
         'email' => 'valerian02@rambler.ru',
         'name' => 'Анисимоваа Мальвина Ивановна',
@@ -38,7 +38,7 @@ return [
         'city_id' => 9,
     ],
     'user3' => [
-        'is_customer' => 1,
+        'is_executor' => 1,
         'raiting' => 2,
         'email' => 'tarasova.konstantin@orlov.org',
         'name' => 'Силина Прохор Владимирович',
@@ -50,7 +50,7 @@ return [
         'city_id' => 5,
     ],
     'user4' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 1,
         'email' => 'stepan.kononov@narod.ru',
         'name' => 'Дьячкова Богдан Алексеевич',
@@ -62,7 +62,7 @@ return [
         'city_id' => 6,
     ],
     'user5' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 2,
         'email' => 'klim.gorbacev@mail.ru',
         'name' => 'Овчинникова Алексей Сергеевич',
@@ -74,7 +74,7 @@ return [
         'city_id' => 2,
     ],
     'user6' => [
-        'is_customer' => 1,
+        'is_executor' => 1,
         'raiting' => 5,
         'email' => 'maja.subbotin@ya.ru',
         'name' => 'Алексеев Адам Борисович',
@@ -86,7 +86,7 @@ return [
         'city_id' => 6,
     ],
     'user7' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 1,
         'email' => 'filatova.oleg@hotmail.com',
         'name' => 'Вячеслав Алексеевич Киселёв',
@@ -98,7 +98,7 @@ return [
         'city_id' => 4,
     ],
     'user8' => [
-        'is_customer' => 0,
+        'is_executor' => 0,
         'raiting' => 3,
         'email' => 'inessa80@narod.ru',
         'name' => 'Журавлёв Валериан Борисович',
@@ -110,7 +110,7 @@ return [
         'city_id' => 9,
     ],
     'user9' => [
-        'is_customer' => 1,
+        'is_executor' => 1,
         'raiting' => 5,
         'email' => 'pmatveev@hotmail.com',
         'name' => 'Владлен Львович Харитонов',

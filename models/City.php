@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "city".
@@ -69,5 +70,10 @@ class City extends \yii\db\ActiveRecord
     public static function find()
     {
         return new CityQuery(get_called_class());
+    }
+
+    public static function getNames(): array
+    {
+        return ArrayHelper::getColumn(self::find()->select('name')->asArray()->all(), 'name');
     }
 }

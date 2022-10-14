@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string|null $created_at
- * @property int|null $is_customer
+ * @property int|null $is_executor
  * @property float|null $raiting
  * @property string $email
  * @property string $name
@@ -29,6 +29,8 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public $password_repeat;
+
     /**
      * {@inheritdoc}
      */
@@ -43,15 +45,18 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'date_of_birth'], 'safe'],
-            [['is_customer', 'city_id'], 'integer'],
+            [['name', 'email', 'password', 'password_repeat', 'created_at', 'date_of_birth'], 'safe'],
+            [['is_executor', 'city_id'], 'integer'],
             [['raiting'], 'number'],
-            [['email', 'name', 'password'], 'required'],
-            [['email', 'name', 'telegram'], 'string', 'max' => 64],
+            [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
+            [['email', 'name', 'telegram'], 'string', 'max' => 64, 'message' => 'Максимальное количество символов 64'],
+            [['name'], 'string', 'min' => 2, 'message' => 'Минимальное количество символов 2'],
             [['password'], 'string', 'max' => 60],
-            [['avatar'], 'string', 'max' => 128],
-            [['phone'], 'string', 'max' => 11],
-            [['email'], 'unique'],
+            [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
+            [['password'], 'compare'],
+            [['avatar'], 'string', 'max' => 128, 'message' => 'Максимальное количество символов 128'],
+            [['phone'], 'match', 'pattern' => '/^[\d]{11}/i', 'message' => 'Номер телефона должен состоять из 11 цифр'],
+            [['email'], 'unique', 'message' => 'Пользователь с таким Email уже зарегистрирован'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
@@ -64,16 +69,17 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'created_at' => 'Created At',
-            'is_customer' => 'Is Customer',
-            'raiting' => 'Raiting',
+            'is_executor' => 'Я собираюсь откликаться на заказы',
+            'raiting' => 'Рейтинг',
             'email' => 'Email',
-            'name' => 'Name',
-            'password' => 'Password',
-            'avatar' => 'Avatar',
-            'date_of_birth' => 'Date Of Birth',
-            'phone' => 'Phone',
-            'telegram' => 'Telegram',
+            'name' => 'Ваше имя',
+            'password' => 'Пароль',
+            'avatar' => 'Аватар',
+            'date_of_birth' => 'Дата рождения',
+            'phone' => 'Телефон',
+            'telegram' => 'Телеграм',
             'city_id' => 'City ID',
+            'password_repeat' => 'Повтор пароля'
         ];
     }
 
