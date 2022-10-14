@@ -37,7 +37,7 @@ class Response extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['task_id', 'user_id', 'is_approved'], 'integer'],
             [['price'], 'number'],
-            [['message'], 'string', 'max' => 256],
+            [['message'], 'string', 'max' => 500],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];

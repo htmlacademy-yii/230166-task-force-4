@@ -45,16 +45,16 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'password', 'password_repeat', 'created_at', 'date_of_birth'], 'safe'],
+            [['created_at', 'date_of_birth'], 'safe'],
             [['is_executor', 'city_id'], 'integer'],
             [['raiting'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
-            [['email', 'name', 'telegram'], 'string', 'max' => 64, 'message' => 'Максимальное количество символов 64'],
+            [['email'], 'string', 'max' => 20, 'message' => 'Максимальное количество символов 20'],
+            [['name'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
+            [['password', 'avatar', 'telegram'], 'string', 'max' => 200, 'message' => 'Максимальное количество символов 200'],
             [['name'], 'string', 'min' => 2, 'message' => 'Минимальное количество символов 2'],
-            [['password'], 'string', 'max' => 60],
             [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
             [['password'], 'compare'],
-            [['avatar'], 'string', 'max' => 128, 'message' => 'Максимальное количество символов 128'],
             [['phone'], 'match', 'pattern' => '/^[\d]{11}/i', 'message' => 'Номер телефона должен состоять из 11 цифр'],
             [['email'], 'unique', 'message' => 'Пользователь с таким Email уже зарегистрирован'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],

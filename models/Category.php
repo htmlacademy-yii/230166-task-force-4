@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string|null $created_at
  * @property string $name
- * @property string|null $icon
+ * @property string|null $label
  *
  * @property Task[] $tasks
  * @property UserCategory[] $userCategories
@@ -34,8 +34,7 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['created_at'], 'safe'],
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 32],
-            [['icon'], 'string', 'max' => 128],
+            [['name', 'label'], 'string', 'max' => 40],
             [['name'], 'unique'],
         ];
     }
@@ -49,7 +48,7 @@ class Category extends \yii\db\ActiveRecord
             'id' => 'ID',
             'created_at' => 'Created At',
             'name' => 'Name',
-            'icon' => 'Icon',
+            'label' => 'Label',
         ];
     }
 

@@ -35,7 +35,7 @@ class City extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['name'], 'required'],
             [['lat', 'lng'], 'number'],
-            [['name'], 'string', 'max' => 32],
+            [['name'], 'string', 'max' => 100],
         ];
     }
 
