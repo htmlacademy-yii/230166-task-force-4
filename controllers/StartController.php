@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\helpers\ArrayHelper;
 use app\models\User;
 use app\models\City;
+use app\models\forms\LoginForm;
 
 class StartController extends Controller
 {
@@ -15,11 +16,24 @@ class StartController extends Controller
     {
         $this->layout = 'start';
 
-        return $this->render('index');
+        $loginForm = new LoginForm();
+
+        if (Yii::$app->request->getIsPost()) {
+            $loginForm->load(Yii::$app->request->post());
+
+            if ($loginForm->validate()) {
+                $user = $loginForm->getUser();
+                Yii::$app->user->login($user);
+
+                return $this->goHome();
+            }
+        }
+
+        return $this->render('index', compact('loginForm'));
     }
 
 
-    public function actionRegistration()
+    public function actionSignup()
     {
         $user = new User();
         $cities = ArrayHelper::map(City::find()->asArray()->all(), 'id', 'name');
@@ -31,10 +45,10 @@ class StartController extends Controller
                 $user->password = Yii::$app->security->generatePasswordHash($user->password);
                 $user->save(false);
                 $user = [];
-                $this->goHome();
+                $this->goBack();
             }
         }
 
-        return $this->render('registration', compact('user', 'cities'));
+        return $this->render('signup', compact('user', 'cities'));
     }
 }

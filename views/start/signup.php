@@ -12,22 +12,22 @@ use yii\widgets\ActiveForm;
             ]); ?>
                 <h3 class="head-main head-task">Регистрация нового пользователя</h3>
                 <div class="form-group">
-                    <?= $form->field($user, 'name', [
+                    <?= $form->field($user, 'name')
+                        ->textInput([
                             'labelOptions' => [
                                 'class' => 'control-label',
                             ],
-                        ])
-                        ->textInput();
+                        ]);
                     ?>
                 </div>
                 <div class="half-wrapper">
                     <div class="form-group">
-                        <?= $form->field($user, 'email', [
+                        <?= $form->field($user, 'email')
+                            ->textInput([
                                 'labelOptions' => [
                                     'class' => 'control-label',
-                                ],
-                            ])
-                            ->textInput();
+                                ]
+                            ]);
                         ?>
                     </div>
                     <div class="form-group">
@@ -42,22 +42,23 @@ use yii\widgets\ActiveForm;
                 </div>
                 <div class="half-wrapper">
                     <div class="form-group">
-                        <?= $form->field($user, 'password', [
+                        <?= $form->field($user, 'password')
+                            ->passwordInput([
                                 'labelOptions' => [
                                     'class' => 'control-label',
                                 ],
-                            ])
-                            ->passwordInput();
+                            ]);
                         ?>
                     </div>
                 </div>
                 <div class="half-wrapper">
                     <div class="form-group">
-                        <?= $form->field($user, 'password_repeat', [
-                            'labelOptions' => [
-                                'class' => 'control-label',
-                            ],
-                            ])->passwordInput();
+                        <?= $form->field($user, 'password_repeat')
+                            ->passwordInput([
+                                'labelOptions' => [
+                                    'class' => 'control-label',
+                                ],
+                            ]);
                         ?>
                     </div>
                 </div>
