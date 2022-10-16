@@ -9,22 +9,24 @@ use yii\widgets\ActiveForm;
     // 'template' => '{label}{input}{error}'
 ]); ?>
     <p>
-        <?= $form->field($loginForm, 'email')
-            ->textInput([
-                'class' => 'enter-form-email input input-middle',
+        <?= $form->field($loginForm, 'email', [
                 'labelOptions' => [
                     'class' => 'form-modal-description',
                 ],
+            ])
+            ->textInput([
+                'class' => 'enter-form-email input input-middle',
             ]);
         ?>
     </p>
     <p>
-        <?= $form->field($loginForm, 'password')
-            ->passwordInput([
-                'class' => 'enter-form-email input input-middle',
+        <?= $form->field($loginForm, 'password', [
                 'labelOptions' => [
                     'class' => 'form-modal-description',
                 ],
+            ])
+            ->passwordInput([
+                'class' => 'enter-form-email input input-middle',
             ]);
         ?>
     </p>

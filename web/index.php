@@ -10,5 +10,7 @@ require __DIR__ . '/functions.php';
 
 $config = require __DIR__ . '/../config/web.php';
 
+// var_dump(\Yii::$app->user);
+
 (new yii\web\Application($config))->run();
 

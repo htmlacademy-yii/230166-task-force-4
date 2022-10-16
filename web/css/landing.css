@@ -4,12 +4,15 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: normal;
-  color: #333438; }
-  body.landing {
-    background-image: url("../img/_polygon.png");
-    background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: -413px; }
+  color: #333438;
+}
+
+body.landing {
+  background-image: url("../img/_polygon.png");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: -413px;
+}
 
 html,
 body {
@@ -614,7 +617,7 @@ footer {
   padding-bottom: 14px;
   padding-right: 16px;
   padding-left: 16px;
-  margin-bottom: 35px; }
+}
 
 .multiple-select {
   padding-top: 14px;

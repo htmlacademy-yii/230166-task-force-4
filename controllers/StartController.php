@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\helpers\ArrayHelper;
 use app\models\User;
 use app\models\City;
@@ -44,7 +43,6 @@ class StartController extends Controller
             if ($user->validate()) {
                 $user->password = Yii::$app->security->generatePasswordHash($user->password);
                 $user->save(false);
-                $user = [];
                 $this->goBack();
             }
         }

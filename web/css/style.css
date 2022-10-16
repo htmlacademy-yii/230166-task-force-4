@@ -1280,10 +1280,8 @@ input[type=checkbox] {
 input[type=date] {
   height: 20px; }
 
-.registration-form {
-  padding-bottom: 122px; }
-  .registration-form .half-wrapper input, .registration-form .half-wrapper select {
-    width: 295px; }
+.registration-form .half-wrapper input, .registration-form .half-wrapper select {
+  width: 295px; }
 
 .registration-form input {
   width: 642px; }
