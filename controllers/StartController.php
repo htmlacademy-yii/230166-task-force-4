@@ -24,7 +24,7 @@ class StartController extends Controller
                 $user = $loginForm->getUser();
                 Yii::$app->user->login($user);
 
-                return $this->goHome();
+                return $this->redirect('/tasks');
             }
         }
 

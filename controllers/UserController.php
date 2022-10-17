@@ -3,15 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use app\models\User;
 
-class UserController extends Controller
+class UserController extends SecuredController
 {
     public function actionIndex()
     {
-        if ($id = \Yii::$app->user->getId()) {
+        if ($id = Yii::$app->user->getId()) {
             $user = User::findOne($id);
         }
 

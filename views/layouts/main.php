@@ -65,7 +65,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                         <a href="#" class="link">Связаться с нами</a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="link">Выход из системы</a>
+                        <a href="/user/logout" class="link">Выход из системы</a>
                     </li>
                 </ul>
             </div>

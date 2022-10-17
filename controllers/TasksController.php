@@ -2,14 +2,13 @@
 
 namespace app\controllers;
 
-use yii\web\Controller;
 use yii\data\Pagination;
 use Yii;
 use app\models\Task;
 use yii\web\NotFoundHttpException;
 use app\models\forms\FilterForm;
 
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
     const PAGE_SIZE = 3;
 
