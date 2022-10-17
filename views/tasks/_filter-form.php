@@ -1,7 +1,6 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use app\models\Category;
 
 ?>
 
@@ -20,7 +19,7 @@ use app\models\Category;
             <?= $form->field($filterForm, 'categories', [
                     'template' => '{input}'
                 ])
-                ->checkboxList(Category::getCategories(), [
+                ->checkboxList($categories, [
                     'class' => 'checkbox-wrapper',
                     'item' => function($index, $label, $name, $checked, $value) {
                         $checked = $checked ? 'checked' : '';

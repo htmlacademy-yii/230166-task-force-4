@@ -38,7 +38,7 @@ use yii\helpers\Html;
        <div class="right-card black">
 
             <!-- фильтры -->
-            <?= $this->render('_filter-form', compact('filterForm')) ?>
+            <?= $this->render('_filter-form', compact('filterForm', 'categories')) ?>
 
        </div>
     </div>

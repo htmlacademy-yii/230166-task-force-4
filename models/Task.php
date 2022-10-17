@@ -65,12 +65,12 @@ class Task extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'category_id' => 'Category ID',
+            'category_id' => 'Категория',
             'status' => 'Status',
-            'title' => 'Title',
-            'text' => 'Text',
-            'price' => 'Price',
-            'deadline' => 'Deadline',
+            'title' => 'Опишите суть работы',
+            'text' => 'Подробности задания',
+            'price' => 'Бюджет',
+            'deadline' => 'Срок исполнения',
         ];
     }
 

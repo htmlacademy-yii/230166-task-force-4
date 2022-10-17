@@ -7,6 +7,8 @@ use Yii;
 use app\models\Task;
 use yii\web\NotFoundHttpException;
 use app\models\forms\FilterForm;
+use app\models\Category;
+use app\models\City;
 
 class TasksController extends SecuredController
 {
@@ -34,6 +36,7 @@ class TasksController extends SecuredController
         $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
         $query = Task::getNewTasksQuery();
+        $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
@@ -48,7 +51,7 @@ class TasksController extends SecuredController
             ->limit($pages->limit)
             ->all();
 
-        return $this->render('index', compact('tasks', 'pages', 'filterForm'));
+        return $this->render('index', compact('tasks', 'pages', 'filterForm', 'categories'));
     }
 
     public function actionView($id)
@@ -60,6 +63,27 @@ class TasksController extends SecuredController
         }
 
         return $this->render('view', compact('task'));
+    }
+
+    public function actionAddTask()
+    {
+        $task = new Task();
+        $categories = Category::getMapIdsToLabels();
+        $city = City::findOne(1);
+        $currentUserId = Yii::$app->user->identity->id;
+
+        if (Yii::$app->request->getIsPost()) {
+            $task->load(Yii::$app->request->post());
+
+            if ($task->validate()) {
+                $task->customer_id = $currentUserId;
+                $task->save(false);
+
+                return $this->redirect('/tasks/view/' . $task['id']);
+            }
+        }
+
+        return $this->render('add-task', compact('task', 'city', 'categories'));
     }
 
 }
