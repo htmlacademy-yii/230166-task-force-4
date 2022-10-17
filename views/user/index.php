@@ -9,7 +9,13 @@
         </h3>
         <div class="user-card">
             <div class="photo-rate">
-                <img class="card-photo" src="../img/man-glasses.png" width="191" height="190" alt="Фото пользователя">
+                <?= Html::img(Yii::getAlias('@web').'/img/man-glasses.png', [
+                        'class' => 'card-photo',
+                        'width' => '191',
+                        'height' => '190',
+                        'alt' => 'Фото пользователя'
+                    ]);
+                ?>
                 <div class="card-rate">
                     <div class="stars-rating big"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
                     <span class="current-rate"><?= Html::encode($user['rating']) ?></span>
