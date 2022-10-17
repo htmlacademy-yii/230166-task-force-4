@@ -9,15 +9,18 @@
             <?= Html::encode($task['price']) ?> ₽
         </p>
     </div>
+
     <p class="info-text">
         <span class="current-time">
             <?= get_relative_date(Html::encode($task['created_at'])) ?>
         </span>
         назад
     </p>
+
     <p class="task-text">
         <?= Html::encode($task['text'])?>
     </p>
+
     <div class="footer-task">
         <p class="info-text town-text">
             <?= Html::encode($task['city']) ?>

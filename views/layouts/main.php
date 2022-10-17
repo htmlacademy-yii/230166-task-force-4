@@ -31,7 +31,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
 <header class="page-header">
     <nav class="main-nav">
         <a href='/' class="header-logo">
-            <img class="logo-image" src="../img/logotype.png" width=227 height=60 alt="taskforce">
+            <?= Html::img(Yii::getAlias('@web').'/img/logotype.png', [
+                    'class' => 'logo-image',
+                    'width' => '227',
+                    'height' => '60',
+                    'alt' => 'taskforce'
+                ]);
+            ?>
         </a>
         <div class="nav-wrapper">
             <ul class="nav-list">
@@ -52,7 +58,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
     </nav>
     <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="../img/man-glasses.png" width="55" height="55" alt="Аватар">
+            <?= Html::img(Yii::getAlias('@web').'/img/man-glasses.png', [
+                    'class' => 'user-photo',
+                    'width' => '55',
+                    'height' => '55',
+                    'alt' => 'Аватар'
+                ]);
+            ?>
         </a>
         <div class="user-menu">
             <p class="user-name">Василий</p>

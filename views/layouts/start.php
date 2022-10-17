@@ -108,10 +108,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                 </div>
                 <div class="page-footer__copyright">
                     <a href="https://htmlacademy.ru">
-                        <img class="copyright-logo"
-                                src="./img/academy-logo.png"
-                                width="185" height="63"
-                                alt="Логотип HTML Academy">
+                        <?= Html::img(Yii::getAlias('@web').'/img/academy-logo.png', [
+                                'class' => 'copyright-logo',
+                                'width' => '185',
+                                'height' => '63',
+                                'alt' => 'Логотип HTML Academy'
+                            ]);
+                        ?>
                     </a>
                 </div>
             </div>

@@ -9,7 +9,7 @@ use yii\helpers\Html;
 
         <!-- список задач -->
         <?php foreach ($tasks as $task) : ?>
-            <?= $this->render('_task', compact('task')) ?>
+            <?= $this->render('_task-card', compact('task')) ?>
         <? endforeach; ?>
 
         <!-- пагинация -->
