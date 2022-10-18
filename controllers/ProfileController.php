@@ -6,7 +6,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use app\models\User;
 
-class UserController extends SecuredController
+class ProfileController extends SecuredController
 {
     public function actionIndex()
     {
@@ -21,10 +21,21 @@ class UserController extends SecuredController
         return $this->render('index', compact('user'));
     }
 
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionSettings()
+    {
+        return $this->render('settings');
+    }
+
+    public function actionTasks()
+    {
+        return $this->render('tasks');
     }
 
 }

@@ -5,6 +5,7 @@
 
 use app\assets\AppAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 
@@ -42,16 +43,16 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
         <div class="nav-wrapper">
             <ul class="nav-list">
                 <li class="list-item list-item--active">
-                    <a class="link link--nav" >Новое</a>
+                    <?= Html::a('Новое', Url::to('/tasks', true), ['class' => 'link link--nav']) ?>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="link link--nav">Мои задания</a>
+                    <?= Html::a('Мои задания', Url::to('/profile/tasks', true), ['class' => 'link link--nav']) ?>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="link link--nav">Создать задание</a>
+                    <?= Html::a('Создать задание', Url::to('/tasks/add-task', true), ['class' => 'link link--nav']) ?>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="link link--nav">Настройки</a>
+                    <?= Html::a('Настройки', Url::to('/profile/settings', true), ['class' => 'link link--nav']) ?>
                 </li>
             </ul>
         </div>
@@ -71,13 +72,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
             <div class="popup-head">
                 <ul class="popup-menu">
                     <li class="menu-item">
-                        <a href="#" class="link">Настройки</a>
+                        <?= Html::a('Настройки', Url::to('/profile/settings', true), ['class' => 'link']) ?>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="link">Связаться с нами</a>
+                        <?= Html::a('Связаться с нами', Url::to('/', true), ['class' => 'link']) ?>
                     </li>
                     <li class="menu-item">
-                        <a href="/user/logout" class="link">Выход из системы</a>
+                        <?= Html::a('Выход из системы', Url::to('/profile/logout', true), ['class' => 'link']) ?>
                     </li>
                 </ul>
             </div>
