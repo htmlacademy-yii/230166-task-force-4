@@ -4,8 +4,8 @@
         <?= $this->render('_landing-center'); ?>
     </div>
 </main>
-<div class="overlay"></div>
 
 <?= $this->render('_login-modal', compact('loginForm')) ?>
 
+<div class="overlay"></div>
 

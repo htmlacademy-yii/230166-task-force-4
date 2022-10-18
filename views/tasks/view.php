@@ -72,3 +72,5 @@
 <?= $this->render('_add-response-modal'); ?>
 <?= $this->render('_complete-task-modal'); ?>
 <?= $this->render('_refusal-modal'); ?>
+
+<div class="overlay"></div>

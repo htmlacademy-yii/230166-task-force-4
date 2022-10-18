@@ -40,6 +40,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                 ]);
             ?>
         </a>
+        <?php if (!Yii::$app->user->isGuest) : ?>
         <div class="nav-wrapper">
             <ul class="nav-list">
                 <li class="list-item list-item--active">
@@ -56,7 +57,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                 </li>
             </ul>
         </div>
+        <? endif; ?>
     </nav>
+    <?php if (!Yii::$app->user->isGuest) : ?>
     <div class="user-block">
         <a href="#">
             <?= Html::img(Yii::getAlias('@web').'/img/man-glasses.png', [
@@ -84,6 +87,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
             </div>
         </div>
     </div>
+    <? endif; ?>
 </header>
 
 <?= $content ?>
