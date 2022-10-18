@@ -1,10 +1,11 @@
 <?php
     use yii\helpers\Html;
+    use yii\helpers\Url;
 ?>
 
 <div class="task-card">
     <div class="header-task">
-        <a  href="#" class="link link--block link--big"><?= Html::encode($task['title']) ?></a>
+        <?= Html::a(Html::encode($task['title']), Url::toRoute(['/tasks/view/', 'id' => $task['id']]), ['class' => 'link link--block link--big']) ?>
         <p class="price price--task">
             <?= Html::encode($task['price']) ?> ₽
         </p>

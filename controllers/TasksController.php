@@ -6,13 +6,41 @@ use yii\data\Pagination;
 use Yii;
 use app\models\Task;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use app\models\forms\FilterForm;
 use app\models\Category;
 use app\models\City;
+use app\models\User;
 
 class TasksController extends SecuredController
 {
     const PAGE_SIZE = 3;
+
+    // public function behaviors()
+    // {
+    //     return [
+    //         'access' => [
+    //             'class' => AccessControl::class,
+    //             'rules' => [
+    //                 [
+    //                     'allow' => false,
+    //                     'actions' => [''],
+    //                     'matchCallback' => function($rule, $action)
+    //                     {
+    //                         $id = Yii::$app->user->getId();
+
+    //                         if ($id) {
+    //                             $user = User::findOne($id);
+    //                             return $user->is_executor;
+    //                         }
+
+    //                         return false;
+    //                     }
+    //                 ]
+    //             ]
+    //         ]
+    //     ];
+    // }
 
     /**
      * {@inheritdoc}
