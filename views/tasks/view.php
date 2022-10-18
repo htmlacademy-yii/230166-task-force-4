@@ -68,3 +68,7 @@
         </div>
     </div>
 </main>
+
+<?= $this->render('_add-response-modal'); ?>
+<?= $this->render('_complete-task-modal'); ?>
+<?= $this->render('_refusal-modal'); ?>
