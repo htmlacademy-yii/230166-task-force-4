@@ -29,8 +29,6 @@
         <p class="info-text category-text">
             <?= Html::encode($task['category_label']) ?>
         </p>
-        <a href="#" class="button button--black">
-            Смотреть Задание
-        </a>
+        <?= Html::a('Смотреть Задание', Url::toRoute(['/tasks/view/', 'id' => $task['id']]), ['class' => 'button button--black']) ?>
     </div>
 </div>
