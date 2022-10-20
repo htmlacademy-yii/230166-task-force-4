@@ -40,7 +40,7 @@ class FilterForm extends Model
     public function rules(): array
     {
         return [
-            ['categories', 'each', 'rule' => ['exist', 'targetClass' => Category::class, 'targetAttribute' => ['categories' => 'name']]],
+            ['categories', 'each', 'rule' => ['exist', 'targetClass' => Category::class, 'targetAttribute' => ['categories' => 'id']]],
             ['noExecutor', 'boolean'],
             ['period', 'in', 'range' => array_keys($this->periodAttributeLabels())]
         ];
@@ -51,7 +51,7 @@ class FilterForm extends Model
         $query = Task::getNewTasksQuery();
 
         if ($this->categories) {
-            $query->andWhere(['category.name' => $this->categories]);
+            $query->andWhere(['category.id' => $this->categories]);
         }
 
         if ($this->noExecutor) {

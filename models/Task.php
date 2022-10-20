@@ -146,7 +146,7 @@ class Task extends \yii\db\ActiveRecord
         ->join('INNER JOIN', 'category', 'task.category_id = category.id')
         ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
         ->join('INNER JOIN', 'city', 'user.city_id = city.id')
-        ->where(['task.status' => BaseTask::STATUS_NEW])
+        ->where(['task.status' => 'new'])
         ->asArray();
     }
 }

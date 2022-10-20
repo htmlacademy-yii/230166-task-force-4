@@ -10,11 +10,12 @@ use yii\filters\AccessControl;
 use app\models\forms\FilterForm;
 use app\models\Category;
 use app\models\City;
+use app\models\Response;
 use app\models\User;
 
 class TasksController extends SecuredController
 {
-    const PAGE_SIZE = 3;
+
 
     // public function behaviors()
     // {
@@ -61,6 +62,7 @@ class TasksController extends SecuredController
      */
     public function actionIndex()
     {
+        $pageSize = 2;
         $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
         $query = Task::getNewTasksQuery();
@@ -74,10 +76,14 @@ class TasksController extends SecuredController
             }
         }
 
-        $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => self::PAGE_SIZE]);
-        $tasks = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
+        $pages = new Pagination([
+            'totalCount' => $query->count(),
+            'pageSize' => $pageSize,
+            'forcePageParam' => false,
+            'pageSizeParam' => false
+        ]);
+
+        $tasks = $query->offset($pages->offset)->limit($pages->limit)->all();
 
         return $this->render('index', compact('tasks', 'pages', 'filterForm', 'categories'));
     }
@@ -89,6 +95,9 @@ class TasksController extends SecuredController
         if (!$task) {
             throw new NotFoundHttpException("Контакт с ID $id не найден");
         }
+
+        // $responses = Response::find()->where(['task_id' => $task['id']])->asArray()->all();
+        // var_dump($responses);
 
         return $this->render('view', compact('task'));
     }

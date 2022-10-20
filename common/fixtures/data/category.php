@@ -2,43 +2,35 @@
 
 return [
     'category0' => [
-        'name' => 'ipsa',
-        'label' => 'atque',
+        'name' => 'courier',
+        'label' => 'Курьерские услуги',
     ],
     'category1' => [
-        'name' => 'maiores',
-        'label' => 'et',
+        'name' => 'clean',
+        'label' => 'Уборка',
     ],
     'category2' => [
-        'name' => 'quis',
-        'label' => 'maxime',
+        'name' => 'cargo',
+        'label' => 'Переезды',
     ],
     'category3' => [
-        'name' => 'accusamus',
-        'label' => 'deleniti',
+        'name' => 'Компьютерная помощь',
+        'label' => 'neo',
     ],
     'category4' => [
-        'name' => 'sint',
-        'label' => 'tempore',
+        'name' => 'flat',
+        'label' => 'Ремонт квартирный',
     ],
     'category5' => [
-        'name' => 'esse',
-        'label' => 'nemo',
+        'name' => 'repair',
+        'label' => 'Ремонт техники',
     ],
     'category6' => [
-        'name' => 'cupiditate',
-        'label' => 'rerum',
+        'name' => 'beauty',
+        'label' => 'Красота',
     ],
     'category7' => [
-        'name' => 'delectus',
-        'label' => 'esse',
-    ],
-    'category8' => [
-        'name' => 'tempora',
-        'label' => 'porro',
-    ],
-    'category9' => [
-        'name' => 'in',
-        'label' => 'et',
+        'name' => 'photo',
+        'label' => 'Фото',
     ],
 ];

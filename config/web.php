@@ -27,7 +27,7 @@ $config = [
             'loginUrl' => ['login'],
         ],
         'errorHandler' => [
-            'errorAction' => '',
+            'errorAction' => 'error/index',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -51,8 +51,9 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
+                'tasks/<id:\d+>' => 'tasks/view',
+                'tasks' => 'tasks/index',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<id:\d+>' => '<controller>',
             ],
         ],
     ],

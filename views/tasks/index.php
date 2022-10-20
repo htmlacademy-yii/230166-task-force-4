@@ -28,7 +28,7 @@ use yii\helpers\Html;
                     'nextPageCssClass' => 'pagination-item mark',
                     'prevPageLabel' => '',
                     'nextPageLabel' => '',
-                    'maxButtonCount' => 10
+                    'maxButtonCount' => 3
                 ]);
             ?>
         </div>

@@ -7,7 +7,7 @@ return [
     'is_executor' => $faker->randomElement([0, 1]),
     'rating' => $faker->numberBetween(1,5),
     'email' => $faker->unique()->email(),
-    'name' => $faker->name() ,
+    'name' => $faker->firstName() ,
     'password' => $faker->password(),
     'avatar' => $faker->randomElement([
         '@app/web/img/avatars/1.png',
