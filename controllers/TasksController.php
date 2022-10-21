@@ -122,5 +122,4 @@ class TasksController extends SecuredController
 
         return $this->render('add-task', compact('task', 'city', 'categories'));
     }
-
 }

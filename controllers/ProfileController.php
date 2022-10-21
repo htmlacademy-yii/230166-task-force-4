@@ -33,9 +33,6 @@ class ProfileController extends SecuredController
         return $this->render('settings');
     }
 
-    public function actionTasks()
-    {
-        return $this->render('tasks');
-    }
+
 
 }

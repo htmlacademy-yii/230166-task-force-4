@@ -46,7 +46,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
             <?= Menu::widget([
                     'items' => [
                         ['label' => 'Новое', 'url' => ['/tasks/index']],
-                        ['label' => 'Мои задания', 'url' => ['/profile/tasks']],
+                        ['label' => 'Мои задания', 'url' => ['/my-task/new']],
                         ['label' => 'Создать задание', 'url' => ['/tasks/add-task']],
                         ['label' => 'Настройки', 'url' => ['/profile/settings']],
                     ],
