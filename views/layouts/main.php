@@ -6,6 +6,7 @@
 use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\Menu;
 
 AppAsset::register($this);
 
@@ -42,20 +43,25 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
         </a>
         <?php if (!Yii::$app->user->isGuest) : ?>
         <div class="nav-wrapper">
-            <ul class="nav-list">
-                <li class="list-item list-item--active">
-                    <?= Html::a('Новое', Url::to('/tasks', true), ['class' => 'link link--nav']) ?>
-                </li>
-                <li class="list-item">
-                    <?= Html::a('Мои задания', Url::to('/profile/tasks', true), ['class' => 'link link--nav']) ?>
-                </li>
-                <li class="list-item">
-                    <?= Html::a('Создать задание', Url::to('/tasks/add-task', true), ['class' => 'link link--nav']) ?>
-                </li>
-                <li class="list-item">
-                    <?= Html::a('Настройки', Url::to('/profile/settings', true), ['class' => 'link link--nav']) ?>
-                </li>
-            </ul>
+            <?= Menu::widget([
+                    'items' => [
+                        ['label' => 'Новое', 'url' => ['/tasks/index']],
+                        ['label' => 'Мои задания', 'url' => ['/profile/tasks']],
+                        ['label' => 'Создать задание', 'url' => ['/tasks/add-task']],
+                        ['label' => 'Настройки', 'url' => ['/profile/settings']],
+                    ],
+                    'options' => [
+                        'class' => 'nav-list'
+                    ],
+                    'itemOptions' => [
+                        'class' => 'list-item'
+                    ],
+                    'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
+                    'activateItems' => true,
+                    'activateParents' => true,
+                    'activeCssClass' => 'list-item--active',
+                ]);
+            ?>
         </div>
         <? endif; ?>
     </nav>
