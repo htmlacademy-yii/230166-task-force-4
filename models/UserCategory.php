@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "user_category".
  *
  * @property int $id
+ * @property string|null $created_at
  * @property int|null $user_id
  * @property int|null $category_id
  *
@@ -30,7 +31,9 @@ class UserCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['created_at'], 'safe'],
             [['user_id', 'category_id'], 'integer'],
+            [['user_id', 'category_id'], 'unique', 'targetAttribute' => ['user_id', 'category_id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
         ];
@@ -43,6 +46,7 @@ class UserCategory extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'created_at' => 'Created At',
             'user_id' => 'User ID',
             'category_id' => 'Category ID',
         ];
@@ -51,7 +55,7 @@ class UserCategory extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Category]].
      *
-     * @return \yii\db\ActiveQuery|CategoryQuery
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
      */
     public function getCategory()
     {
@@ -61,7 +65,7 @@ class UserCategory extends \yii\db\ActiveRecord
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery|UserQuery
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
      */
     public function getUser()
     {

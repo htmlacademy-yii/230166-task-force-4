@@ -20,4 +20,5 @@ abstract class SecuredController extends Controller
             ]
         ];
     }
+
 }

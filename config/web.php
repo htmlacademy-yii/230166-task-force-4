@@ -53,6 +53,7 @@ $config = [
             'rules' => [
                 'tasks/<id:\d+>' => 'tasks/view',
                 'tasks' => 'tasks/index',
+                'settings' => '/settings/index',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
             ],
         ],

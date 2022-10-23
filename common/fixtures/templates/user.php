@@ -19,5 +19,6 @@ return [
     'date_of_birth' => $faker->dateTimeBetween('-100 years', '-2 years')->format('Y-m-d'),
     'phone' => substr($faker->e164PhoneNumber, 1, 11),
     'telegram' => $faker->lexify('@???????'),
+    'description' => $faker->paragraph(),
     'city_id' => $faker->numberBetween(1,10)
 ];

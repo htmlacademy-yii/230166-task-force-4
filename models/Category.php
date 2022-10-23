@@ -72,8 +72,29 @@ class Category extends \yii\db\ActiveRecord
         return $this->hasMany(UserCategory::class, ['category_id' => 'id']);
     }
 
+    public static function getUserCategoriesById($userId)
+    {
+        return Category::find()
+        ->join('INNER JOIN', 'user_category', 'user_category.category_id = category.id')
+        ->join('INNER JOIN', 'user', 'user_category.user_id = user.id')
+        ->where(['user.id' => $userId])
+        ->asArray()
+        ->all();
+    }
+
     public static function getMapIdsToLabels()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'label');
+    }
+
+    public static function getUserCategoriesIds($userId): ?array
+    {
+        $userCategories = self::getUserCategoriesById($userId);
+
+        if ($userCategories) {
+            return ArrayHelper::getColumn($userCategories, 'id');
+        }
+
+        return null;
     }
 }

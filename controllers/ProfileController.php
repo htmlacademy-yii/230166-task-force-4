@@ -27,12 +27,4 @@ class ProfileController extends SecuredController
 
         return $this->goHome();
     }
-
-    public function actionSettings()
-    {
-        return $this->render('settings');
-    }
-
-
-
 }

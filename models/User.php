@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
  * @property string|null $date_of_birth
  * @property string|null $phone
  * @property string|null $telegram
+ * @property string|null $description
  * @property int|null $city_id
  *
  * @property City $city
@@ -50,14 +51,13 @@ class User extends ActiveRecord implements IdentityInterface
             [['is_executor', 'city_id'], 'integer'],
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
-            [['email'], 'string', 'max' => 20, 'message' => 'Максимальное количество символов 20'],
-            [['name'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
+            [['name', 'email'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
             [['password', 'avatar', 'telegram'], 'string', 'max' => 200, 'message' => 'Максимальное количество символов 200'],
-            [['name'], 'string', 'min' => 2, 'message' => 'Минимальное количество символов 2'],
             [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
             [['password'], 'compare'],
             [['phone'], 'match', 'pattern' => '/^[\d]{11}/i', 'message' => 'Номер телефона должен состоять из 11 цифр'],
             [['email'], 'unique', 'message' => 'Пользователь с таким Email уже зарегистрирован'],
+            [['description'], 'string', 'max' => 1000, 'message' => 'Максимальное количество символов 1000'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
@@ -78,7 +78,8 @@ class User extends ActiveRecord implements IdentityInterface
             'avatar' => 'Аватар',
             'date_of_birth' => 'Дата рождения',
             'phone' => 'Телефон',
-            'telegram' => 'Телеграм',
+            'telegram' => 'Telegram',
+            'description' => 'Информация о себе',
             'city_id' => 'City ID',
             'password_repeat' => 'Повтор пароля'
         ];

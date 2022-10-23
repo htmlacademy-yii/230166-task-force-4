@@ -43,7 +43,7 @@ class StartController extends Controller
             if ($user->validate()) {
                 $user->password = Yii::$app->security->generatePasswordHash($user->password);
                 $user->save(false);
-                $this->goBack();
+                $this->goHome();
             }
         }
 

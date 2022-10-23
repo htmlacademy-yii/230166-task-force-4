@@ -48,7 +48,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                         ['label' => 'Новое', 'url' => ['/tasks/index']],
                         ['label' => 'Мои задания', 'url' => ['/my-task/new']],
                         ['label' => 'Создать задание', 'url' => ['/tasks/add-task']],
-                        ['label' => 'Настройки', 'url' => ['/profile/settings']],
+                        ['label' => 'Настройки', 'url' => ['/settings/index']],
                     ],
                     'options' => [
                         'class' => 'nav-list'

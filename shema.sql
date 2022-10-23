@@ -34,7 +34,8 @@ CREATE TABLE user (
   avatar VARCHAR(200) NULL DEFAULT NULL,
   date_of_birth DATE DEFAULT NULL,
   phone CHAR(11) NULL DEFAULT NULL,
-  telegram CHAR(200) NULL DEFAULT NULL,
+  telegram VARCHAR(200) NULL DEFAULT NULL,
+  description VARCHAR(1000) NULL DEFAULT NULL,
   city_id INT NULL DEFAULT NULL,
 
   UNIQUE INDEX user_email (email),
@@ -63,11 +64,14 @@ CREATE TABLE task (
 
 CREATE TABLE user_category (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_id INT,
   category_id INT,
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE,
+
+  CONSTRAINT user_category UNIQUE (user_id, category_id)
 );
 
 CREATE TABLE response (

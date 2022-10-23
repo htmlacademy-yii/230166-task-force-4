@@ -14,8 +14,8 @@ return [
         'label' => 'Переезды',
     ],
     'category3' => [
-        'name' => 'Компьютерная помощь',
-        'label' => 'neo',
+        'name' => 'neo',
+        'label' => 'Компьютерная помощь',
     ],
     'category4' => [
         'name' => 'flat',
