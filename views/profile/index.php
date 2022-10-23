@@ -9,7 +9,7 @@
         </h3>
         <div class="user-card">
             <div class="photo-rate">
-                <?= Html::img(Yii::getAlias('@web').'/img/man-glasses.png', [
+                <?= Html::img(Yii::$app->user->identity->avatar, [
                         'class' => 'card-photo',
                         'width' => '191',
                         'height' => '190',

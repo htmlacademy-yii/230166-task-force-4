@@ -68,7 +68,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
     <?php if (!Yii::$app->user->isGuest) : ?>
     <div class="user-block">
         <a href="<?= Url::to('/profile', true) ?>">
-            <?= Html::img(Yii::getAlias('@web').'/img/man-glasses.png', [
+            <?= Html::img(Yii::$app->user->identity->avatar, [
                     'class' => 'user-photo',
                     'width' => '55',
                     'height' => '55',
