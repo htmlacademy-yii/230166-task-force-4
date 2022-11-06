@@ -5,6 +5,7 @@
 
 use app\assets\StartAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 StartAsset::register($this);
 
@@ -57,16 +58,20 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                             </g>
                         </svg>
                     </a>
-                <p>Работа там, где ты!</p>
+                    <p>Работа там, где ты!</p>
                 </div>
+
+
                 <div class="header__account--index">
-                    <a href="#" class="header__account-enter open-modal" data-for="enter-form">
-                        <span>Вход</span></a>
-                    или
-                    <a href="start/signup" class="header__account-registration">
-                        Регистрация
-                    </a>
+                    <?php if(Yii::$app->user->isGuest) : ?>
+                        <a class="header__account-enter open-modal" href="#" data-for="enter-form"><span>Вход</span></a>
+                        или
+                        <?= Html::a('Регистрация', Url::to('/signup'), ['class' => 'header__account-registration']) ?>
+                    <? else : ?>
+                        <?= Html::a('Новые задачи', Url::to('/tasks', true), ['class' => 'header__account-enter']) ?>
+                    <? endif; ?>
                 </div>
+
             </div>
         </header>
 
@@ -84,28 +89,32 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                         mail@taskforce.com
                     </p>
                 </div>
-                <div class="page-footer__links">
-                    <ul class="links__list">
-                        <li class="links__item">
-                            <a href="">Задания</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="">Мой профиль</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="">Исполнители</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="">Регистрация</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="">Создать задание</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="">Справка</a>
-                        </li>
-                    </ul>
-                </div>
+
+                <?php if (!Yii::$app->user->isGuest) : ?>
+                    <div class="page-footer__links">
+                        <ul class="links__list">
+                            <li class="links__item">
+                                <?= Html::a('Задания', Url::to('/tasks')) ?>
+                            </li>
+                            <li class="links__item">
+                                <?= Html::a('Мой профиль', Url::to(['/profile', 'id' => Yii::$app->user->getId()])) ?>
+                            </li>
+                            <li class="links__item">
+                                <?= Html::a('Исполнители', Url::to('/')) ?>
+                            </li>
+                            <li class="links__item">
+                                <?= Html::a('Регистрация', Url::to('/signup')) ?>
+                            </li>
+                            <li class="links__item">
+                                <?= Html::a('Создать задание', Url::to('/add-task')) ?>
+                            </li>
+                            <li class="links__item">
+                                <?= Html::a('Справка', Url::to('/')) ?>
+                            </li>
+                        </ul>
+                    </div>
+                <? endif; ?>
+
                 <div class="page-footer__copyright">
                     <a href="https://htmlacademy.ru">
                         <?= Html::img(Yii::getAlias('@web').'/img/academy-logo.png', [

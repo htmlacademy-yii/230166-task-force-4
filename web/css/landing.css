@@ -2068,10 +2068,11 @@ footer {
   color: #ffffff; }
 
 .logo-image--index {
-  margin-top: 17px;
-  padding-left: 18px;
+  display: block;
   height: 114px;
-  fill: #ffffff; }
+  margin: 0 auto;
+  fill: #ffffff;
+}
 
 .header__account--index {
   font-family: "Myriad Pro", sans-serif;
@@ -2432,23 +2433,12 @@ footer {
     font-size: 20px;
     margin-top: 17px;
     margin-bottom: 16px; }
-  .form-modal form div {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    margin: 0; }
   .form-modal .form-modal-description {
     text-transform: uppercase;
     color: rgba(57, 57, 57, 0.86);
     margin-bottom: 7px; }
-  .form-modal button {
-    float: right; }
 
-.enter-form {
+  .enter-form {
   display: none; }
 
 .response-form {
@@ -2483,6 +2473,7 @@ footer {
   position: absolute;
   top: 15px;
   right: 15px;
+  z-index: 1;
   width: 27px;
   height: 27px;
   font-size: 0;
@@ -2587,3 +2578,26 @@ footer {
 .has-error div {
   color: #FF116E; }
 /*# sourceMappingURL=style.css.map */
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#login-form input {
+  width: 260px;
+}
+
+.page-header--index {
+  position: relative;
+}
+
+.page-header__logo--index {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  width: 378px;
+  margin: 0 auto;
+  margin-left: -189px;
+}

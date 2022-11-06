@@ -1,3 +1,9 @@
+<?php
+
+use yii\helpers\Url;
+
+?>
+
 <section class="pop-up pop-up--refusal pop-up--close">
     <div class="pop-up--wrapper">
         <h4>Отказ от задания</h4>
@@ -6,7 +12,7 @@
             Вы собираетесь отказаться от выполнения этого задания.<br>
             Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
         </p>
-        <a class="button button--pop-up button--orange">Отказаться</a>
+        <a href="<?= Url::toRoute(['/tasks/refusal/', 'id' => $task['id']]); ?>" class="button button--pop-up button--orange">Отказаться</a>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>

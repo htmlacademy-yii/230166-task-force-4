@@ -1,6 +1,7 @@
 <?php
 
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 ?>
 
@@ -57,7 +58,7 @@ use yii\widgets\ActiveForm;
             ?>
         </div>
 
-        <input type="submit" class="button button--blue" value="Искать">
+        <?= Html::submitButton('Искать', ['class' => 'button button--blue']) ?>
 
     <?php ActiveForm::end(); ?>
 </div>

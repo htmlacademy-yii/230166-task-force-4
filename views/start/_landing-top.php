@@ -1,3 +1,10 @@
+<?php
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+?>
+
 <div class="landing-top">
     <h1>
         Работа для всех.<br>
@@ -8,5 +15,5 @@
         У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
         Быстро, безопасно и с гарантией. Просто, как раз, два, три.
     </p>
-    <button class="button">Создать аккаунт</button>
+    <?= Html::a('Создать аккаунт', Url::to('/signup'), ['class' => 'button']) ?>
 </div>

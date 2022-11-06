@@ -1,5 +1,10 @@
 <?php
+    use Yii;
     use yii\helpers\Html;
+    use yii\helpers\ArrayHelper;
+
+    $price = ArrayHelper::getValue($task, 'price');
+    $text = ArrayHelper::getValue($task, 'text');
 ?>
 
 <main class="main-content container">
@@ -8,34 +13,74 @@
             <h3 class="head-main">
                 <?= Html::encode($task['title']) ?>
             </h3>
-            <p class="price price--big">
-                <?= Html::encode($task['price']) ?> ₽
+
+            <?php if($price) : ?>
+                <p class="price price--big">
+                    <?= Html::encode($price) ?>&nbsp;<span class="regular-font">₽</span>
+                </p>
+            <? endif; ?>
+        </div>
+
+        <?php if($text) : ?>
+            <p class="task-description">
+                <?= Html::encode($text) ?>
             </p>
-        </div>
+        <? endif; ?>
 
-        <p class="task-description">
-            <?= Html::encode($task['text']) ?>
-        </p>
+        <?php if(ArrayHelper::getValue($currentUser, 'is_executor') && !ArrayHelper::getValue($task, 'executor_id')) : ?>
+            <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
+        <? endif; ?>
 
-        <a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>
-        <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
-        <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
+        <?php if(ArrayHelper::getValue($currentUser, 'is_executor') && ArrayHelper::getValue($task, 'executor_id') === Yii::$app->user->getId()) : ?>
+            <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
+        <? endif; ?>
 
-        <div class="task-map">
-            <?= Html::img(Yii::getAlias('@web').'/img/map.png', [
-                    'class' => 'map',
-                    'width' => '725',
-                    'height' => '346',
-                    'alt' => 'Новый арбат, 23, к. 1'
-                ]);
-            ?>
-            <p class="map-address town">Москва</p>
-            <p class="map-address">Новый арбат, 23, к. 1</p>
-        </div>
+        <?php if(!ArrayHelper::getValue($currentUser, 'is_executor') && ArrayHelper::getValue($task, 'customer_id') === Yii::$app->user->getId()) : ?>
+            <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
+        <? endif; ?>
+
+        <?php if (ArrayHelper::getValue($task, 'city')) : ?>
+            <div class="task-map">
+                <script type="text/javascript">
+                    ymaps.ready(init);
+                    var myMap;
+                    function init(){
+                        var myMap = new ymaps.Map("map", {
+                            center: [<?= ArrayHelper::getValue($task, 'city.lat') ?>, <?= ArrayHelper::getValue($task, 'city.lng') ?>],
+                            zoom: 10,
+                            scrollZoom: false,
+                            controls: [],
+                        });
+                    }
+                </script>
+                <div id="map" style="width: 725px; height: 346px;"></div>
+                <?php if (ArrayHelper::getValue($task, 'city.address')) : ?>
+                    <?= Html::encode($task['city']['address']) ?>
+                <? else : ?>
+                    <p class="map-address town"><?= Html::encode($task['city']['name']) ?></p>
+                <? endif; ?>
+            </div>
+        <? endif; ?>
+
+        <?php if (ArrayHelper::getValue($currentUser, 'id') == ArrayHelper::getValue($task, 'customer_id')) : ?>
+            <h4 class="head-regular">Отклики на задание</h4>
+            <?php if ($responses) : ?>
+                <?php foreach($responses as $response) : ?>
+                    <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
+                <? endforeach; ?>
+            <? else : ?>
+                <p class="caption">Список пуст</p>
+            <? endif; ?>
+        <? endif; ?>
 
         <h4 class="head-regular">Отклики на задание</h4>
-
-        <?= $this->render('_response-card'); ?>
+            <?php if ($responses) : ?>
+                <?php foreach($responses as $response) : ?>
+                    <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
+                <? endforeach; ?>
+            <? else : ?>
+                <p class="caption">Список пуст</p>
+            <? endif; ?>
     </div>
 
     <div class="right-column">
@@ -43,13 +88,13 @@
             <h4 class="head-card">Информация о задании</h4>
             <dl class="black-list">
                 <dt>Категория</dt>
-                <dd>Уборка</dd>
+                <dd><?= Html::encode($task['category']['label']) ?></dd>
                 <dt>Дата публикации</dt>
-                <dd>25 минут назад</dd>
+                <dd><?= Yii::$app->formatter->asDate(Html::encode($task['created_at'])) ?></dd>
                 <dt>Срок выполнения</dt>
-                <dd>15 октября, 13:00</dd>
+                <dd><?= Yii::$app->formatter->asDate(Html::encode($task['deadline'])) ?></dd>
                 <dt>Статус</dt>
-                <dd>Открыт для новых заказов</dd>
+                <dd><?= Html::encode($task['status']) ?></dd>
             </dl>
         </div>
 
@@ -69,8 +114,8 @@
     </div>
 </main>
 
-<?= $this->render('_add-response-modal'); ?>
-<?= $this->render('_complete-task-modal'); ?>
-<?= $this->render('_refusal-modal'); ?>
+<?= $this->render('_add-response-modal', compact('addResponseForm')); ?>
+<?= $this->render('_add-feedback-modal', compact('addFeedbackForm')); ?>
+<?= $this->render('_refusal-modal', compact('task')); ?>
 
 <div class="overlay"></div>

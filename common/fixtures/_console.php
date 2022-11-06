@@ -1,4 +1,4 @@
-php yii fixture/generate city user task user-category response feedback file --count=10 --language=ru_RU
+php yii fixture/generate city user task user_category response feedback file --count=10 --language=ru_RU
 php yii fixture/load Category
 php yii fixture/load City
 php yii fixture/load User

@@ -11,5 +11,6 @@ return [
     'title' => $faker->sentence(),
     'text' => $faker->paragraph(),
     'price' => $faker->numberBetween(100,10000),
-    'deadline' => $faker->dateTimeBetween('now', '+15 days')->format('Y-m-d')
+    'deadline' => $faker->dateTimeBetween('now', '+15 days')->format('Y-m-d'),
+    'city_id' => $faker->numberBetween(1,10)
 ];

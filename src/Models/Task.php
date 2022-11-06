@@ -2,12 +2,12 @@
 
 namespace TaskForce\Models;
 
-use TaskForce\TaskActions\AbstractAction;
-use TaskForce\TaskActions\ActionCancel;
-use TaskForce\TaskActions\ActionComplete;
-use TaskForce\TaskActions\ActionQuit;
-use TaskForce\TaskActions\ActionRespond;
-use TaskForce\TaskActions\ActionStart;
+use TaskForce\Actions\AbstractAction;
+use TaskForce\Actions\ActionCancel;
+use TaskForce\Actions\ActionComplete;
+use TaskForce\Actions\ActionQuit;
+use TaskForce\Actions\ActionRespond;
+use TaskForce\Actions\ActionStart;
 use TaskForce\Exceptions\ExceptionRequestValueIsEmpty;
 use TaskForce\Exceptions\ExceptionWrongParameter;
 
@@ -75,11 +75,11 @@ class Task
     }
 
     /**
-     * statusesExternalNames
+     * getStatusesLabels
      *
      * @return array
      */
-    public function getStatusesExternalNames(): array
+    public function getStatusesLabels(): array
     {
         return [
             self::STATUS_NEW => 'Новое задание',
@@ -91,16 +91,16 @@ class Task
     }
 
     /**
-     * getActionsExternalNames
+     * getActionsLabels
      *
      * @return array
      */
-    public function getActionsExternalNames(): array
+    public function getActionsLabels(): array
     {
         $names = [];
 
         foreach($this->getActions() as $action) {
-            $names[$action::NAME] = $action::EXTERNAl_NAME;
+            $names[$action::NAME] = $action::LABEL;
         }
 
         return $names;
@@ -157,20 +157,6 @@ class Task
     }
 
     /**
-     * getExecutprId
-     *
-     * @return ?int
-     */
-    public function getExecutorId(): ?int
-    {
-        if (!$this->executorId) {
-            throw new ExceptionRequestValueIsEmpty();
-        }
-
-        return $this->executorId;
-    }
-
-    /**
      * getStatus - возвращает текущий статус
      *
      * @return ?string
@@ -178,21 +164,6 @@ class Task
     public function getStatus(): ?string
     {
         return $this->status;
-    }
-
-    /**
-     * setExecutorId
-     *
-     * @param  mixed $userId
-     * @return void
-     */
-    public function setExecutorId(int $userId): void
-    {
-        if ($userId === $this->customerId) {
-            throw new ExceptionWrongParameter;
-        }
-
-        $this->executorId = $userId;
     }
 }
 

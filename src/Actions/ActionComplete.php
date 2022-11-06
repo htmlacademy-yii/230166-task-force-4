@@ -1,14 +1,14 @@
 <?php
 
-namespace TaskForce\TaskActions;
+namespace TaskForce\Actions;
 
-use TaskForce\TaskActions\AbstractAction;
+use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\Task;
 
 class ActionComplete extends AbstractAction
 {
     const NAME = 'complete';
-    const EXTERNAL_NAME = 'Завершить задание';
+    const LABEL = 'Завершить задание';
 
     public static function check(Task $task, int $currentUserId): bool
     {

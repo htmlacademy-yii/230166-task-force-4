@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 use TaskForce\Models\Task as BaseTask;
+use yii\web\NotFoundHttpException;
+use app\models\User;
 
 /**
  * This is the model class for table "task".
@@ -16,9 +18,11 @@ use TaskForce\Models\Task as BaseTask;
  * @property string|null $status
  * @property string $title
  * @property string $text
- * @property float|null $price
+ * @property int|null $price
  * @property string|null $deadline
+ * @property int|null $city_id
  *
+ * @property City $city
  * @property Category $category
  * @property User $customer
  * @property User $executor
@@ -52,6 +56,7 @@ class Task extends \yii\db\ActiveRecord
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
@@ -65,13 +70,57 @@ class Task extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'category_id' => 'Категория',
+            'category_id' => 'Category Id',
+            'city_id' => 'City Id',
             'status' => 'Status',
             'title' => 'Опишите суть работы',
             'text' => 'Подробности задания',
             'price' => 'Бюджет',
             'deadline' => 'Срок исполнения',
         ];
+    }
+
+    public static function getQueryWithNewTasks(): \yii\db\ActiveQuery
+    {
+        return self::find()
+            ->joinWith(['category', 'city'])
+            ->where(['task.status' => 'new'])
+            ->asArray();
+    }
+
+    public static function getTaskById($taskId)
+    {
+        $task = self::find()
+            ->joinWith(['city', 'category'])
+            ->where(['task.id' => $taskId])
+            ->limit(1)
+            ->asArray()
+            ->one();
+
+        if (!$task) {
+            throw new NotFoundHttpException("Контакт с задачей с ID $taskId не найден");
+        }
+
+        return $task;
+    }
+
+    public static function getAllResponses($task)
+    {
+        return Response::find()
+        ->where(['task_id' => $task['id']])
+        ->joinWith('user')
+        ->asArray()
+        ->all();
+    }
+
+    /**
+     * Gets query for [[City]].
+     *
+     * @return \yii\db\ActiveQuery|CityQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['id' => 'city_id']);
     }
 
     /**
@@ -132,21 +181,5 @@ class Task extends \yii\db\ActiveRecord
     public function getResponses()
     {
         return $this->hasMany(Response::class, ['task_id' => 'id']);
-    }
-
-    public static function getNewTasksQuery(): \yii\db\ActiveQuery
-    {
-        return self::find()
-        ->select([
-            'task.*',
-            'category.name as category_name',
-            'category.label as category_label',
-            'city.name as city'
-        ])
-        ->join('INNER JOIN', 'category', 'task.category_id = category.id')
-        ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
-        ->join('INNER JOIN', 'city', 'user.city_id = city.id')
-        ->where(['task.status' => 'new'])
-        ->asArray();
     }
 }

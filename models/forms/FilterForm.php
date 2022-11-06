@@ -48,7 +48,7 @@ class FilterForm extends Model
 
     public function getQueryWithFilters(): \yii\db\ActiveQuery
     {
-        $query = Task::getNewTasksQuery();
+        $query = Task::getQueryWithNewTasks();
 
         if ($this->categories) {
             $query->andWhere(['category.id' => $this->categories]);

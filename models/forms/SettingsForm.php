@@ -2,12 +2,11 @@
 
 namespace app\models\forms;
 
-use app\models\Category;
 use Yii;
+use Exception;
 use yii\base\Model;
 use app\models\User;
 use app\models\UserCategory;
-use Exception;
 
 class SettingsForm extends Model
 {
@@ -35,7 +34,7 @@ class SettingsForm extends Model
         $this->telegram = $this->_user->telegram;
         $this->description = $this->_user->description;
 
-        $this->categories = Category::getUserCategoriesIds($this->_user->id);
+        $this->categories = User::getCategoriesIds($this->_user);
     }
 
     public function attributeLabels()

@@ -74,7 +74,6 @@ use yii\widgets\ActiveForm;
                 </div>
 
                 <input type="submit" class="button button--blue" value="Создать аккаунт">
-
             <?php ActiveForm::end(); ?>
 
         </div>

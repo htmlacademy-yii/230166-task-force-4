@@ -2,58 +2,54 @@
 
 namespace app\controllers;
 
-use yii\data\Pagination;
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\data\Pagination;
 use app\models\Task;
-use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
-use app\models\forms\FilterForm;
 use app\models\Category;
 use app\models\City;
+use app\models\Feedback;
 use app\models\Response;
 use app\models\User;
+use app\models\forms\FilterForm;
+use app\models\forms\AddFeedbackForm;
+use app\models\forms\AddResponseForm;
+use yii\web\NotFoundHttpException;
+use TaskForce\Models\Task as BaseTask;
+use TaskForce\Actions\AbstractAction;
+use TaskForce\Actions\ActionCancel;
+use TaskForce\Actions\ActionComplete;
+use TaskForce\Actions\ActionQuit;
+use TaskForce\Actions\ActionRespond;
+use TaskForce\Actions\ActionStart;
 
 class TasksController extends SecuredController
 {
-
-
     // public function behaviors()
     // {
-    //     return [
-    //         'access' => [
-    //             'class' => AccessControl::class,
-    //             'rules' => [
-    //                 [
-    //                     'allow' => false,
-    //                     'actions' => [''],
-    //                     'matchCallback' => function($rule, $action)
-    //                     {
-    //                         $id = Yii::$app->user->getId();
-
-    //                         if ($id) {
-    //                             $user = User::findOne($id);
-    //                             return $user->is_executor;
-    //                         }
-
-    //                         return false;
-    //                     }
-    //                 ]
-    //             ]
-    //         ]
+    //     $rules = parent::behaviors();
+    //     $rule = [
+    //         'allow' => false,
+    //         'actions' => ['add'],
+    //         'roles' => ['@'],
+    //         'matchCallback' => function ($rule, $action) {
+    //             return (Yii::$app->user->identity->role === User::ROLE_EXECUTOR);
+    //         }
     //     ];
+    //     array_unshift($rules['access']['rules'], $rule);
+
+    //     return $rules;
     // }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
+    // public function actions()
+    // {
+    //     return [
+    //         'cencel' => [
+    //             'class' => 'TaskForce\Actions\ActionCancel',
+    //             'successCallback' => [$this, 'onCencelSuccess'],
+    //         ],
+    //     ];
+    // }
 
     /**
      * Displays homepage.
@@ -62,10 +58,10 @@ class TasksController extends SecuredController
      */
     public function actionIndex()
     {
-        $pageSize = 2;
+        $pageSize = 4;
         $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
-        $query = Task::getNewTasksQuery();
+        $query = Task::getQueryWithNewTasks();
         $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {
@@ -88,38 +84,86 @@ class TasksController extends SecuredController
         return $this->render('index', compact('tasks', 'pages', 'filterForm', 'categories'));
     }
 
-    public function actionView($id)
+    public function actionView($taskId)
     {
-        $task = Task::findOne($id);
+        $task = Task::getTaskById($taskId);
+        $responses = Task::getAllResponses($task);
 
-        if (!$task) {
-            throw new NotFoundHttpException("Контакт с ID $id не найден");
+        $currentUser = User::getCurrentUser();
+        $addFeedbackForm = new AddFeedbackForm();
+        $addResponseForm = new AddResponseForm();
+        $baseTask = new BaseTask(ArrayHelper::getValue($task, 'customer_id'));
+
+        if (Yii::$app->request->getIsPost()) {
+            if ($addFeedbackForm->load(Yii::$app->request->post())) {
+                $feedback = new Feedback();
+                $feedback->message = $addFeedbackForm['message'];
+                $feedback->rating = 4;
+                $feedback->save(false);
+            }
+
+            if ($addResponseForm->load(Yii::$app->request->post())) {
+                $response = new Response();
+                $response->task_id = $taskId;
+                $response->user_id = $currentUser['id'];
+                $response->message = $addResponseForm['message'];
+                $response->price = $addResponseForm['price'];
+                $response->save(false);
+            }
         }
 
-        // $responses = Response::find()->where(['task_id' => $task['id']])->asArray()->all();
-        // var_dump($responses);
-
-        return $this->render('view', compact('task'));
+        return $this->render('view', compact('task', 'responses', 'currentUser', 'addFeedbackForm', 'addResponseForm'));
     }
 
     public function actionAddTask()
     {
         $task = new Task();
+        $city = new City();
         $categories = Category::getMapIdsToLabels();
-        $city = City::findOne(1);
         $currentUserId = Yii::$app->user->identity->id;
 
         if (Yii::$app->request->getIsPost()) {
-            $task->load(Yii::$app->request->post());
-
-            if ($task->validate()) {
+            if ($task->load(Yii::$app->request->post()) && $task->validate()) {
                 $task->customer_id = $currentUserId;
                 $task->save(false);
+            }
 
-                return $this->redirect('/tasks/view/' . $task['id']);
+            if ($city->load(Yii::$app->request->post()) && $city->validate()) {
+                $geoCoder = new GeoCoderController($city['name']);
+                $city->name = $geoCoder->getName();
+                $city->address = $geoCoder->getAddress();
+                $city->lat = $geoCoder->getLat();
+                $city->lng = $geoCoder->getLng();
+                $city->save(false);
+
+                $task->city_id = $city['id'];
+                $task->save(false);
             }
         }
 
         return $this->render('add-task', compact('task', 'city', 'categories'));
+    }
+
+    public function actionRefusal($id)
+    {
+        $currentUser = User::getCurrentUser();
+
+        $task = Task::find()
+            ->where([
+                    'task.id' => $id,
+                    'task.executor_id' => $currentUser['id']
+                ])
+            ->limit(1)
+            ->one();
+
+        $task->status = 'failed';
+        $task->save(false);
+
+        $this->redirect('/tasks');
+    }
+
+    public function onCencelSuccess()
+    {
+        var_dump('Cencel');
     }
 }

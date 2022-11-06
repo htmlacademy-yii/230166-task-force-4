@@ -32,8 +32,18 @@ use yii\widgets\ActiveForm;
                 ]);
             ?>
         </p>
-        <button class="button" type="submit">Войти</button>
+
+        <div class="modal-footer">
+            <div>
+                <button class="button" type="submit">Войти</button>
+            </div>
+            <?= yii\authclient\widgets\AuthChoice::widget([
+                'baseAuthUrl' => ['/start/auth'],
+                'popupMode' => false,
+            ]) ?>
+        </div>
     <?php ActiveForm::end(); ?>
 
     <button class="form-modal-close" type="button">Закрыть</button>
+
 </section>

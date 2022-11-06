@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\controllers\GeoCoderController;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -11,6 +12,7 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string|null $created_at
  * @property string $name
+ * @property string $address
  * @property float|null $lat
  * @property float|null $lng
  *
@@ -36,6 +38,8 @@ class City extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['lat', 'lng'], 'number'],
             [['name'], 'string', 'max' => 100],
+            ['name', 'validateName'],
+            [['address'], 'string', 'max' => 500],
         ];
     }
 
@@ -47,10 +51,26 @@ class City extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'created_at' => 'Created At',
-            'name' => 'Локация',
+            'name' => 'Name',
+            'address' => 'Address',
             'lat' => 'Lat',
             'lng' => 'Lng',
         ];
+    }
+
+    public function validateName($attribute, $params): void
+    {
+        if (!$this->hasErrors()) {
+            $geoCoder = new GeoCoderController($this->name);
+
+            if (!ArrayHelper::getValue($geoCoder->data, 'GeoObjectCollection.featureMember')) {
+                $this->addError($attribute, 'Этот адрес не верен');
+            }
+
+            if (ArrayHelper::getValue($geoCoder->data, 'GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found') > 1) {
+                $this->addError($attribute, 'Есть несколько совпадений, введите более точный адрес');
+            }
+        }
     }
 
     /**
@@ -62,8 +82,6 @@ class City extends \yii\db\ActiveRecord
     {
         return $this->hasMany(User::class, ['city_id' => 'id']);
     }
-
-
 
     public static function getNames(): array
     {

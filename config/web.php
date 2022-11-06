@@ -7,13 +7,33 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'ru-RU',
     'defaultRoute' => 'start',
-    'homeUrl' => '/',
+    'homeUrl' => '/tasks',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'clientId' => '51461761',
+                    'clientSecret' => '4v1hqFOCjiVanzOG2szx',
+                    'scope' => 'email',
+                    'apiVersion' => '5.131'
+                ]
+            ]
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
+        'response' => [
+            // 'format' => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'BYsZYK6GVFucxYv4cBuHD73Q8mRi5ZGD',
@@ -24,7 +44,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
-            'loginUrl' => ['login'],
+            'loginUrl' => ['/'],
         ],
         'errorHandler' => [
             'errorAction' => 'error/index',
@@ -51,10 +71,12 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                'tasks/<id:\d+>' => 'tasks/view',
-                'tasks' => 'tasks/index',
-                'settings' => '/settings/index',
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '/signup' => '/start/signup',
+                '/add-task' => '/tasks/add-task',
+                '/tasks/<taskId:\d+>' => '/tasks/view',
+                '/tasks' => '/tasks/index',
+                '/settings' => '/settings/index',
+                '/profile/<userId:\d+>' => 'profile',
             ],
         ],
     ],

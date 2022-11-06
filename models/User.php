@@ -5,6 +5,11 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
+use app\models\Category;
+use app\models\Task;
+use app\models\Feedback;
 
 /**
  * This is the model class for table "user".
@@ -13,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string|null $created_at
  * @property int|null $is_executor
  * @property float|null $rating
+ * @property int|null $count_feedbacks
  * @property string $email
  * @property string $name
  * @property string $password
@@ -23,6 +29,7 @@ use yii\web\IdentityInterface;
  * @property string|null $description
  * @property int|null $city_id
  *
+ * @property Auth[] $auths
  * @property City $city
  * @property File[] $files
  * @property Response[] $responses
@@ -31,7 +38,11 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const ROLE_CUSTOMER = 'customer';
+    const ROLE_EXECUTOR = 'executor';
+
     public $password_repeat;
+    public $categories;
 
     /**
      * {@inheritdoc}
@@ -48,7 +59,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['created_at', 'date_of_birth'], 'safe'],
-            [['is_executor', 'city_id'], 'integer'],
+            [['is_executor', 'count_feedbacks', 'city_id'], 'integer'],
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
             [['name', 'email'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
@@ -72,6 +83,7 @@ class User extends ActiveRecord implements IdentityInterface
             'created_at' => 'Created At',
             'is_executor' => 'Я собираюсь откликаться на заказы',
             'rating' => 'Рейтинг',
+            'count_feedbacks' => 'Count Feedbacks',
             'email' => 'Email',
             'name' => 'Ваше имя',
             'password' => 'Пароль',
@@ -83,6 +95,131 @@ class User extends ActiveRecord implements IdentityInterface
             'city_id' => 'City ID',
             'password_repeat' => 'Повтор пароля'
         ];
+    }
+
+    public static function getUserById($userId)
+    {
+        $user = self::find()
+            ->joinWith(['city'])
+            ->where(['user.id' => $userId])
+            ->limit(1)
+            ->asArray()
+            ->one();
+
+        if (!$user) {
+            throw new NotFoundHttpException("Контакт с ID $userId не найден");
+        }
+
+        return $user;
+    }
+
+    public static function getCurrentUser()
+    {
+        if ($currentUserId = Yii::$app->user->getId()) {
+            $currentUser = User::getUserById($currentUserId);
+        }
+
+        return $currentUser;
+    }
+
+    public static function getCategories($user)
+    {
+        return
+            Category::find()
+                ->join('INNER JOIN', 'user_category', 'user_category.category_id = category.id')
+                ->join('INNER JOIN', 'user', 'user_category.user_id = user.id')
+                ->where(['user.id' => $user['id']])
+                ->asArray()
+                ->all();
+    }
+
+    public static function getCategoriesIds($user): ?array
+    {
+        $categories = self::getCategories($user);
+
+        if ($categories) {
+            return ArrayHelper::getColumn($categories, 'id');
+        }
+
+        return null;
+    }
+
+    public static function getTasks($user)
+    {
+        if ($user['is_executor']) {
+            return
+                Task::find()
+                    ->where(['task.executor_id' => $user['id']])
+                    ->asArray()
+                    ->all();
+        }
+
+        return
+            Task::find()
+                ->where(['task.customer_id' => $user['id']])
+                ->asArray()
+                ->all();
+    }
+
+    public static function getRate($user)
+    {
+        $ids = User::find()
+            ->select(['user.id'])
+            ->orderBy(['user.rating' => SORT_DESC])
+            ->where(['user.is_executor' => true])
+            ->asArray()
+            ->all();
+
+        $arrIds = ArrayHelper::getColumn($ids, 'id');
+
+        return array_search($user['id'], $arrIds);
+    }
+
+    public static function getFeedbacks($user)
+    {
+        if ($user['is_executor']) {
+            $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
+
+            foreach ($tasks as $task) {
+                $feedback = Feedback::find()
+                    ->where(['feedback.task_id' => $task['id']])
+                    ->asArray()
+                    ->limit(1)
+                    ->one();
+                $feedback['task']['id'] = $task['id'];
+                $feedback['task']['title'] = $task['title'];
+                $feedback['author'] = User::find()
+                    ->select(['user.id', 'user.avatar'])
+                    ->where(['user.id' => $task['customer_id']])
+                    ->asArray()
+                    ->limit(1)
+                    ->one();
+
+                $feedbacks[] = $feedback;
+            }
+        }
+
+        return null;
+    }
+
+    public static function getFeedbacksCount($user)
+    {
+        if ($user['is_executor']) {
+            return
+                Task::find()
+                    ->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])
+                    ->count();
+        }
+    }
+
+    /**
+     * Gets query for [[Auths]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuths()
+    {
+        return $this->hasMany(Auth::class, ['user_id' => 'id']);
     }
 
     /**

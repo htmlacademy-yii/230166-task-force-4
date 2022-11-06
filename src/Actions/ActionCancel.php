@@ -1,14 +1,14 @@
 <?php
 
-namespace TaskForce\TaskActions;
+namespace TaskForce\Actions;
 
-use TaskForce\TaskActions\AbstractAction;
+use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\Task;
 
 class ActionCancel extends AbstractAction
 {
     const NAME = 'cancel';
-    const EXTERNAL_NAME = 'Отменить задание';
+    const LABEL = 'Отказать';
 
     public static function check(Task $task, int $currentUserId): bool
     {

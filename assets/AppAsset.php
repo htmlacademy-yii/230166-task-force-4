@@ -24,7 +24,8 @@ class AppAsset extends AssetBundle
         'css/style.css',
     ];
     public $js = [
-        'js/main.js'
+        ['https://api-maps.yandex.ru/2.1/?lang=ru_RU', 'position' => \yii\web\View::POS_HEAD],
+        'js/main.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

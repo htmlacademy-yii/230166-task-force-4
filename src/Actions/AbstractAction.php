@@ -1,13 +1,13 @@
 <?php
 
-namespace TaskForce\TaskActions;
+namespace TaskForce\Actions;
 
 use TaskForce\Models\Task;
 
 abstract class AbstractAction
 {
     const NAME = self::NAME;
-    const EXTERNAL_NAME = self::EXTERNAL_NAME;
+    const LABEL = self::LABEL;
 
     /**
      * check проверяет права пользователя
