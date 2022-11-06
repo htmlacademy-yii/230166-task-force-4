@@ -4,7 +4,7 @@
  * @var $index integer
  */
 return [
-    'is_executor' => $faker->randomElement([0, 1]),
+    'role' => $faker->randomElement(['customer', 'executor']),
     'rating' => $faker->numberBetween(1,5),
     'count_feedbacks' => $faker->numberBetween(1,10),
     'email' => $faker->unique()->email(),

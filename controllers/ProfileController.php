@@ -32,7 +32,7 @@ class ProfileController extends SecuredController
          */
         $user['categories'] = User::getCategories($user);
 
-        if ($user['is_executor']) {
+        if ($user['role'] === User::ROLE_EXECUTOR) {
             /**
              * количество задач
             */

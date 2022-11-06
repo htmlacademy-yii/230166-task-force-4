@@ -2,6 +2,10 @@
     use Yii;
     use yii\helpers\Html;
     use yii\helpers\ArrayHelper;
+    use yii\helpers\Url;
+    use app\models\User;
+    use TaskForce\Actions\ActionQuit;
+    use TaskForce\Actions\ActionRespond;
 
     $price = ArrayHelper::getValue($task, 'price');
     $text = ArrayHelper::getValue($task, 'text');
@@ -27,17 +31,21 @@
             </p>
         <? endif; ?>
 
-        <?php if(ArrayHelper::getValue($currentUser, 'is_executor') && !ArrayHelper::getValue($task, 'executor_id')) : ?>
-            <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
+        <?php if(ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && !ArrayHelper::getValue($task, 'executor_id')) : ?>
+            <button class="button button--blue action-btn" data-action="act_response" type="button">
+                <?= Html::encode(ActionRespond::LABEL) ?>
+            </button>
         <? endif; ?>
 
         <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
 
-        <?php if(ArrayHelper::getValue($currentUser, 'is_executor') && ArrayHelper::getValue($task, 'executor_id') === Yii::$app->user->getId()) : ?>
-            <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
+        <?php if(ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && ArrayHelper::getValue($task, 'executor_id') === Yii::$app->user->getId()) : ?>
+            <button class="button button--orange action-btn" data-action="refusal">
+                <?= Html::encode(ActionQuit::LABEL) ?>
+            </button>
         <? endif; ?>
 
-        <?php if(!ArrayHelper::getValue($currentUser, 'is_executor') && ArrayHelper::getValue($task, 'customer_id') === Yii::$app->user->getId()) : ?>
+        <?php if(!ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && ArrayHelper::getValue($task, 'customer_id') === Yii::$app->user->getId()) : ?>
             <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
         <? endif; ?>
 

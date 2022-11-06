@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\widgets\ActiveForm;
 
 ?>
@@ -63,9 +64,9 @@ use yii\widgets\ActiveForm;
                     </div>
                 </div>
                 <div class="form-group">
-                    <?= $form->field($user, 'is_executor')
+                    <?= $form->field($user, 'role')
                         ->checkbox([
-                            'checked' => $user->is_executor,
+                            'checked' => $user->role === User::ROLE_EXECUTOR,
                             'labelOptions' => [
                                 'class' => 'control-label',
                             ],

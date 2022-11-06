@@ -7,7 +7,7 @@ return [
     'customer_id' => $faker->numberBetween(1,10),
     'executor_id' => $faker->numberBetween(1,10),
     'category_id' => $faker->numberBetween(1,10),
-    'status' => $faker->randomElement(['new', 'cencelled', 'in_progress', 'done', 'failed']),
+    'status' => $faker->randomElement(['new', 'cencelled', 'in progress', 'done', 'failed']),
     'title' => $faker->sentence(),
     'text' => $faker->paragraph(),
     'price' => $faker->numberBetween(100,10000),

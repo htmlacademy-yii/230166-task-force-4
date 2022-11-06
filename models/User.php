@@ -16,7 +16,7 @@ use app\models\Feedback;
  *
  * @property int $id
  * @property string|null $created_at
- * @property int|null $is_executor
+ * @property int|null $role
  * @property float|null $rating
  * @property int|null $count_feedbacks
  * @property string $email
@@ -59,7 +59,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['created_at', 'date_of_birth'], 'safe'],
-            [['is_executor', 'count_feedbacks', 'city_id'], 'integer'],
+            [['count_feedbacks', 'city_id'], 'integer'],
+            [['role'], 'string'],
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
             [['name', 'email'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
@@ -81,7 +82,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'id' => 'ID',
             'created_at' => 'Created At',
-            'is_executor' => 'Я собираюсь откликаться на заказы',
+            'role' => 'Я собираюсь откликаться на заказы',
             'rating' => 'Рейтинг',
             'count_feedbacks' => 'Count Feedbacks',
             'email' => 'Email',
@@ -146,7 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getTasks($user)
     {
-        if ($user['is_executor']) {
+        if ($user['role'] === self::ROLE_EXECUTOR) {
             return
                 Task::find()
                     ->where(['task.executor_id' => $user['id']])
@@ -166,7 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
         $ids = User::find()
             ->select(['user.id'])
             ->orderBy(['user.rating' => SORT_DESC])
-            ->where(['user.is_executor' => true])
+            ->where(['user.role' => self::ROLE_EXECUTOR])
             ->asArray()
             ->all();
 
@@ -177,7 +178,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getFeedbacks($user)
     {
-        if ($user['is_executor']) {
+        if ($user['role'] === self::ROLE_EXECUTOR){
             $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
 
             foreach ($tasks as $task) {
@@ -186,14 +187,16 @@ class User extends ActiveRecord implements IdentityInterface
                     ->asArray()
                     ->limit(1)
                     ->one();
-                $feedback['task']['id'] = $task['id'];
-                $feedback['task']['title'] = $task['title'];
+
                 $feedback['author'] = User::find()
                     ->select(['user.id', 'user.avatar'])
                     ->where(['user.id' => $task['customer_id']])
                     ->asArray()
                     ->limit(1)
                     ->one();
+
+                $feedback['task']['id'] = $task['id'];
+                $feedback['task']['title'] = $task['title'];
 
                 $feedbacks[] = $feedback;
             }
@@ -204,7 +207,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getFeedbacksCount($user)
     {
-        if ($user['is_executor']) {
+        if ($user['role'] === self::ROLE_EXECUTOR) {
             return
                 Task::find()
                     ->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])

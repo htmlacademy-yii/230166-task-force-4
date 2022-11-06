@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
+use app\models\User;
 
 ?>
 
@@ -68,18 +69,18 @@ use app\components\AvatarWidget;
             </div>
         </div>
 
-        <?php if ($feedbacks && $user['is_executor']) : ?>
+        <?php if ($feedbacks && $user['role'] === User::ROLE_EXECUTOR) : ?>
             <h4 class="head-regular">Отзывы заказчиков</h4>
             <?php foreach ($user['feedbacks'] as $feedback) : ?>
                 <?= $this->render('_feedback-card', compact('feedback')); ?>
             <? endforeach; ?>
-        <? elseif ($user['is_executor']) : ?>
+        <? elseif ($user['role'] === User::ROLE_EXECUTOR) : ?>
             <div class="caption">Нет отзывов</div>
         <? endif; ?>
     </div>
 
     <div class="right-column">
-        <?php if ($user['is_executor']) : ?>
+        <?php if ($user['role'] === User::ROLE_EXECUTOR) : ?>
             <div class="right-card black">
                 <h4 class="head-card">Статистика исполнителя</h4>
                 <dl class="black-list">

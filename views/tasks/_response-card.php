@@ -46,14 +46,13 @@ use TaskForce\Actions\ActionCancel;
     </div>
 
     <div class="button-popup">
-        <a href="#" class="button button--blue button--small">Принять</a>
         <?= Html::a(ActionStart::LABEL, Url::to([
                 '/tasks/start',
                 'taskId' => ArrayHelper::getValue($task, 'id'),
                 'userId' => ArrayHelper::getValue($response, 'user.id')
             ]),
             [
-                'class' => 'button button--orange button--small'
+                'class' => 'button button--blue button--small'
             ])
         ?>
         <?= Html::a(ActionCancel::LABEL, Url::to([
