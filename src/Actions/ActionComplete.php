@@ -7,17 +7,19 @@ use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Feedback;
 use app\models\forms\AddFeedbackForm;
+use app\models\Task;
+use app\models\User;
 
 class ActionComplete extends AbstractAction
 {
     const NAME = 'complete';
     const LABEL = 'Завершить задание';
 
-    public static function check(BaseTask $task, int $currentUserId): bool
+    public static function check(Task $task, User $currentUser): bool
     {
         return
-            $task->getStatus() === BaseTask::STATUS_INPROGRESS
-            && $currentUserId === $task->getCustomerId();
+            $task->status === BaseTask::STATUS_INPROGRESS
+            && $currentUser->id === $task->customer_id;
     }
 
     public function run(int $taskId, int $userId)

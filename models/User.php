@@ -98,13 +98,13 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public static function getUserById($userId)
+    public static function getUserAsArray($userId)
     {
         $user = self::find()
-            ->joinWith(['city'])
             ->where(['user.id' => $userId])
-            ->limit(1)
+            ->joinWith(['city'])
             ->asArray()
+            ->limit(1)
             ->one();
 
         if (!$user) {
@@ -117,7 +117,11 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getCurrentUser()
     {
         if ($currentUserId = Yii::$app->user->getId()) {
-            $currentUser = User::getUserById($currentUserId);
+            $currentUser = self::find()
+                ->where(['user.id' => $currentUserId])
+                ->joinWith(['city'])
+                ->limit(1)
+                ->one();
         }
 
         return $currentUser;

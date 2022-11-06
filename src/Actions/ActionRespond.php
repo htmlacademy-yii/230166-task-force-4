@@ -6,19 +6,20 @@ use Yii;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Response;
-use app\models\Task;
 use app\models\forms\AddResponseForm;
+use app\models\Task;
+use app\models\User;
 
 class ActionRespond extends AbstractAction
 {
     const NAME = 'respond';
     const LABEL = 'Откликнуться на задание';
 
-    public static function check(BaseTask $task, int $currentUserId): bool
+    public static function check(Task $task, User $currentUser): bool
     {
         return
-            $task->getStatus() === BaseTask::STATUS_NEW
-            && $currentUserId === $task->getExecutorId();
+            $task->status === BaseTask::STATUS_NEW
+            && $currentUser->role === User::ROLE_EXECUTOR;
     }
 
     public function run(int $taskId, int $userId)

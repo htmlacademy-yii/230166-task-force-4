@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
 use TaskForce\Actions\ActionStart;
-use TaskForce\Actions\ActionCancel;
+use TaskForce\Actions\ActionRefuse;
 
 ?>
 
@@ -55,7 +55,7 @@ use TaskForce\Actions\ActionCancel;
                 'class' => 'button button--blue button--small'
             ])
         ?>
-        <?= Html::a(ActionCancel::LABEL, Url::to([
+        <?= Html::a(ActionRefuse::LABEL, Url::to([
                 '/tasks/cencel',
                 'taskId' => ArrayHelper::getValue($task, 'id'),
                 'userId' => ArrayHelper::getValue($response, 'user.id')

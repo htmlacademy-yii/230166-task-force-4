@@ -94,7 +94,6 @@ class Task extends \yii\db\ActiveRecord
             ->joinWith(['city', 'category'])
             ->where(['task.id' => $taskId])
             ->limit(1)
-            ->asArray()
             ->one();
 
         if (!$task) {

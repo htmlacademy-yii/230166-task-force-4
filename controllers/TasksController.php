@@ -17,7 +17,7 @@ use app\models\forms\AddResponseForm;
 use yii\web\NotFoundHttpException;
 use TaskForce\Models\BaseTask;
 use TaskForce\Actions\AbstractAction;
-use TaskForce\Actions\ActionCancel;
+use TaskForce\Actions\ActionRefuse;
 use TaskForce\Actions\ActionComplete;
 use TaskForce\Actions\ActionQuit;
 use TaskForce\Actions\ActionRespond;
@@ -50,8 +50,8 @@ class TasksController extends SecuredController
             'start' => [
                 'class' => 'TaskForce\Actions\ActionStart',
             ],
-            'cencel' => [
-                'class' => 'TaskForce\Actions\ActionCancel',
+            'refuse' => [
+                'class' => 'TaskForce\Actions\ActionRefuse',
             ],
             'quit' => [
                 'class' => 'TaskForce\Actions\ActionQuit',
@@ -104,6 +104,9 @@ class TasksController extends SecuredController
         $addFeedbackForm = new AddFeedbackForm();
         $addResponseForm = new AddResponseForm();
         $baseTask = new BaseTask(ArrayHelper::getValue($task, 'customer_id'));
+
+        var_dump(BaseTask::getAvailableActions($task, $currentUser));
+        var_dump($currentUser->role);
 
         if (Yii::$app->request->getIsPost()) {
             if ($addFeedbackForm->load(Yii::$app->request->post())) {

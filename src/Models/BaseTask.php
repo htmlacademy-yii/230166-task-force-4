@@ -2,9 +2,11 @@
 
 namespace TaskForce\Models;
 
+use app\models\Task;
+use app\models\User;
 use yii\base\Action;
 use TaskForce\Actions\AbstractAction;
-use TaskForce\Actions\ActionCancel;
+use TaskForce\Actions\ActionRefuse;
 use TaskForce\Actions\ActionComplete;
 use TaskForce\Actions\ActionQuit;
 use TaskForce\Actions\ActionRespond;
@@ -64,11 +66,11 @@ class BaseTask
      *
      * @return array
      */
-    public function getActions(): array
+    public static function getActions(): array
     {
         return [
             ActionStart::class,
-            ActionCancel::class,
+            ActionRefuse::class,
             ActionComplete::class,
             ActionRespond::class,
             ActionQuit::class
@@ -117,7 +119,7 @@ class BaseTask
     {
         $actionsMap = [
             ActionStart::NAME => self::STATUS_INPROGRESS,
-            ActionCancel::NAME => self::STATUS_CANCELED,
+            ActionRefuse::NAME => self::STATUS_CANCELED,
             ActionComplete::NAME => self::STATUS_DONE,
             ActionRespond::NAME => self::STATUS_NEW,
             ActionQuit::NAME => self::STATUS_FAILED,
@@ -132,17 +134,19 @@ class BaseTask
      *
      * @param int $userId
      *
-     * @return ?array
+     *
      */
-    public function getAvailableActions(int $userId): ?array
+    public static function getAvailableActions(Task $task, User $currentUser)
     {
-        if ($userId !== $this->customerId && $userId !== $this->executorId) {
-            throw new ExceptionWrongParameter('$userId', 'getAvailableActions');
-        }
-
-        $actions = array_filter($this->getActions(), function($value) use ($userId) {
-            return $value->check($this, $userId);
+        $actions = array_filter(self::getActions(), function($action) use ($task, $currentUser) {
+            return $action::check($task, $currentUser);
         });
+
+        if ($actions) {
+            return array_map(function($action) {
+                return $action::NAME;
+            }, $actions);
+        }
 
         return $actions;
     }

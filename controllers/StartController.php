@@ -52,6 +52,7 @@ class StartController extends Controller
 
             if ($user->validate()) {
                 $user->password = Yii::$app->security->generatePasswordHash($user->password);
+                $user->role = $user['role'] ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
 
                 $user->save(false);
                 $this->redirect('/');

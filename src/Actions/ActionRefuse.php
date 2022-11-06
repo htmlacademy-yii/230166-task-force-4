@@ -5,19 +5,21 @@ namespace TaskForce\Actions;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Response;
+use app\models\Task;
+use app\models\User;
 
-class ActionCancel extends AbstractAction
+class ActionRefuse extends AbstractAction
 {
     const NAME = 'cancel';
     const LABEL = 'Отказать';
 
     public $successCallback;
 
-    public static function check(BaseTask $task, int $currentUserId): bool
+    public static function check(Task $task, User $currentUser): bool
     {
         return
-            $task->getStatus() === BaseTask::STATUS_NEW
-            && $currentUserId === $task->getCustomerId();
+            $task->status === BaseTask::STATUS_NEW
+            && $currentUser->role === User::ROLE_EXECUTOR;
     }
 
     public function run(int $taskId, int $userId)

@@ -6,6 +6,7 @@
     use app\models\User;
     use TaskForce\Actions\ActionQuit;
     use TaskForce\Actions\ActionRespond;
+    use TaskForce\Models\BaseTask;
 
     $price = ArrayHelper::getValue($task, 'price');
     $text = ArrayHelper::getValue($task, 'text');
@@ -84,13 +85,13 @@
         <? endif; ?>
 
         <h4 class="head-regular">Отклики на задание</h4>
-            <?php if ($responses) : ?>
-                <?php foreach($responses as $response) : ?>
-                    <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
-                <? endforeach; ?>
-            <? else : ?>
-                <p class="caption">Список пуст</p>
-            <? endif; ?>
+        <?php if ($responses) : ?>
+            <?php foreach($responses as $response) : ?>
+                <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
+            <? endforeach; ?>
+        <? else : ?>
+            <p class="caption">Список пуст</p>
+        <? endif; ?>
     </div>
 
     <div class="right-column">

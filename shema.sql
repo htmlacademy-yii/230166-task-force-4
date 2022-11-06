@@ -27,7 +27,7 @@ CREATE TABLE city (
 CREATE TABLE user (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  role ENUM ('customer', 'executor'),
+  role ENUM ('customer', 'executor') DEFAULT 'executor',
   rating FLOAT DEFAULT 0,
   count_feedbacks INT DEFAULT 0,
   email VARCHAR(40) NOT NULL,

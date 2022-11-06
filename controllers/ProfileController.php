@@ -13,7 +13,7 @@ class ProfileController extends SecuredController
         /**
          * Получаем пользователя из модели User по id из get-параметров
          */
-        $user = User::getUserById($userId);
+        $user = User::getUserAsArray($userId);
 
         /**
          * Получаем все задачи пользователя
