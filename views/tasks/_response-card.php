@@ -6,6 +6,8 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
+use TaskForce\Actions\ActionStart;
+use TaskForce\Actions\ActionCancel;
 
 ?>
 
@@ -45,6 +47,23 @@ use app\components\AvatarWidget;
 
     <div class="button-popup">
         <a href="#" class="button button--blue button--small">Принять</a>
-        <a href="/tasks/cencel" class="button button--orange button--small">Отказать</a>
+        <?= Html::a(ActionStart::LABEL, Url::to([
+                '/tasks/start',
+                'taskId' => ArrayHelper::getValue($task, 'id'),
+                'userId' => ArrayHelper::getValue($response, 'user.id')
+            ]),
+            [
+                'class' => 'button button--orange button--small'
+            ])
+        ?>
+        <?= Html::a(ActionCancel::LABEL, Url::to([
+                '/tasks/cencel',
+                'taskId' => ArrayHelper::getValue($task, 'id'),
+                'userId' => ArrayHelper::getValue($response, 'user.id')
+            ]),
+            [
+                'class' => 'button button--orange button--small'
+            ])
+        ?>
     </div>
 </div>

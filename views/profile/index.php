@@ -7,7 +7,6 @@ use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
 
-
 ?>
 
 <main class="main-content container">

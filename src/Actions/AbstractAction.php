@@ -2,9 +2,10 @@
 
 namespace TaskForce\Actions;
 
-use TaskForce\Models\Task;
+use TaskForce\Models\BaseTask;
+use yii\base\Action;
 
-abstract class AbstractAction
+abstract class AbstractAction extends Action
 {
     const NAME = self::NAME;
     const LABEL = self::LABEL;
@@ -17,6 +18,6 @@ abstract class AbstractAction
      *
      * @return bool
      */
-    abstract public static function check(Task $task, int $currentUserId): bool;
+    abstract public static function check(BaseTask $task, int $currentUserId): bool;
 }
 

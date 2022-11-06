@@ -48,7 +48,7 @@ CREATE TABLE user (
 CREATE TABLE task (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status ENUM('new', 'cencelled', 'in_progress', 'done', 'failed') DEFAULT 'new',
+  status ENUM('new', 'cencelled', 'in progress', 'done', 'failed') DEFAULT 'new',
   title VARCHAR(100) NOT NULL,
   text VARCHAR(500) NOT NULL,
   price INT UNSIGNED DEFAULT 0,

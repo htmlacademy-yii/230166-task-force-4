@@ -2,6 +2,7 @@
 
 namespace TaskForce\Models;
 
+use yii\base\Action;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Actions\ActionCancel;
 use TaskForce\Actions\ActionComplete;
@@ -11,7 +12,7 @@ use TaskForce\Actions\ActionStart;
 use TaskForce\Exceptions\ExceptionRequestValueIsEmpty;
 use TaskForce\Exceptions\ExceptionWrongParameter;
 
-class Task
+class BaseTask
 {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
@@ -66,11 +67,11 @@ class Task
     public function getActions(): array
     {
         return [
-            new ActionStart,
-            new ActionCancel,
-            new ActionComplete,
-            new ActionRespond,
-            new ActionQuit
+            ActionStart::class,
+            ActionCancel::class,
+            ActionComplete::class,
+            ActionRespond::class,
+            ActionQuit::class
         ];
     }
 

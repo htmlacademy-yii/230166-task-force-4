@@ -1,6 +1,9 @@
 <?php
 
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use TaskForce\Actions\ActionQuit;
 
 ?>
 
@@ -12,7 +15,15 @@ use yii\helpers\Url;
             Вы собираетесь отказаться от выполнения этого задания.<br>
             Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
         </p>
-        <a href="<?= Url::toRoute(['/tasks/refusal/', 'id' => $task['id']]); ?>" class="button button--pop-up button--orange">Отказаться</a>
+        <?= Html::a(ActionQuit::LABEL, Url::to([
+                '/tasks/refusal',
+                'taskId' => ArrayHelper::getValue($task, 'id'),
+                'userId' => ArrayHelper::getValue($currentUser, 'id')
+            ]),
+            [
+                'class' => 'button button--pop-up button--orange'
+            ])
+        ?>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>

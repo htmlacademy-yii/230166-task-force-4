@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use TaskForce\Models\Task as BaseTask;
+use TaskForce\Models\BaseTask as BaseTask;
 use yii\web\NotFoundHttpException;
 use app\models\User;
 
@@ -107,10 +107,10 @@ class Task extends \yii\db\ActiveRecord
     public static function getAllResponses($task)
     {
         return Response::find()
-        ->where(['task_id' => $task['id']])
-        ->joinWith('user')
-        ->asArray()
-        ->all();
+            ->where(['task_id' => $task['id']])
+            ->joinWith('user')
+            ->asArray()
+            ->all();
     }
 
     /**

@@ -12,23 +12,6 @@ use app\models\forms\LoginForm;
 
 class StartController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['index'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['index'],
-                        'roles' => ['?']
-                    ]
-                ]
-            ]
-        ];
-    }
-
     public function actions()
     {
         return [

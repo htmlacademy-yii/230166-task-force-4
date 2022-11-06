@@ -15,7 +15,7 @@ use app\models\forms\FilterForm;
 use app\models\forms\AddFeedbackForm;
 use app\models\forms\AddResponseForm;
 use yii\web\NotFoundHttpException;
-use TaskForce\Models\Task as BaseTask;
+use TaskForce\Models\BaseTask;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Actions\ActionCancel;
 use TaskForce\Actions\ActionComplete;
@@ -25,31 +25,42 @@ use TaskForce\Actions\ActionStart;
 
 class TasksController extends SecuredController
 {
-    // public function behaviors()
-    // {
-    //     $rules = parent::behaviors();
-    //     $rule = [
-    //         'allow' => false,
-    //         'actions' => ['add'],
-    //         'roles' => ['@'],
-    //         'matchCallback' => function ($rule, $action) {
-    //             return (Yii::$app->user->identity->role === User::ROLE_EXECUTOR);
-    //         }
-    //     ];
-    //     array_unshift($rules['access']['rules'], $rule);
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['add'],
+            'roles' => ['@'],
+            'matchCallback' => function ($rule, $action) {
+                return (Yii::$app->user->identity->role === User::ROLE_EXECUTOR);
+            }
+        ];
+        array_unshift($rules['access']['rules'], $rule);
 
-    //     return $rules;
-    // }
+        return $rules;
+    }
 
-    // public function actions()
-    // {
-    //     return [
-    //         'cencel' => [
-    //             'class' => 'TaskForce\Actions\ActionCancel',
-    //             'successCallback' => [$this, 'onCencelSuccess'],
-    //         ],
-    //     ];
-    // }
+    public function actions()
+    {
+        return [
+            'respond' => [
+                'class' => 'TaskForce\Actions\ActionRespond',
+            ],
+            'start' => [
+                'class' => 'TaskForce\Actions\ActionStart',
+            ],
+            'cencel' => [
+                'class' => 'TaskForce\Actions\ActionCancel',
+            ],
+            'quit' => [
+                'class' => 'TaskForce\Actions\ActionQuit',
+            ],
+            'complete' => [
+                'class' => 'TaskForce\Actions\ActionComplete',
+            ],
+        ];
+    }
 
     /**
      * Displays homepage.
@@ -142,28 +153,5 @@ class TasksController extends SecuredController
         }
 
         return $this->render('add-task', compact('task', 'city', 'categories'));
-    }
-
-    public function actionRefusal($id)
-    {
-        $currentUser = User::getCurrentUser();
-
-        $task = Task::find()
-            ->where([
-                    'task.id' => $id,
-                    'task.executor_id' => $currentUser['id']
-                ])
-            ->limit(1)
-            ->one();
-
-        $task->status = 'failed';
-        $task->save(false);
-
-        $this->redirect('/tasks');
-    }
-
-    public function onCencelSuccess()
-    {
-        var_dump('Cencel');
     }
 }

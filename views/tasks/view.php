@@ -31,6 +31,8 @@
             <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
         <? endif; ?>
 
+        <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
+
         <?php if(ArrayHelper::getValue($currentUser, 'is_executor') && ArrayHelper::getValue($task, 'executor_id') === Yii::$app->user->getId()) : ?>
             <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
         <? endif; ?>
@@ -114,8 +116,8 @@
     </div>
 </main>
 
-<?= $this->render('_add-response-modal', compact('addResponseForm')); ?>
-<?= $this->render('_add-feedback-modal', compact('addFeedbackForm')); ?>
-<?= $this->render('_refusal-modal', compact('task')); ?>
+<?= $this->render('_add-response-modal', compact('addResponseForm', 'task', 'currentUser')); ?>
+<?= $this->render('_add-feedback-modal', compact('addFeedbackForm', 'task', 'currentUser')); ?>
+<?= $this->render('_refusal-modal', compact('task', 'task', 'currentUser')); ?>
 
 <div class="overlay"></div>

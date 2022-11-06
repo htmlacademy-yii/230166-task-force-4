@@ -2,6 +2,8 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 ?>
 
@@ -15,6 +17,11 @@ use yii\helpers\Html;
         <div class="completion-form pop-up--form regular-form">
             <?php $form = ActiveForm::begin([
                     'id' => 'completion-form',
+                    'action' =>  Url::to([
+                        '/tasks/complete',
+                        'taskId' => ArrayHelper::getValue($task, 'id'),
+                        'userId' => ArrayHelper::getValue($currentUser, 'id')
+                    ]),
                     'fieldConfig' => [
                         'options' => [
                             'tag' => false,
