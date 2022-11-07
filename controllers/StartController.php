@@ -45,7 +45,8 @@ class StartController extends Controller
     public function actionSignup()
     {
         $user = new User();
-        $cities = ArrayHelper::map(City::find()->asArray()->all(), 'id', 'name');
+        $city = new City();
+        $cities = ArrayHelper::getColumn(City::find()->asArray()->all(), 'name');
 
         if (Yii::$app->request->getIsPost()) {
             $user->load(Yii::$app->request->post());
@@ -53,13 +54,14 @@ class StartController extends Controller
             if ($user->validate()) {
                 $user->password = Yii::$app->security->generatePasswordHash($user->password);
                 $user->role = $user['role'] ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
+                $user->city_id = City::find()->select('id')->where(['name' => $user['city']]);
 
                 $user->save(false);
                 $this->redirect('/');
             }
         }
 
-        return $this->render('signup', compact('user', 'cities'));
+        return $this->render('signup', compact('user', 'city', 'cities'));
     }
 
     public function onAuthSuccess($client)

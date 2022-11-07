@@ -1621,3 +1621,7 @@ form .has-error textarea:hover {
   line-height: 23px;
   color: #777777;
 }
+
+#city_name {
+  padding-left: 50px;
+}

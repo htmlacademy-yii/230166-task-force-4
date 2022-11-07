@@ -39,6 +39,11 @@ class Category extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getMapIdsToLabels()
+    {
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'label');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -70,10 +75,5 @@ class Category extends \yii\db\ActiveRecord
     public function getUserCategories()
     {
         return $this->hasMany(UserCategory::class, ['category_id' => 'id']);
-    }
-
-    public static function getMapIdsToLabels()
-    {
-        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'label');
     }
 }

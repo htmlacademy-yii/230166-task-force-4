@@ -21,11 +21,12 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/normalize.css',
+        'https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css',
         'css/style.css',
     ];
     public $js = [
         ['https://api-maps.yandex.ru/2.1/?lang=ru_RU', 'position' => \yii\web\View::POS_HEAD],
-        'https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js',
+        ['https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js', 'position' => \yii\web\View::POS_HEAD],
         'js/main.js',
         'js/autocomplete.js'
     ];

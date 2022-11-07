@@ -43,6 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public $password_repeat;
     public $categories;
+    public $city;
 
     /**
      * {@inheritdoc}
@@ -71,6 +72,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'unique', 'message' => 'Пользователь с таким Email уже зарегистрирован'],
             [['description'], 'string', 'max' => 1000, 'message' => 'Максимальное количество символов 1000'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['city'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city' => 'name']],
         ];
     }
 
@@ -88,13 +90,14 @@ class User extends ActiveRecord implements IdentityInterface
             'email' => 'Email',
             'name' => 'Ваше имя',
             'password' => 'Пароль',
+            'password_repeat' => 'Повтор пароля',
             'avatar' => 'Аватар',
             'date_of_birth' => 'Дата рождения',
             'phone' => 'Телефон',
             'telegram' => 'Telegram',
             'description' => 'Информация о себе',
             'city_id' => 'City ID',
-            'password_repeat' => 'Повтор пароля'
+            'city' => 'Город',
         ];
     }
 
