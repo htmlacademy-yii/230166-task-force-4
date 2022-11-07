@@ -68,24 +68,22 @@ use yii\widgets\ActiveForm;
 </main>
 
 <script>
-
-        const autoCompleteJS = new autoComplete({
-            selector: '#city_name',
-            data: {
-                src: ["<?= implode('", "', $cities) ?>"],
-                cache: true,
-            },
-            resultItem: {
-                highlight: true
-            },
-            events: {
-                input: {
-                    selection: (event) => {
-                        const selection = event.detail.selection.value;
-                        autoCompleteJS.input.value = selection;
-                    }
+    const autoCompleteJS = new autoComplete({
+        selector: '#city_name',
+        data: {
+            src: ["<?= implode('", "', $cities) ?>"],
+            cache: true,
+        },
+        resultItem: {
+            highlight: true
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection;
                 }
             }
-        });
-
+        }
+    });
 </script>

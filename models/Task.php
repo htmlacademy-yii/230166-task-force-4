@@ -32,6 +32,9 @@ use app\models\User;
  */
 class Task extends \yii\db\ActiveRecord
 {
+    public $city;
+    public $file;
+
     /**
      * {@inheritdoc}
      */
@@ -46,7 +49,7 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'deadline', 'date_of_birth'], 'safe'],
+            [['created_at', 'deadline', 'date_of_birth', 'file'], 'safe'],
             [['customer_id', 'executor_id', 'category_id'], 'integer'],
             [['status'], 'string'],
             [['title', 'text'], 'required'],
@@ -57,6 +60,8 @@ class Task extends \yii\db\ActiveRecord
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['city'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city' => 'name']],
+            ['file', 'file']
         ];
     }
 
@@ -70,13 +75,15 @@ class Task extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'category_id' => 'Category Id',
+            'category_id' => 'Категории',
             'city_id' => 'City Id',
             'status' => 'Status',
             'title' => 'Опишите суть работы',
             'text' => 'Подробности задания',
             'price' => 'Бюджет',
             'deadline' => 'Срок исполнения',
+            'city' => 'Город',
+            'file' => 'Добавить новый файл',
         ];
     }
 

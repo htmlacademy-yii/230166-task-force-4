@@ -19,13 +19,14 @@ class ActionRefuse extends AbstractAction
     {
         return
             $task->status === BaseTask::STATUS_NEW
-            && $currentUser->role === User::ROLE_EXECUTOR;
+            && $task->customer_id === $currentUser->id;
     }
 
     public function run(int $taskId, int $userId)
     {
         $response = Response::findOne(['task_id' => $taskId, 'user_id' => $userId]);
-        $response->delete();
+        $response->status = Response::STATUS_REFUSE;
+        $response->save(false);
         header('Location: /tasks/' . $taskId);
     }
 }

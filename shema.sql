@@ -83,7 +83,7 @@ CREATE TABLE response (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   task_id INT,
   user_id INT,
-  is_approved TINYINT(1) DEFAULT 0,
+  status ENUM('new', 'refuse', 'aprove') DEFAULT 'new',
   message VARCHAR(500) NULL DEFAULT NULL,
   price INT UNSIGNED NULL DEFAULT NULL,
 
@@ -110,7 +110,7 @@ CREATE TABLE file (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   task_id INT,
   user_id INT,
-  url VARCHAR(200) NOT NULL,
+  url VARCHAR(500) NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE CASCADE

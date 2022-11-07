@@ -11,17 +11,13 @@ use app\models\City;
 use app\models\Feedback;
 use app\models\Response;
 use app\models\User;
+use app\models\File;
 use app\models\forms\FilterForm;
 use app\models\forms\AddFeedbackForm;
 use app\models\forms\AddResponseForm;
-use yii\web\NotFoundHttpException;
+use Exception;
 use TaskForce\Models\BaseTask;
-use TaskForce\Actions\AbstractAction;
-use TaskForce\Actions\ActionRefuse;
-use TaskForce\Actions\ActionComplete;
-use TaskForce\Actions\ActionQuit;
-use TaskForce\Actions\ActionRespond;
-use TaskForce\Actions\ActionStart;
+use yii\web\UploadedFile;
 
 class TasksController extends SecuredController
 {
@@ -30,7 +26,7 @@ class TasksController extends SecuredController
         $rules = parent::behaviors();
         $rule = [
             'allow' => false,
-            'actions' => ['add'],
+            'actions' => ['add-task'],
             'roles' => ['@'],
             'matchCallback' => function ($rule, $action) {
                 return (Yii::$app->user->identity->role === User::ROLE_EXECUTOR);
@@ -99,24 +95,36 @@ class TasksController extends SecuredController
     {
         $task = Task::getTaskById($taskId);
         $responses = Task::getAllResponses($task);
-
         $currentUser = User::getCurrentUser();
         $addFeedbackForm = new AddFeedbackForm();
         $addResponseForm = new AddResponseForm();
         $baseTask = new BaseTask(ArrayHelper::getValue($task, 'customer_id'));
 
-        // var_dump(BaseTask::getAvailableActions($task, $currentUser));
-        // var_dump($currentUser->role);
-
         if (Yii::$app->request->getIsPost()) {
-            if ($addFeedbackForm->load(Yii::$app->request->post())) {
-                $feedback = new Feedback();
-                $feedback->message = $addFeedbackForm['message'];
-                $feedback->rating = 4;
-                $feedback->save(false);
+            if ($addFeedbackForm->load(Yii::$app->request->post()) && $addFeedbackForm->validate()) {
+                $transaction = Yii::$app->db->beginTransaction();
+
+                try {
+                    $feedback = new Feedback();
+                    $feedback->message = $addFeedbackForm['message'];
+                    $feedback->rating = $addFeedbackForm['message'];
+                    $feedback->save(false);
+
+                    $currentUser->count_feedbacks += 1;
+                    $currentUser->rating = Feedback::find()->where(['executor_id' => $task->executor_id])->sum('rating') / $currentUser->count_feedbacks;
+                    $currentUser->save();
+
+                    $transaction->commit();
+                } catch(Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                } catch (\Throwable $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
             }
 
-            if ($addResponseForm->load(Yii::$app->request->post())) {
+            if ($addResponseForm->load(Yii::$app->request->post()) && $addResponseForm->validate()) {
                 $response = new Response();
                 $response->task_id = $taskId;
                 $response->user_id = $currentUser['id'];
@@ -132,29 +140,35 @@ class TasksController extends SecuredController
     public function actionAddTask()
     {
         $task = new Task();
-        $city = new City();
         $categories = Category::getMapIdsToLabels();
         $currentUserId = Yii::$app->user->identity->id;
+        $cities = ArrayHelper::getColumn(City::find()->asArray()->all(), 'name');
 
         if (Yii::$app->request->getIsPost()) {
-            if ($task->load(Yii::$app->request->post()) && $task->validate()) {
+            $task->load(Yii::$app->request->post());
+            $task->file = UploadedFile::getInstance($task, 'file');
+
+            if ($task->validate()) {
                 $task->customer_id = $currentUserId;
-                $task->save(false);
-            }
+                $task->city_id = City::find()->select('id')->where(['name' => $task['city']]);
 
-            if ($city->load(Yii::$app->request->post()) && $city->validate()) {
-                $geoCoder = new GeoCoderController($city['name']);
-                $city->name = $geoCoder->getName();
-                $city->address = $geoCoder->getAddress();
-                $city->lat = $geoCoder->getLat();
-                $city->lng = $geoCoder->getLng();
-                $city->save(false);
+                if ($task->file) {
+                    $file = new File;
+                    $path = '/uploads/file-' . uniqid() . '.' . $task->file->extension;
 
-                $task->city_id = $city['id'];
+                    if ($task->file->saveAs('@webroot' . $path)) {
+                        $file->task_id = $task->id;
+                        $file->user_id = $currentUserId;
+                        $file->url = $path;
+                        $file->save(false);
+                    }
+                }
+
                 $task->save(false);
+                $this->redirect('/tasks');
             }
         }
 
-        return $this->render('add-task', compact('task', 'city', 'categories'));
+        return $this->render('add-task', compact('task', 'categories', 'cities'));
     }
 }

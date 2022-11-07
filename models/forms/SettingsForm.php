@@ -24,7 +24,7 @@ class SettingsForm extends Model
 
     public function __construct()
     {
-        $this->_user = $this->getUser();
+        $this->_user = User::getCurrentUser();
 
         $this->avatar = $this->_user->avatar;
         $this->name = $this->_user->name;
@@ -84,7 +84,6 @@ class SettingsForm extends Model
             }
         }
 
-
         if ($this->categories) {
             $this->updateUserCategories();
         }
@@ -127,11 +126,5 @@ class SettingsForm extends Model
             $userCategory->category_id = $category_id;
             $userCategory->save(false);
         }
-    }
-
-    private function getUser()
-    {
-        $currentId = Yii::$app->user->getId();
-        return $this->_user = User::findOne($currentId);
     }
 }

@@ -24,8 +24,17 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($task, 'category_id')->dropDownList($categories); ?>
             </div>
 
-            <div class="form-group">
-                <?= $form->field($city, 'name'); ?>
+            <div class="form-group autoComplete_wrapper">
+                <?= $form->field($task, 'city')
+                    ->input('search', [
+                        'id' => 'city_name',
+                        'dir' => 'ltr',
+                        'spellcheck' => 'false',
+                        'autocorrect' => 'off',
+                        'autocomplete' => 'off',
+                        'autocapitalize' => 'off'
+                    ]);
+                ?>
             </div>
 
             <div class="half-wrapper">
@@ -38,12 +47,42 @@ use yii\widgets\ActiveForm;
             </div>
 
             <p class="form-label">Файлы</p>
-            <div class="new-file">
-               Добавить новый файл
-            </div>
+
+            <?= $form->field($task, 'file', [
+                    'template' => '{input}{label}{error}',
+                    'labelOptions' => [
+                        'class' => 'new-file'
+                    ]
+                ])
+                ->fileInput([
+                    'hidden' => '',
+                    'id' => 'button-input'
+                ]);
+            ?>
 
             <input type="submit" class="button button--blue" value="Опубликовать">
 
         <?php ActiveForm::end(); ?>
     </div>
 </main>
+
+<script>
+    const autoCompleteJS = new autoComplete({
+        selector: '#city_name',
+        data: {
+            src: ["<?= implode('", "', $cities) ?>"],
+            cache: true,
+        },
+        resultItem: {
+            highlight: true
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection;
+                }
+            }
+        }
+    });
+</script>

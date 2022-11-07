@@ -20,6 +20,10 @@ use Yii;
  */
 class Response extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 'new';
+    const STATUS_REFUSE = 'refuse';
+    const STATUS_APROVE = 'aprove';
+
     /**
      * {@inheritdoc}
      */

@@ -11,21 +11,9 @@ class ProfileController extends SecuredController
     public function actionIndex($userId)
     {
         /**
-         * Получаем пользователя из модели User по id из get-параметров
+         * Получаем пользователя
          */
         $user = User::getUserAsArray($userId);
-
-        /**
-         * Получаем все задачи пользователя
-         */
-        $tasks = User::getTasks($user);
-        /**
-         * фильтруем задачи по статусу для получения проваленных задач
-         */
-        $failedTasks = array_filter($tasks, function($task) {
-                return $task['status'] === 'failed';
-            }
-        );
 
         /**
          * категории пользователя
@@ -34,13 +22,13 @@ class ProfileController extends SecuredController
 
         if ($user['role'] === User::ROLE_EXECUTOR) {
             /**
-             * количество задач
+             * количество задач для исполнителя
             */
             $user['tasks_count']['all'] = Task::find()->where(['task.executor_id' => $user['id']])->count();
             $user['tasks_count']['failed'] = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'failed'])->count();
 
             /**
-             * отзывы от заказчиков
+             * отзывы заказчиков
             */
             $feedbacks = User::getFeedbacks($user);
 
@@ -50,7 +38,7 @@ class ProfileController extends SecuredController
             $user['rate'] = User::getRate($user);
         } else {
             /**
-             * количество задач
+             * количество задач для заказчика
             */
             $user['tasks_count']['all'] = Task::find()->where(['task.customer_id' => $user['id']])->count();
             $user['tasks_count']['failed'] = Task::find()->where(['task.customer_id' => $user['id'], 'task.status' => 'failed'])->count();
@@ -60,10 +48,12 @@ class ProfileController extends SecuredController
         return $this->render('index', compact('user', 'feedbacks'));
     }
 
-    public function actionLogout()
+    /**
+     * выход пользователя
+    */
+    public function actionLogout(): object
     {
         Yii::$app->user->logout();
-
         return $this->redirect('/');
     }
 }
