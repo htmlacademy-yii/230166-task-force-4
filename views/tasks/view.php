@@ -6,6 +6,7 @@
     use app\models\User;
     use TaskForce\Actions\ActionQuit;
     use TaskForce\Actions\ActionRespond;
+    use TaskForce\Actions\ActionComplete;
     use TaskForce\Models\BaseTask;
 
     $price = ArrayHelper::getValue($task, 'price');
@@ -32,22 +33,22 @@
             </p>
         <? endif; ?>
 
-        <?php if(ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && !ArrayHelper::getValue($task, 'executor_id')) : ?>
+        <?php if(ArrayHelper::isIn('respond', BaseTask::getAvailableActions($task, $currentUser))) : ?>
             <button class="button button--blue action-btn" data-action="act_response" type="button">
                 <?= Html::encode(ActionRespond::LABEL) ?>
             </button>
         <? endif; ?>
 
-        <button class="button button--blue action-btn" data-action="act_response" type="button">Откликнуться на задание</button>
-
-        <?php if(ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && ArrayHelper::getValue($task, 'executor_id') === Yii::$app->user->getId()) : ?>
-            <button class="button button--orange action-btn" data-action="refusal">
+        <?php if (ArrayHelper::isIn('quit', BaseTask::getAvailableActions($task, $currentUser))) : ?>
+            <button class="button button--orange action-btn" data-action="refusal" type="button">
                 <?= Html::encode(ActionQuit::LABEL) ?>
             </button>
         <? endif; ?>
 
-        <?php if(!ArrayHelper::getValue($currentUser, 'role') === User::ROLE_EXECUTOR && ArrayHelper::getValue($task, 'customer_id') === Yii::$app->user->getId()) : ?>
-            <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
+        <?php if(ArrayHelper::isIn('complete', BaseTask::getAvailableActions($task, $currentUser))) : ?>
+            <button class="button button--pink action-btn" data-action="completion" type="button">
+                <?= Html::encode(ActionComplete::LABEL) ?>
+            </button>
         <? endif; ?>
 
         <?php if (ArrayHelper::getValue($task, 'city')) : ?>
@@ -125,8 +126,8 @@
     </div>
 </main>
 
-<?= $this->render('_add-response-modal', compact('addResponseForm', 'task', 'currentUser')); ?>
-<?= $this->render('_add-feedback-modal', compact('addFeedbackForm', 'task', 'currentUser')); ?>
-<?= $this->render('_refusal-modal', compact('task', 'task', 'currentUser')); ?>
+<?= $this->render('_respond-modal', compact('addResponseForm', 'task', 'currentUser')); ?>
+<?= $this->render('_complete-modal', compact('addFeedbackForm', 'task', 'currentUser')); ?>
+<?= $this->render('_quit-modal', compact('task', 'task', 'currentUser')); ?>
 
 <div class="overlay"></div>

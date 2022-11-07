@@ -10,7 +10,7 @@ use app\models\User;
 
 class ActionRefuse extends AbstractAction
 {
-    const NAME = 'cancel';
+    const NAME = 'refuse';
     const LABEL = 'Отказать';
 
     public $successCallback;
@@ -26,6 +26,6 @@ class ActionRefuse extends AbstractAction
     {
         $response = Response::findOne(['task_id' => $taskId, 'user_id' => $userId]);
         $response->delete();
-        $this->redirect(['/tasks', 'taskId' => $taskId]);
+        header('Location: /tasks/' . $taskId);
     }
 }

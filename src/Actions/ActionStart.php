@@ -11,7 +11,7 @@ use app\models\User;
 class ActionStart extends AbstractAction
 {
     const NAME = 'start';
-    const LABEL = 'Запуск задания';
+    const LABEL = 'Принять';
 
     public static function check(Task $task, User $currentUser): bool
     {
@@ -31,6 +31,6 @@ class ActionStart extends AbstractAction
         $task->status = BaseTask::STATUS_INPROGRESS;
         $task->save(false);
 
-        $this->redirect(['/tasks', 'taskId' => $taskId]);
+        header('Location: /tasks/' . $taskId);
     }
 }

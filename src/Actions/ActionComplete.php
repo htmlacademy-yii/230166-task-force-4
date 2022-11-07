@@ -35,6 +35,6 @@ class ActionComplete extends AbstractAction
             }
         }
 
-        $this->redirect(['/tasks', 'taskId' => $taskId]);
+        header('Location: /tasks/' . $taskId);
     }
 }

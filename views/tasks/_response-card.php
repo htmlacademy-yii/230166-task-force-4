@@ -8,6 +8,7 @@ use app\components\StarsWidget;
 use app\components\AvatarWidget;
 use TaskForce\Actions\ActionStart;
 use TaskForce\Actions\ActionRefuse;
+use TaskForce\Models\BaseTask;
 
 ?>
 
@@ -46,23 +47,28 @@ use TaskForce\Actions\ActionRefuse;
     </div>
 
     <div class="button-popup">
-        <?= Html::a(ActionStart::LABEL, Url::to([
-                '/tasks/start',
-                'taskId' => ArrayHelper::getValue($task, 'id'),
-                'userId' => ArrayHelper::getValue($response, 'user.id')
-            ]),
-            [
-                'class' => 'button button--blue button--small'
-            ])
-        ?>
-        <?= Html::a(ActionRefuse::LABEL, Url::to([
-                '/tasks/cencel',
-                'taskId' => ArrayHelper::getValue($task, 'id'),
-                'userId' => ArrayHelper::getValue($response, 'user.id')
-            ]),
-            [
-                'class' => 'button button--orange button--small'
-            ])
-        ?>
+        <?php if(ArrayHelper::isIn('start', BaseTask::getAvailableActions($task, $currentUser))) : ?>
+            <?= Html::a(ActionStart::LABEL, Url::to([
+                    '/tasks/start',
+                    'taskId' => ArrayHelper::getValue($task, 'id'),
+                    'userId' => ArrayHelper::getValue($response, 'user.id')
+                ]),
+                [
+                    'class' => 'button button--blue button--small'
+                ])
+            ?>
+        <? endif; ?>
+
+        <?php if(ArrayHelper::isIn('refuse', BaseTask::getAvailableActions($task, $currentUser))) : ?>
+            <?= Html::a(ActionRefuse::LABEL, Url::to([
+                    '/tasks/refuse',
+                    'taskId' => ArrayHelper::getValue($task, 'id'),
+                    'userId' => ArrayHelper::getValue($response, 'user.id')
+                ]),
+                [
+                    'class' => 'button button--orange button--small'
+                ])
+            ?>
+        <? endif; ?>
     </div>
 </div>

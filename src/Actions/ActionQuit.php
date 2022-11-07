@@ -32,6 +32,6 @@ class ActionQuit extends AbstractAction
         $task->status = 'failed';
         $task->save(false);
 
-        $this->redirect('/tasks');
+        header('Location: /tasks/' . $taskId);
     }
 }

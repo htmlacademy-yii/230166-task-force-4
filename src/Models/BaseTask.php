@@ -2,16 +2,15 @@
 
 namespace TaskForce\Models;
 
+use yii\helpers\ArrayHelper;
 use app\models\Task;
 use app\models\User;
-use yii\base\Action;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Actions\ActionRefuse;
 use TaskForce\Actions\ActionComplete;
 use TaskForce\Actions\ActionQuit;
 use TaskForce\Actions\ActionRespond;
 use TaskForce\Actions\ActionStart;
-use TaskForce\Exceptions\ExceptionRequestValueIsEmpty;
 use TaskForce\Exceptions\ExceptionWrongParameter;
 
 class BaseTask

@@ -105,8 +105,8 @@ class TasksController extends SecuredController
         $addResponseForm = new AddResponseForm();
         $baseTask = new BaseTask(ArrayHelper::getValue($task, 'customer_id'));
 
-        var_dump(BaseTask::getAvailableActions($task, $currentUser));
-        var_dump($currentUser->role);
+        // var_dump(BaseTask::getAvailableActions($task, $currentUser));
+        // var_dump($currentUser->role);
 
         if (Yii::$app->request->getIsPost()) {
             if ($addFeedbackForm->load(Yii::$app->request->post())) {

@@ -19,7 +19,8 @@ class ActionRespond extends AbstractAction
     {
         return
             $task->status === BaseTask::STATUS_NEW
-            && $currentUser->role === User::ROLE_EXECUTOR;
+            && $currentUser->role === User::ROLE_EXECUTOR
+            && !Response::find()->where(['task_id' => $task->id, 'user_id' => $currentUser->id]);
     }
 
     public function run(int $taskId, int $userId)
@@ -39,6 +40,6 @@ class ActionRespond extends AbstractAction
             }
         }
 
-        $this->redirect(['/tasks', 'taskId' => $taskId]);
+        header('Location: /tasks/' . $taskId);
     }
 }

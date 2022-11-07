@@ -17,7 +17,7 @@ use yii\helpers\ArrayHelper;
         <div class="addition-form pop-up--form regular-form">
             <?php $form = ActiveForm::begin([
                     'action' => Url::to([
-                        '/tasks/complete',
+                        '/tasks/respond',
                         'taskId' => ArrayHelper::getValue($task, 'id'),
                         'userId' => ArrayHelper::getValue($currentUser, 'id')
                     ]),
