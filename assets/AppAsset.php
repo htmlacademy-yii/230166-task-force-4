@@ -25,7 +25,9 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         ['https://api-maps.yandex.ru/2.1/?lang=ru_RU', 'position' => \yii\web\View::POS_HEAD],
+        'https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js',
         'js/main.js',
+        'js/autocomplete.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
