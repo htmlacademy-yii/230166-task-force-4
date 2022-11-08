@@ -10,36 +10,24 @@ class ProfileController extends SecuredController
 {
     public function actionIndex($userId)
     {
-        /**
-         * Получаем пользователя
-         */
+        //Получаем пользователя из бд как массив
         $user = User::getUserAsArray($userId);
 
-        /**
-         * категории пользователя
-         */
+        //категории пользователя из бд
         $user['categories'] = User::getCategories($user);
 
         if ($user['role'] === User::ROLE_EXECUTOR) {
-            /**
-             * количество задач для исполнителя
-            */
+            //количество задач для исполнителя
             $user['tasks_count']['all'] = Task::find()->where(['task.executor_id' => $user['id']])->count();
             $user['tasks_count']['failed'] = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'failed'])->count();
 
-            /**
-             * отзывы заказчиков
-            */
+            // отзывы заказчиков
             $feedbacks = User::getFeedbacks($user);
 
-            /**
-             * место в рейтинге
-            */
+            //место в рейтинге
             $user['rate'] = User::getRate($user);
         } else {
-            /**
-             * количество задач для заказчика
-            */
+            //количество задач для заказчика
             $user['tasks_count']['all'] = Task::find()->where(['task.customer_id' => $user['id']])->count();
             $user['tasks_count']['failed'] = Task::find()->where(['task.customer_id' => $user['id'], 'task.status' => 'failed'])->count();
             $feedbacks = [];
@@ -49,9 +37,9 @@ class ProfileController extends SecuredController
     }
 
     /**
-     * выход пользователя
+     * разлогинивание текущего пользователя
     */
-    public function actionLogout(): object
+    public function actionLogout()
     {
         Yii::$app->user->logout();
         return $this->redirect('/');

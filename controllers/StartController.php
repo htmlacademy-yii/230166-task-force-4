@@ -25,7 +25,6 @@ class StartController extends Controller
     public function actionIndex()
     {
         $this->layout = 'start';
-
         $loginForm = new LoginForm();
 
         if (Yii::$app->request->getIsPost()) {

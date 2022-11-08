@@ -2,31 +2,36 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Task;
 
 class MyTaskController extends SecuredController
 {
+    /**
+     * Выводит список новых задач для текущего пользователя
+    */
     public function actionNew()
     {
-        $query = Task::getQueryWithNewTasks();
-        $newTasks = $query->where(['task.id' => Yii::$app->user->getId()])->all();
+        $newTasks = Task::getNewTasksForCurrentUser();
 
         return $this->render('new', compact('newTasks'));
     }
 
+    /**
+     * Выводит список задач в работе
+    */
     public function actionInProgress()
     {
-        $query = Task::getQueryWithNewTasks();
-        $inProgressTasks = $query->where(['task.id' => Yii::$app->user->getId(), 'task.status' => 'in_progress'])->all();
+        $inProgressTasks = Task::getProgressTasksForCurrentUser();
 
         return $this->render('in-progress', compact('inProgressTasks'));
     }
 
+    /**
+     * Выводит список законченнных задач
+    */
     public function actionFinished()
     {
-        $query = Task::getQueryWithNewTasks();
-        $finishedTasks = $query->where(['task.id' => Yii::$app->user->getId(), 'task.status' => 'done'])->all();
+        $finishedTasks = Task::getFinishedTasksForCurrentUser();
 
         return $this->render('finished', compact('finishedTasks'));
     }

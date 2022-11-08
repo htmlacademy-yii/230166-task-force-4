@@ -87,21 +87,9 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getQueryWithNewTasks(): \yii\db\ActiveQuery
-    {
-        return self::find()
-            ->joinWith(['category', 'city'])
-            ->where(['task.status' => 'new'])
-            ->asArray();
-    }
-
     public static function getTaskById($taskId)
     {
-        $task = self::find()
-            ->joinWith(['city', 'category'])
-            ->where(['task.id' => $taskId])
-            ->limit(1)
-            ->one();
+        $task = self::find()->joinWith(['city', 'category'])->where(['task.id' => $taskId])->limit(1)->one();
 
         if (!$task) {
             throw new NotFoundHttpException("Контакт с задачей с ID $taskId не найден");
@@ -110,13 +98,42 @@ class Task extends \yii\db\ActiveRecord
         return $task;
     }
 
-    public static function getAllResponses($task)
+    public static function getAllResponses(Task $task): array
     {
-        return Response::find()
-            ->where(['task_id' => $task['id']])
-            ->joinWith('user')
-            ->asArray()
-            ->all();
+        return Response::find()->where(['task_id' => $task->id])->joinWith('user')->asArray()->all();
+    }
+
+    public static function getNewTasksForCurrentUser(): ?array
+    {
+        $currentUser = User::getCurrentUser();
+
+        if ($currentUser->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+        } else {
+            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+        }
+    }
+
+    public static function getProgressTasksForCurrentUser(): ?array
+    {
+        $currentUser = User::getCurrentUser();
+
+        if ($currentUser->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+        } else {
+            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+        }
+    }
+
+    public static function getFinishedTasksForCurrentUser(): ?array
+    {
+        $currentUser = User::getCurrentUser();
+
+        if ($currentUser->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
+        } else {
+            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
+        }
     }
 
     /**

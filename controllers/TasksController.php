@@ -68,7 +68,7 @@ class TasksController extends SecuredController
         $pageSize = 4;
         $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
-        $query = Task::getQueryWithNewTasks();
+        $query = Task::find()->joinWith(['category', 'city'])->where(['task.status' => 'new'])->asArray();
         $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {

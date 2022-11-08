@@ -103,12 +103,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getUserAsArray($userId)
     {
-        $user = self::find()
-            ->where(['user.id' => $userId])
-            ->joinWith(['city'])
-            ->asArray()
-            ->limit(1)
-            ->one();
+        $user = self::find()->where(['user.id' => $userId])->joinWith(['city'])->asArray()->limit(1)->one();
 
         if (!$user) {
             throw new NotFoundHttpException("Контакт с ID $userId не найден");
@@ -120,11 +115,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getCurrentUser()
     {
         if ($currentUserId = Yii::$app->user->getId()) {
-            $currentUser = self::find()
-                ->where(['user.id' => $currentUserId])
-                ->joinWith(['city'])
-                ->limit(1)
-                ->one();
+            $currentUser = self::find()->where(['user.id' => $currentUserId])->joinWith(['city'])->limit(1)->one();
         }
 
         return $currentUser;
@@ -155,29 +146,15 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getTasks($user)
     {
         if ($user['role'] === self::ROLE_EXECUTOR) {
-            return
-                Task::find()
-                    ->where(['task.executor_id' => $user['id']])
-                    ->asArray()
-                    ->all();
+            return Task::find()->where(['task.executor_id' => $user['id']])->asArray()->all();
         }
 
-        return
-            Task::find()
-                ->where(['task.customer_id' => $user['id']])
-                ->asArray()
-                ->all();
+        return Task::find()->where(['task.customer_id' => $user['id']])->asArray()->all();
     }
 
     public static function getRate($user)
     {
-        $ids = User::find()
-            ->select(['user.id'])
-            ->orderBy(['user.rating' => SORT_DESC])
-            ->where(['user.role' => self::ROLE_EXECUTOR])
-            ->asArray()
-            ->all();
-
+        $ids = User::find()->select(['user.id'])->where(['user.role' => self::ROLE_EXECUTOR])->orderBy(['user.rating' => SORT_DESC])->asArray()->all();
         $arrIds = ArrayHelper::getColumn($ids, 'id');
 
         return array_search($user['id'], $arrIds);
@@ -189,22 +166,10 @@ class User extends ActiveRecord implements IdentityInterface
             $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
 
             foreach ($tasks as $task) {
-                $feedback = Feedback::find()
-                    ->where(['feedback.task_id' => $task['id']])
-                    ->asArray()
-                    ->limit(1)
-                    ->one();
-
-                $feedback['author'] = User::find()
-                    ->select(['user.id', 'user.avatar'])
-                    ->where(['user.id' => $task['customer_id']])
-                    ->asArray()
-                    ->limit(1)
-                    ->one();
-
+                $feedback = Feedback::find()->where(['feedback.task_id' => $task['id']])->limit(1)->asArray()->one();
+                $feedback['author'] = User::find()->select(['user.id', 'user.avatar'])->where(['user.id' => $task['customer_id']])->asArray()->limit(1)->one();
                 $feedback['task']['id'] = $task['id'];
                 $feedback['task']['title'] = $task['title'];
-
                 $feedbacks[] = $feedback;
             }
         }
@@ -215,10 +180,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getFeedbacksCount($user)
     {
         if ($user['role'] === self::ROLE_EXECUTOR) {
-            return
-                Task::find()
-                    ->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])
-                    ->count();
+            return Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->count();
         }
     }
 
