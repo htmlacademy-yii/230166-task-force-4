@@ -1,18 +1,14 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use app\models\Category;
+use yii\helpers\Html;
 
 ?>
 
 <div class="search-form">
     <?php $form = ActiveForm::begin([
             'id' => 'filter-form',
-            'fieldConfig' => [
-                'options' => [
-                    'tag' => false,
-                ]
-            ]
+            'fieldConfig' => ['options' => ['tag' => false]]
         ]);
     ?>
         <h4 class="head-card">Категории</h4>
@@ -20,7 +16,7 @@ use app\models\Category;
             <?= $form->field($filterForm, 'categories', [
                     'template' => '{input}'
                 ])
-                ->checkboxList(Category::getCategories(), [
+                ->checkboxList($categories, [
                     'class' => 'checkbox-wrapper',
                     'item' => function($index, $label, $name, $checked, $value) {
                         $checked = $checked ? 'checked' : '';
@@ -58,7 +54,7 @@ use app\models\Category;
             ?>
         </div>
 
-        <input type="submit" class="button button--blue" value="Искать">
+        <?= Html::submitButton('Искать', ['class' => 'button button--blue']) ?>
 
     <?php ActiveForm::end(); ?>
 </div>

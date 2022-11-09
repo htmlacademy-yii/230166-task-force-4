@@ -5,7 +5,9 @@
  */
 return [
     'task_id' => $faker->numberBetween(1,10),
-    'mark' => $faker->numberBetween(1,5),
-    'text' => $faker->paragraph(),
+    'customer_id' => $faker->numberBetween(1,10),
+    'executor_id' => $faker->numberBetween(1,10),
+    'rating' => $faker->numberBetween(1,5),
+    'message' => $faker->paragraph(),
 ];
 

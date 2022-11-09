@@ -4,8 +4,7 @@ namespace app\models\forms;
 
 use yii\base\Model;
 use app\models\Category;
-use app\models\Task as TaskActiveRecord;
-use TaskForce\Models\Task;
+use app\models\Task;
 
 class FilterForm extends Model
 {
@@ -41,39 +40,18 @@ class FilterForm extends Model
     public function rules(): array
     {
         return [
-            ['categories', 'each', 'rule' => ['exist', 'targetClass' => Category::class, 'targetAttribute' => ['categories' => 'name']]],
+            ['categories', 'each', 'rule' => ['exist', 'targetClass' => Category::class, 'targetAttribute' => ['categories' => 'id']]],
             ['noExecutor', 'boolean'],
             ['period', 'in', 'range' => array_keys($this->periodAttributeLabels())]
         ];
     }
 
-    public function getNewTaskQuery(): \yii\db\ActiveQuery
-    {
-        return TaskActiveRecord::find()
-        ->select([
-            'task.id',
-            'task.created_at',
-            'task.title',
-            'task.price',
-            'task.text',
-            'task.status',
-            'category.name as category_name',
-            'category.label as category_label',
-            'city.name as city'
-        ])
-        ->join('INNER JOIN', 'category', 'task.category_id = category.id')
-        ->join('INNER JOIN', 'user', 'task.customer_id = user.id')
-        ->join('INNER JOIN', 'city', 'user.city_id = city.id')
-        ->where(['task.status' => Task::STATUS_NEW])
-        ->asArray();
-    }
-
     public function getQueryWithFilters(): \yii\db\ActiveQuery
     {
-        $query = self::getNewTaskQuery();
+        $query = Task::find()->joinWith(['category', 'city'])->where(['task.status' => 'new'])->asArray();
 
         if ($this->categories) {
-            $query->andWhere(['category.name' => $this->categories]);
+            $query->andWhere(['category.id' => $this->categories]);
         }
 
         if ($this->noExecutor) {

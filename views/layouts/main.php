@@ -3,8 +3,13 @@
 /** @var yii\web\View $this */
 /** @var string $content */
 
-use app\assets\AppAsset;
+use Yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\Menu;
+use app\assets\AppAsset;
+use app\components\AvatarWidget;
+use app\models\User;
 
 AppAsset::register($this);
 
@@ -14,6 +19,9 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@web/favicon.ico']);
+
+$role = Yii::$app->user->identity->role;
+
 ?>
 
 <?php $this->beginPage() ?>
@@ -30,47 +38,85 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
 
 <header class="page-header">
     <nav class="main-nav">
-        <a href='#' class="header-logo">
-            <img class="logo-image" src="../img/logotype.png" width=227 height=60 alt="taskforce">
-        </a>
-        <div class="nav-wrapper">
-            <ul class="nav-list">
-                <li class="list-item list-item--active">
-                    <a class="link link--nav" >Новое</a>
-                </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav">Мои задания</a>
-                </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav">Создать задание</a>
-                </li>
-                <li class="list-item">
-                    <a href="#" class="link link--nav">Настройки</a>
-                </li>
-            </ul>
-        </div>
+        <?php if (Yii::$app->user->isGuest) : ?>
+            <a href="<?= Url::to('/', true) ?>" class="header-logo">
+                <?= Html::img(Yii::getAlias('@web').'/img/logotype.png', [
+                        'class' => 'logo-image',
+                        'width' => '227',
+                        'height' => '60',
+                        'alt' => 'taskforce'
+                    ]);
+                ?>
+            </a>
+        <? else : ?>
+            <a href="<?= Url::to('/tasks', true) ?>" class="header-logo">
+                <?= Html::img(Yii::getAlias('@web').'/img/logotype.png', [
+                        'class' => 'logo-image',
+                        'width' => '227',
+                        'height' => '60',
+                        'alt' => 'taskforce'
+                    ]);
+                ?>
+            </a>
+        <? endif; ?>
+        <?php if (!Yii::$app->user->isGuest) : ?>
+            <div class="nav-wrapper">
+                <?= Menu::widget([
+                        'items' => [
+                            ['label' => 'Новое', 'url' => ['/tasks/index']],
+                            ['label' => 'Мои задания', 'url' => ['/my-tasks/new']],
+                            ['label' => 'Создать задание', 'url' => ['/tasks/add-task'], 'visible' => $role === User::ROLE_CUSTOMER],
+                            ['label' => 'Настройки', 'url' => ['/settings/index']],
+                        ],
+                        'options' => [
+                            'class' => 'nav-list'
+                        ],
+                        'itemOptions' => [
+                            'class' => 'list-item'
+                        ],
+                        'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
+                        'activateItems' => true,
+                        'activateParents' => true,
+                        'activeCssClass' => 'list-item--active',
+                    ]);
+                ?>
+            </div>
+        <? endif; ?>
     </nav>
-    <div class="user-block">
-        <a href="#">
-            <img class="user-photo" src="../img/man-glasses.png" width="55" height="55" alt="Аватар">
-        </a>
-        <div class="user-menu">
-            <p class="user-name">Василий</p>
-            <div class="popup-head">
-                <ul class="popup-menu">
-                    <li class="menu-item">
-                        <a href="#" class="link">Настройки</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" class="link">Связаться с нами</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" class="link">Выход из системы</a>
-                    </li>
-                </ul>
+    <?php if (!Yii::$app->user->isGuest) : ?>
+        <div class="user-block">
+            <?= AvatarWidget::widget([
+                    'userId' => $role === User::ROLE_EXECUTOR ? Yii::$app->user->getId() : null,
+                    'src' => Yii::$app->user->identity->avatar,
+                    'width' => 55,
+                    'height' => 55,
+                    'alt' => 'Аватар'
+                ])
+            ?>
+            <div class="user-menu">
+                <p class="user-name">
+                    <?php if ($role === User::ROLE_EXECUTOR) : ?>
+                        <?= Html::a(Html::encode(Yii::$app->user->identity->name), Url::to(['/profile', 'userId' => Yii::$app->user->getId()]), ['class' => 'link']) ?>
+                    <? else : ?>
+                        <span class="link"><?= Html::encode(Yii::$app->user->identity->name) ?></span>
+                    <? endif; ?>
+                </p>
+                <div class="popup-head">
+                    <ul class="popup-menu">
+                        <li class="menu-item">
+                            <?= Html::a('Настройки', Url::to('/settings', true), ['class' => 'link']) ?>
+                        </li>
+                        <li class="menu-item">
+                            <?= Html::a('Связаться с нами', Url::to('/', true), ['class' => 'link']) ?>
+                        </li>
+                        <li class="menu-item">
+                            <?= Html::a('Выход из системы', Url::to('/start/logout', true), ['class' => 'link']) ?>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+    <? endif; ?>
 </header>
 
 <?= $content ?>

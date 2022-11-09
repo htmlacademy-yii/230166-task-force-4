@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\controllers\GeoCoderController;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "city".
@@ -13,6 +15,7 @@ use Yii;
  * @property float|null $lat
  * @property float|null $lng
  *
+ * @property Task[] $tasks
  * @property User[] $users
  */
 class City extends \yii\db\ActiveRecord
@@ -34,7 +37,7 @@ class City extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['name'], 'required'],
             [['lat', 'lng'], 'number'],
-            [['name'], 'string', 'max' => 32],
+            [['name'], 'string', 'max' => 100],
         ];
     }
 
@@ -52,22 +55,43 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getAllNames(): array
+    {
+        return ArrayHelper::getColumn(self::find()->asArray()->all(), 'name');
+    }
+
+    public static function getCityId($cityName, $cities)
+    {
+        if (!ArrayHelper::isIn($cityName, $cities)) {
+            $geoCoder = new GeoCoderController($cityName);
+            $city = new City;
+            $city->name = $cityName;
+            $city->lat = $geoCoder->getLat();
+            $city->lng = $geoCoder->getLng();
+            $city->save(false);
+            return $city->id;
+        } else {
+            return ArrayHelper::getValue(City::findOne(['name' => $cityName]), 'id');
+        }
+    }
+
+    /**
+     * Gets query for [[Tasks]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Task::class, ['city_id' => 'id']);
+    }
+
     /**
      * Gets query for [[Users]].
      *
-     * @return \yii\db\ActiveQuery|UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getUsers()
     {
         return $this->hasMany(User::class, ['city_id' => 'id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return CityQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CityQuery(get_called_class());
     }
 }

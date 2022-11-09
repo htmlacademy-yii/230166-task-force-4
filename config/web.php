@@ -3,24 +3,39 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
-/**
- * Часовой пояс по умолчанию
-*/
-date_default_timezone_set("Europe/Moscow");
-
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'ru-RU',
+    'defaultRoute' => 'start',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'language' => 'ru',
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'clientId' => '51461761',
+                    'clientSecret' => '4v1hqFOCjiVanzOG2szx',
+                    'scope' => 'email',
+                    'apiVersion' => '5.131'
+                ]
+            ]
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
+        'response' => [
+            // 'format' => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'CNYubAHht_36NbftKmzT4TU_MvlfZfwv',
+            'cookieValidationKey' => 'BYsZYK6GVFucxYv4cBuHD73Q8mRi5ZGD',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -28,14 +43,16 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['/'],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'error/index',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
+            'class' => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure transport
+            // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
         'log' => [
@@ -53,7 +70,17 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                // ...
+                '/signup' => '/start/signup',
+                '/add-task' => '/tasks/add-task',
+                '/tasks/<taskId:\d+>' => '/tasks/view',
+                '/tasks' => '/tasks/index',
+                '/tasks/respond/<taskId:\d+>/<executorId:\d+>' => '/tasks/respond',
+                '/tasks/start/<taskId:\d+>/<userId:\d+>' => '/tasks/start',
+                '/tasks/cencel/<taskId:\d+>/<userId:\d+>' => '/tasks/cencel',
+                '/tasks/quit/<taskId:\d+>/<userId:\d+>' => '/tasks/quit',
+                '/tasks/complete/<taskId:\d+>/<customerId:\d+>/<executorId:\d+>' => '/tasks/complete',
+                '/settings' => '/settings/index',
+                '/profile/<userId:\d+>' => 'profile',
             ],
         ],
     ],

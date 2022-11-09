@@ -9,17 +9,21 @@ use Yii;
  *
  * @property int $id
  * @property string|null $created_at
- * @property int|null $task_id
- * @property int|null $user_id
- * @property int|null $is_approved
- * @property string|null $message
- * @property float|null $price
+ * @property int $task_id
+ * @property int $executor_id
+ * @property string|null $status
+ * @property string $message
+ * @property int|null $price
  *
+ * @property User $executor
  * @property Task $task
- * @property User $user
  */
 class Response extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 'new';
+    const STATUS_REFUSE = 'refuse';
+    const STATUS_APROVE = 'aprove';
+
     /**
      * {@inheritdoc}
      */
@@ -35,15 +39,16 @@ class Response extends \yii\db\ActiveRecord
     {
         return [
             [['created_at'], 'safe'],
-            [['task_id', 'user_id', 'is_approved'], 'integer'],
-            [['price'], 'number'],
-            [['message'], 'string', 'max' => 256],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['task_id', 'executor_id', 'message'], 'required'],
+            [['task_id', 'executor_id', 'price'], 'integer'],
+            [['status'], 'string'],
+            [['message'], 'string', 'max' => 500],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
+            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
         ];
     }
 
-    /**
+     /**
      * {@inheritdoc}
      */
     public function attributeLabels()
@@ -52,39 +57,30 @@ class Response extends \yii\db\ActiveRecord
             'id' => 'ID',
             'created_at' => 'Created At',
             'task_id' => 'Task ID',
-            'user_id' => 'User ID',
-            'is_approved' => 'Is Approved',
+            'executor_id' => 'Executor ID',
+            'status' => 'Status',
             'message' => 'Message',
             'price' => 'Price',
         ];
     }
 
     /**
+     * Gets query for [[Executor]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExecutor()
+    {
+        return $this->hasOne(User::class, ['id' => 'executor_id']);
+    }
+
+    /**
      * Gets query for [[Task]].
      *
-     * @return \yii\db\ActiveQuery|TaskQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getTask()
     {
         return $this->hasOne(Task::class, ['id' => 'task_id']);
-    }
-
-    /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery|UserQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return ResponseQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new ResponseQuery(get_called_class());
     }
 }

@@ -4,20 +4,22 @@
  * @var $index integer
  */
 return [
-    'is_customer' => $faker->randomElement([0, 1]),
-    'raiting' => $faker->numberBetween(1,5),
+    'role' => $faker->randomElement(['customer', 'executor']),
+    'rating' => $faker->numberBetween(1,5),
+    'count_feedbacks' => $faker->numberBetween(1,10),
     'email' => $faker->unique()->email(),
-    'name' => $faker->name() ,
+    'name' => $faker->firstName() ,
     'password' => $faker->password(),
     'avatar' => $faker->randomElement([
-        '@app/web/img/avatars/1.png',
-        '@app/web/img/avatars/2.png',
-        '@app/web/img/avatars/3.png',
-        '@app/web/img/avatars/4.png',
-        '@app/web/img/avatars/5.png',
+        '/img/avatars/1.png',
+        '/img/avatars/2.png',
+        '/img/avatars/3.png',
+        '/img/avatars/4.png',
+        '/img/avatars/5.png',
     ]),
     'date_of_birth' => $faker->dateTimeBetween('-100 years', '-2 years')->format('Y-m-d'),
     'phone' => substr($faker->e164PhoneNumber, 1, 11),
     'telegram' => $faker->lexify('@???????'),
+    'description' => $faker->paragraph(),
     'city_id' => $faker->numberBetween(1,10)
 ];

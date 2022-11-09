@@ -4,13 +4,15 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: normal;
-  background-color: #f1f2f6;
-  color: #333438; }
-  body.landing {
-    background-image: url("../img/polygon.png");
-    background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: -413px; }
+  color: #333438;
+}
+
+body.landing {
+  background-image: url("../img/_polygon.png");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: -413px;
+}
 
 html,
 body {
@@ -615,7 +617,7 @@ footer {
   padding-bottom: 14px;
   padding-right: 16px;
   padding-left: 16px;
-  margin-bottom: 35px; }
+}
 
 .multiple-select {
   padding-top: 14px;
@@ -1683,7 +1685,7 @@ footer {
   left: 411px; }
 
 .clipart-message {
-  background-image: url("../img/oval.png");
+  background-image: url("../img/_oval.png");
   background-repeat: no-repeat;
   background-position: center;
   width: 456px;
@@ -2066,10 +2068,11 @@ footer {
   color: #ffffff; }
 
 .logo-image--index {
-  margin-top: 17px;
-  padding-left: 18px;
+  display: block;
   height: 114px;
-  fill: #ffffff; }
+  margin: 0 auto;
+  fill: #ffffff;
+}
 
 .header__account--index {
   font-family: "Myriad Pro", sans-serif;
@@ -2088,10 +2091,11 @@ footer {
   background-color: #ffffff;
   background-image: url("../img/woman-wrench.png");
   background-repeat: no-repeat;
-  background-position: -125px 45px;
+  background-position: -125px bottom;
   min-height: 374px;
   padding-left: 360px;
   padding-top: 45px;
+  padding-bottom: 50px;
   width: 650px;
   margin: 0 auto; }
   .landing-top h1 {
@@ -2429,23 +2433,13 @@ footer {
     font-size: 20px;
     margin-top: 17px;
     margin-bottom: 16px; }
-  .form-modal form div {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    margin: 0; }
   .form-modal .form-modal-description {
+    display: block;
     text-transform: uppercase;
     color: rgba(57, 57, 57, 0.86);
     margin-bottom: 7px; }
-  .form-modal button {
-    float: right; }
 
-.enter-form {
+  .enter-form {
   display: none; }
 
 .response-form {
@@ -2480,6 +2474,7 @@ footer {
   position: absolute;
   top: 15px;
   right: 15px;
+  z-index: 1;
   width: 27px;
   height: 27px;
   font-size: 0;
@@ -2584,3 +2579,64 @@ footer {
 .has-error div {
   color: #FF116E; }
 /*# sourceMappingURL=style.css.map */
+
+#login-form input {
+  width: 260px;
+}
+
+.page-header--index {
+  position: relative;
+}
+
+.page-header__logo--index {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  width: 378px;
+  margin: 0 auto;
+  margin-left: -189px;
+}
+
+.auth-clients {
+  padding: 0;
+}
+
+.auth-link {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.help-block {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.auth-client-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: rgba(57, 57, 57, 0.86);
+  background-color: #fff;
+}
+
+.auth-client-title::after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  margin-left: 10px;
+  background-color: #f1f2f6;
+}
+
+.enter-form-email {
+  width: 300px !important;
+  box-sizing: border-box;
+  border-radius: 2px !important;
+}

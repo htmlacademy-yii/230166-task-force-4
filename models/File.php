@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "file".
@@ -35,10 +36,15 @@ class File extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['task_id', 'user_id'], 'integer'],
             [['url'], 'required'],
-            [['url'], 'string', 'max' => 128],
+            [['url'], 'string', 'max' => 500],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
+    }
+
+    public static function getTaskFilesAsArray($task): ?array
+    {
+        return self::find()->where(['task_id' => ArrayHelper::getValue($task, 'id')])->asArray()->all();
     }
 
     /**
@@ -75,12 +81,4 @@ class File extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return FileQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new FileQuery(get_called_class());
-    }
 }
