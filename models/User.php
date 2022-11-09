@@ -150,15 +150,6 @@ class User extends ActiveRecord implements IdentityInterface
                 ->all();
     }
 
-    public static function getTasks($user)
-    {
-        if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR) {
-            return Task::find()->where(['task.executor_id' => ArrayHelper::getValue($user, 'id')])->asArray()->all();
-        }
-
-        return Task::find()->where(['task.customer_id' => ArrayHelper::getValue($user, 'id')])->asArray()->all();
-    }
-
     public static function getRate($user)
     {
         $ids = User::find()->select(['user.id'])->where(['user.role' => self::ROLE_EXECUTOR])->orderBy(['user.rating' => SORT_DESC])->asArray()->all();
@@ -167,7 +158,13 @@ class User extends ActiveRecord implements IdentityInterface
         return array_search($user['id'], $arrIds);
     }
 
-    public static function getFeedbacks($user)
+    /**
+     * получение отзывов для исполнителя
+     *
+     * @param  mixed $user
+     * @return array
+     */
+    public static function getFeedbacks($user): ?array
     {
         if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR){
             $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
@@ -184,13 +181,24 @@ class User extends ActiveRecord implements IdentityInterface
         return null;
     }
 
-    public static function getFeedbacksCount($user)
+    /**
+     * получение количества отзывов
+     *
+     * @param  mixed $user
+     * @return int
+     */
+    public static function getFeedbacksCount($user): ?int
     {
         if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR) {
             return Task::find()->where(['task.executor_id' => ArrayHelper::getValue($user, 'id'), 'task.status' => 'done'])->count();
         }
     }
 
+    /**
+     * Получение рейтинга
+     *
+     * @param  mixed $executor
+     */
     public static function getRating($executor)
     {
         $sum = Feedback::find()->where(['executor_id' => ArrayHelper::getValue($executor, 'id')])->sum('rating');
@@ -198,15 +206,6 @@ class User extends ActiveRecord implements IdentityInterface
         $countFailedTasks = ArrayHelper::getValue($executor, 'count_failed_tasks');
 
         return $sum / $countFeedbacks + $countFailedTasks;
-    }
-
-    public function validateCity($attribute, $params): void
-    {
-        $geoCoder = new GeoCoderController($this->city);
-
-        if (!$geoCoder->getName()) {
-            $this->addError($attribute, 'Город не найден');
-        }
     }
 
     /**

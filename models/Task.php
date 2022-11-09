@@ -83,7 +83,14 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getTaskById($taskId)
+    /**
+     * получение задачи по id
+     *
+     * @param  int $taskId
+     * @throws NotFoundHttpException
+     * @return Task
+     */
+    public static function getTaskById(int $taskId): Task
     {
         $task = self::find()->joinWith(['category'])->where(['task.id' => $taskId])->limit(1)->one();
 
@@ -94,6 +101,12 @@ class Task extends \yii\db\ActiveRecord
         return $task;
     }
 
+    /**
+     * Получение всех откликов на задачу
+     *
+     * @param  Task $task
+     * @return array
+     */
     public static function getAllResponsesAsArray(Task $task): array
     {
         return Response::find()
@@ -112,7 +125,14 @@ class Task extends \yii\db\ActiveRecord
             ->all();
     }
 
-    public static function getExecutorResponse($task, $executor)
+    /**
+     * получение своего отклика на задачу исполнителем
+     *
+     * @param  Task $task
+     * @param  User $executor
+     * @return ?array
+     */
+    public static function getExecutorResponse(Task $task, User $executor): ?array
     {
         return Response::find()
             ->select([
@@ -131,7 +151,13 @@ class Task extends \yii\db\ActiveRecord
             ->one();
     }
 
-    public static function getNewTasksForCustomer($customer): ?array
+    /**
+     * получение новых задач заказчика
+     *
+     * @param  User $customer
+     * @return ?array
+     */
+    public static function getNewTasksForCustomer(User $customer): ?array
     {
         if ($customer->role === User::ROLE_CUSTOMER) {
             return self::find()->joinWith(['category'])->where([
@@ -143,7 +169,13 @@ class Task extends \yii\db\ActiveRecord
         return null;
     }
 
-    public static function getInProgressTasks($user): ?array
+    /**
+     * получение задач в процессе для исполнителя или заказчика
+     *
+     * @param  User $user
+     * @return ?array
+     */
+    public static function getInProgressTasks(User $user): ?array
     {
         if ($user->role === User::ROLE_EXECUTOR) {
             return self::find()->joinWith(['category'])->where([
@@ -158,7 +190,13 @@ class Task extends \yii\db\ActiveRecord
         }
     }
 
-    public static function getDoneTasks($user): ?array
+    /**
+     * получение закрытых задач
+     *
+     * @param  User $user
+     * @return ?array
+     */
+    public static function getDoneTasks(User $user): ?array
     {
         if ($user->role === User::ROLE_EXECUTOR) {
             return self::find()->joinWith(['category'])->where([
@@ -173,7 +211,13 @@ class Task extends \yii\db\ActiveRecord
         }
     }
 
-    public static function getLateTasksForExecutor($executor)
+    /**
+     * получение просроченных задач
+     *
+     * @param  User $executor
+     * @return ?array
+     */
+    public static function getLateTasksForExecutor(User $executor): ?array
     {
         $currentDate = time();
 
@@ -188,7 +232,16 @@ class Task extends \yii\db\ActiveRecord
         return null;
     }
 
-    public static function getLocation($city, $district = null, $street = null)
+
+    /**
+     * склеиваем  город, район и улицу в одну строку
+     *
+     * @param  string $city
+     * @param  string $district
+     * @param  string $street
+     * @return string
+     */
+    public static function getLocation(string $city, string $district = null, string $street = null): string
     {
         return implode(', ', array_filter([$city, $district, $street]));
     }
