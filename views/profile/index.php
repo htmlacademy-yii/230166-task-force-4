@@ -63,8 +63,6 @@ use app\components\AvatarWidget;
             <?php foreach ($feedbacks as $feedback) : ?>
                 <?= $this->render('_feedback-card', compact('feedback')); ?>
             <? endforeach; ?>
-        <? else : ?>
-            <div class="caption">Список пуст</div>
         <? endif; ?>
     </div>
 
