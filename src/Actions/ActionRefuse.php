@@ -2,7 +2,6 @@
 
 namespace TaskForce\Actions;
 
-use app\models\Feedback;
 use Yii;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
@@ -26,9 +25,25 @@ class ActionRefuse extends AbstractAction
 
     public function run(int $taskId, int $executorId)
     {
-        $response = Response::findOne(['task_id' => $taskId, 'executor_id' => $executorId]);
-        $response->status = Response::STATUS_REFUSE;
-        $response->save(false);
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $response = Response::findOne(['task_id' => $taskId, 'executor_id' => $executorId]);
+            $response->status = Response::STATUS_REFUSE;
+            $response->save(false);
+
+            $task = Task::findOne($taskId);
+            $task->status = BaseTask::STATUS_CANCELED;
+            $task->save(false);
+
+            $transaction->commit();
+        } catch(\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
 
         header('Location: /tasks/' . $taskId);
     }

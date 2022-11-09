@@ -64,7 +64,8 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
                 <?= Menu::widget([
                         'items' => [
                             ['label' => 'Новое', 'url' => ['/tasks/index']],
-                            ['label' => 'Мои задания', 'url' => ['/my-tasks/new']],
+                            ['label' => 'Мои задания', 'url' => ['/my-tasks', 'status' => 'new'], 'visible' => !$is_executor],
+                            ['label' => 'Мои задания', 'url' => ['/my-tasks', 'status' => 'in-progress'], 'visible' => $is_executor],
                             ['label' => 'Создать задание', 'url' => ['/tasks/add-task'], 'visible' => !$is_executor],
                             ['label' => 'Настройки', 'url' => ['/settings/index']],
                         ],

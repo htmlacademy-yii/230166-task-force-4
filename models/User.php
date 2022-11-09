@@ -126,7 +126,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function getCurrentUser(): User
     {
-        if ($currentUserId = Yii::$app->user->getId()) {
+        if ($currentUserId = Yii::$app->user->identity->id) {
             $currentUser = self::find()->where(['user.id' => $currentUserId])->joinWith(['city'])->limit(1)->one();
         }
 

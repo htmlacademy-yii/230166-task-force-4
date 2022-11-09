@@ -49,7 +49,7 @@ class ActionComplete extends AbstractAction
                     $executor->save();
 
                     $task = Task::findOne($taskId);
-                    $task->status = BaseTask::STATUS_DONE;
+                    $task->status = BaseTask::STATUS_COMPLETE;
                     $task->save(false);
 
                     $transaction->commit();
