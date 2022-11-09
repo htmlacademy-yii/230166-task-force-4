@@ -126,7 +126,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function getCurrentUser(): User
     {
-        if ($currentUserId = Yii::$app->user->getId()) {
+        if ($currentUserId = Yii::$app->user->identity->id) {
             $currentUser = self::find()->where(['user.id' => $currentUserId])->joinWith(['city'])->limit(1)->one();
         }
 
@@ -189,6 +189,15 @@ class User extends ActiveRecord implements IdentityInterface
         if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR) {
             return Task::find()->where(['task.executor_id' => ArrayHelper::getValue($user, 'id'), 'task.status' => 'done'])->count();
         }
+    }
+
+    public static function getRating($executor)
+    {
+        $sum = Feedback::find()->where(['executor_id' => ArrayHelper::getValue($executor, 'id')])->sum('rating');
+        $countFeedbacks = ArrayHelper::getValue($executor, 'count_feedbacks');
+        $countFailedTasks = ArrayHelper::getValue($executor, 'count_failed_tasks');
+
+        return $sum / $countFeedbacks + $countFailedTasks;
     }
 
     public function validateCity($attribute, $params): void

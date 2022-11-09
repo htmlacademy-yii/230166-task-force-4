@@ -3,37 +3,36 @@
 namespace app\controllers;
 
 use app\models\Task;
+use app\models\User;
+use TaskForce\Models\BaseMyTasks;
 
 class MyTasksController extends SecuredController
 {
     /**
-     * Выводит список новых задач для текущего пользователя
+     * Выводит список задач для текущего пользователя
     */
-    public function actionNew()
+    public function actionIndex($status)
     {
-        $newTasks = Task::getNewTasksForCurrentUser();
+        $currentUser = User::getCurrentUser();
+        $tasks = [];
 
-        return $this->render('new', compact('newTasks'));
-    }
+        if ($status === BaseMyTasks::STATUS_NEW) {
+            $tasks = Task::getNewTasksForCustomer($currentUser);
+        }
 
-    /**
-     * Выводит список задач в работе
-    */
-    public function actionInProgress()
-    {
-        $inProgressTasks = Task::getProgressTasksForCurrentUser();
+        if ($status === BaseMyTasks::STATUS_INPROGRESS) {
+            $tasks = Task::getInProgressTasks($currentUser);
+        }
 
-        return $this->render('in-progress', compact('inProgressTasks'));
-    }
+        if ($status === BaseMyTasks::STATUS_COMPLETE) {
+            $tasks = Task::getDoneTasks($currentUser);
+        }
 
-    /**
-     * Выводит список законченнных задач
-    */
-    public function actionFinished()
-    {
-        $finishedTasks = Task::getFinishedTasksForCurrentUser();
+        if ($status === BaseMyTasks::STATUS_LATE) {
+            $tasks = Task::getLateTasksForExecutor($currentUser);
+        }
 
-        return $this->render('finished', compact('finishedTasks'));
+        return $this->render('index', compact('tasks', 'status'));
     }
 }
 

@@ -6,6 +6,7 @@
 use app\assets\StartAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use app\models\User;
 
 StartAsset::register($this);
 
@@ -15,6 +16,9 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@web/favicon.ico']);
+
+$is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;
+
 ?>
 
 <?php $this->beginPage() ?>
@@ -94,18 +98,26 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                             <li class="links__item">
                                 <?= Html::a('Задания', Url::to('/tasks')) ?>
                             </li>
-                            <li class="links__item">
-                                <?= Html::a('Мой профиль', Url::to(['/profile', 'id' => Yii::$app->user->getId()])) ?>
-                            </li>
+
+                            <?php if ($is_executor) : ?>
+                                <li class="links__item">
+                                    <?= Html::a('Мой профиль', Url::to(['/profile', 'executorId' => Yii::$app->user->getId()])) ?>
+                                </li>
+                            <? endif; ?>
+
                             <li class="links__item">
                                 <?= Html::a('Исполнители', Url::to('/')) ?>
                             </li>
                             <li class="links__item">
                                 <?= Html::a('Регистрация', Url::to('/signup')) ?>
                             </li>
-                            <li class="links__item">
-                                <?= Html::a('Создать задание', Url::to('/add-task')) ?>
-                            </li>
+
+                            <?php if (!$is_executor) : ?>
+                                <li class="links__item">
+                                    <?= Html::a('Создать задание', Url::to('/add-task')) ?>
+                                </li>
+                            <? endif; ?>
+
                             <li class="links__item">
                                 <?= Html::a('Справка', Url::to('/')) ?>
                             </li>

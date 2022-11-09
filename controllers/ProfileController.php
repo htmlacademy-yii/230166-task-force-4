@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\User;
 use app\models\Task;
 use yii\helpers\ArrayHelper;
@@ -10,9 +9,9 @@ use yii\web\NotFoundHttpException;
 
 class ProfileController extends SecuredController
 {
-    public function actionIndex($userId)
+    public function actionIndex($executorId)
     {
-        $user = User::getUserAsArray($userId);
+        $user = User::getUserAsArray($executorId);
 
         if (ArrayHelper::getValue($user, 'role') === User::ROLE_CUSTOMER) {
             throw new NotFoundHttpException('Можно просматривать только профили исполнителей');

@@ -21,7 +21,7 @@ class AddFeedbackForm extends Model
     {
         return [
             [['message', 'rating'], 'safe'],
-            [['message'], 'required', 'message' => 'Это обязательное поле'],
+            [['message', 'rating'], 'required', 'message' => 'Это обязательное поле'],
         ];
     }
 }

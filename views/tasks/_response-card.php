@@ -15,8 +15,8 @@ use TaskForce\Models\BaseTask;
 
 <div class="response-card">
     <?= AvatarWidget::widget([
-            'userId' => ArrayHelper::getValue($response, 'user.id'),
-            'src' => ArrayHelper::getValue($response, 'user.avatar'),
+            'userId' => ArrayHelper::getValue($response, 'user_id'),
+            'src' => ArrayHelper::getValue($response, 'user_avatar'),
             'imageClass' => 'customer-photo',
             'width' => 146,
             'height' => 156,
@@ -25,12 +25,15 @@ use TaskForce\Models\BaseTask;
     ?>
 
     <div class="feedback-wrapper">
-        <?= Html::a(ArrayHelper::getValue($response, 'user.name'), Url::to(['/profile', 'userId' => ArrayHelper::getValue($response, 'user.id')])) ?>
+        <?= Html::a(ArrayHelper::getValue($response, 'user_name'), Url::to(['/profile', 'executorId' => ArrayHelper::getValue($response, 'user_id')])) ?>
         <div class="response-wrapper">
-            <?= StarsWidget::widget(['className' => 'stars-rating small', 'rating' => ArrayHelper::getValue($response, 'user.rating')]) ?>
-            <p class="reviews">
-                <?= ArrayHelper::getValue($response, 'user.count_feedbacks') ?> <?= get_noun_plural_form(ArrayHelper::getValue($response, 'user.count_feedbacks'), 'отзыв', 'отзыва', 'отзывов') ?>
-            </p>
+            <?= StarsWidget::widget(['className' => 'stars-rating small', 'rating' => ArrayHelper::getValue($response, 'user_rating')]) ?>
+
+            <?php if (ArrayHelper::getValue($response, 'user_count_feedbacks')) : ?>
+                <p class="reviews">
+                    <?= $response['user_count_feedbacks'] ?> <?= get_noun_plural_form($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
+                </p>
+            <? endif; ?>
         </div>
         <p class="response-message">
             <?= Html::encode(ArrayHelper::getValue($response, 'message')) ?>
@@ -38,21 +41,28 @@ use TaskForce\Models\BaseTask;
     </div>
 
     <div class="feedback-wrapper">
-        <p class="info-text">
-            <span class="current-time">
-                <?= Html::encode(Yii::$app->formatter->asRelativetime(ArrayHelper::getValue($response, 'created_at'))) ?>
-            </span>
-            назад
-        </p>
-        <p class="price price--small"><?= Html::encode(ArrayHelper::getValue($response, 'price')) ?> ₽</p>
+        <?php if (ArrayHelper::getValue($response, 'created_at')) : ?>
+            <p class="info-text">
+                <span class="current-time">
+                    <?= Html::encode(get_relative_date($response['created_at'])) ?>
+                </span>
+                назад
+            </p>
+        <? endif; ?>
+
+        <?php if (ArrayHelper::getValue($response, 'price')) : ?>
+            <p class="price price--small"><?= Html::encode(ArrayHelper::getValue($response, 'price')) ?> ₽</p>
+        <? endif; ?>
     </div>
 
     <div class="button-popup">
-        <?php if(ArrayHelper::isIn('start', BaseTask::getAvailableActions($task, $currentUser)) && $response->status !== Response::STATUS_REFUSE) : ?>
+        <?php if(ArrayHelper::isIn('start', BaseTask::getAvailableActions($task, $currentUser))
+            && ArrayHelper::getValue($response, 'status') !== Response::STATUS_REFUSE) :
+        ?>
             <?= Html::a(ActionStart::LABEL, Url::to([
                     '/tasks/start',
                     'taskId' => ArrayHelper::getValue($task, 'id'),
-                    'userId' => ArrayHelper::getValue($response, 'user.id')
+                    'executorId' => ArrayHelper::getValue($response, 'user_id')
                 ]),
                 [
                     'class' => 'button button--blue button--small'
@@ -61,13 +71,13 @@ use TaskForce\Models\BaseTask;
         <? endif; ?>
 
         <?php if(ArrayHelper::isIn('refuse', BaseTask::getAvailableActions($task, $currentUser))) : ?>
-            <?php if ($response->status === Response::STATUS_REFUSE) : ?>
+            <?php if (ArrayHelper::getValue($response, 'status') === Response::STATUS_REFUSE) : ?>
                 <span class = "button button--orange button--small">Отказано</span>
             <? else : ?>
                 <?= Html::a(ActionRefuse::LABEL, Url::to([
                         '/tasks/refuse',
                         'taskId' => ArrayHelper::getValue($task, 'id'),
-                        'userId' => ArrayHelper::getValue($response, 'user.id')
+                        'executorId' => ArrayHelper::getValue($response, 'user_id')
                     ]),
                     [
                         'class' => 'button button--orange button--small'

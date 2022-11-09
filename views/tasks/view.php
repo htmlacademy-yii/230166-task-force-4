@@ -65,7 +65,7 @@
                 </script>
                 <div id="map" style="width: 725px; height: 346px;"></div>
                 <?php if (ArrayHelper::getValue($task, 'location')) : ?>
-                    <?= Html::encode(ArrayHelper::getValue($task, 'location')) ?>
+                    <p class="map-address town"><?= Html::encode(ArrayHelper::getValue($task, 'location')) ?></p>
                 <? endif; ?>
             </div>
         <? endif; ?>
@@ -79,6 +79,11 @@
             <? else : ?>
                 <p class="caption">Список пуст</p>
             <? endif; ?>
+        <? endif; ?>
+
+        <?php if ($response && ArrayHelper::getValue($response, 'executor_id') === Yii::$app->user->getId()) : ?>
+            <h4 class="head-regular">Ваш отклик</h4>
+            <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
         <? endif; ?>
     </div>
 

@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
                     'action' => Url::to([
                         '/tasks/respond',
                         'taskId' => ArrayHelper::getValue($task, 'id'),
-                        'userId' => ArrayHelper::getValue($currentUser, 'id')
+                        'executorId' => ArrayHelper::getValue($currentUser, 'id')
                     ]),
                 ]);
             ?>

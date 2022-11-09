@@ -94,42 +94,98 @@ class Task extends \yii\db\ActiveRecord
         return $task;
     }
 
-    public static function getAllResponses(Task $task): array
+    public static function getAllResponsesAsArray(Task $task): array
     {
-        return Response::find()->where(['task_id' => ArrayHelper::getValue($task, 'id')])->asArray()->all();
+        return Response::find()
+            ->select([
+                'response.*',
+                'user.id as user_id',
+                'user.avatar as user_avatar',
+                'user.rating as user_rating',
+                'user.name as user_name',
+                'user.email as user_email',
+                'user.count_feedbacks as user_count_feedbacks',
+            ])
+            ->join('INNER JOIN', 'user', 'user.id = response.executor_id')
+            ->where(['response.task_id' => ArrayHelper::getValue($task, 'id')])
+            ->asArray()
+            ->all();
     }
 
-    public static function getNewTasksForCurrentUser(): ?array
+    public static function getExecutorResponse($task, $executor)
     {
-        $currentUser = User::getCurrentUser();
+        return Response::find()
+            ->select([
+                'response.*',
+                'user.id as user_id',
+                'user.avatar as user_avatar',
+                'user.rating as user_rating',
+                'user.name as user_name',
+                'user.email as user_email',
+                'user.count_feedbacks as user_count_feedbacks',
+            ])
+            ->join('INNER JOIN', 'user', 'user.id = response.executor_id')
+            ->where(['response.task_id' => ArrayHelper::getValue($task, 'id'), 'response.executor_id' => ArrayHelper::getValue($executor, 'id')])
+            ->asArray()
+            ->limit(1)
+            ->one();
+    }
 
-        if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+    public static function getNewTasksForCustomer($customer): ?array
+    {
+        if ($customer->role === User::ROLE_CUSTOMER) {
+            return self::find()->joinWith(['category'])->where([
+                'customer_id' => ArrayHelper::getValue($customer, 'id'),
+                'status' => BaseTask::STATUS_NEW
+            ])->asArray()->all();
+        }
+
+        return null;
+    }
+
+    public static function getInProgressTasks($user): ?array
+    {
+        if ($user->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category'])->where([
+                'executor_id' => ArrayHelper::getValue($user, 'id'),
+                'status' => BaseTask::STATUS_INPROGRESS
+            ])->asArray()->all();
         } else {
-            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+            return self::find()->joinWith(['category'])->where([
+                'customer_id' =>ArrayHelper::getValue($user, 'id'),
+                'status' => BaseTask::STATUS_INPROGRESS
+            ])->asArray()->all();
         }
     }
 
-    public static function getProgressTasksForCurrentUser(): ?array
+    public static function getDoneTasks($user): ?array
     {
-        $currentUser = User::getCurrentUser();
-
-        if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+        if ($user->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category'])->where([
+                'executor_id' => ArrayHelper::getValue($user, 'id'),
+                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED]
+            ])->asArray()->all();
         } else {
-            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+            return self::find()->joinWith(['category'])->where([
+                'customer_id' => ArrayHelper::getValue($user, 'id'),
+                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_COMPLETE]
+            ])->asArray()->all();
         }
     }
 
-    public static function getFinishedTasksForCurrentUser(): ?array
+    public static function getLateTasksForExecutor($executor)
     {
-        $currentUser = User::getCurrentUser();
+        $currentDate = time();
 
-        if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
-        } else {
-            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
+        if ($executor->role === User::ROLE_EXECUTOR) {
+            return self::find()->joinWith(['category'])->where([
+                'task.executor_id' => ArrayHelper::getValue($executor, 'id'),
+            ])
+            ->where('task.deadline' < 'CURRENT_TIMESTAMP')
+            ->asArray()->all();
         }
+
+        return null;
     }
 
     public static function getLocation($city, $district = null, $street = null)

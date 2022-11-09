@@ -59,7 +59,7 @@ function get_relative_date($date)
     $post_date = strtotime($date);
     $dif_date = abs($cur_date - $post_date);
 
-    if ($dif_date < 3600) {
+    if ($dif_date < 3600 && $dif_date > 60) {
         $minuts = floor($dif_date / 60);
         return $minuts . ' ' . get_noun_plural_form($minuts, 'минута', 'минуты', 'минут');
     }

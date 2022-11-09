@@ -2,7 +2,6 @@
 
 namespace TaskForce\Models;
 
-use yii\helpers\ArrayHelper;
 use app\models\Task;
 use app\models\User;
 use TaskForce\Actions\AbstractAction;
@@ -18,10 +17,9 @@ class BaseTask
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
     public const STATUS_INPROGRESS = 'in progress';
-    public const STATUS_DONE = 'done';
+    public const STATUS_COMPLETE = 'done';
     public const STATUS_FAILED = 'failed';
     private $customerId;
-    private $executorId;
     private $status;
 
     /**
@@ -55,7 +53,7 @@ class BaseTask
             self::STATUS_NEW,
             self::STATUS_CANCELED,
             self::STATUS_INPROGRESS,
-            self::STATUS_DONE,
+            self::STATUS_COMPLETE,
             self::STATUS_FAILED
         ];
     }
@@ -87,7 +85,7 @@ class BaseTask
             self::STATUS_NEW => 'Новое задание',
             self::STATUS_CANCELED => 'Задание отменено',
             self::STATUS_INPROGRESS => 'Задание в работе',
-            self::STATUS_DONE => 'Задание выполнено',
+            self::STATUS_COMPLETE => 'Задание выполнено',
             self::STATUS_FAILED => 'Задание провалено',
         ];
     }
@@ -119,7 +117,7 @@ class BaseTask
         $actionsMap = [
             ActionStart::NAME => self::STATUS_INPROGRESS,
             ActionRefuse::NAME => self::STATUS_CANCELED,
-            ActionComplete::NAME => self::STATUS_DONE,
+            ActionComplete::NAME => self::STATUS_COMPLETE,
             ActionRespond::NAME => self::STATUS_NEW,
             ActionQuit::NAME => self::STATUS_FAILED,
         ];
