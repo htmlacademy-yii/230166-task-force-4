@@ -52,6 +52,7 @@ var starRating = document.querySelector(".active-stars");
 if (starRating) {
     starRating.addEventListener("click", function(event) {
         var stars = event.currentTarget.childNodes;
+
         var rating = 0;
 
         for (var i = 0; i < stars.length; i++) {
@@ -67,7 +68,7 @@ if (starRating) {
             }
         }
 
-        var inputField = starRating.previousSibling;
+        var inputField = document.querySelector(".active-stars-input");
         inputField.value = rating;
     });
 }

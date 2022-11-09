@@ -22,21 +22,13 @@ use yii\helpers\ArrayHelper;
                         'taskId' => ArrayHelper::getValue($task, 'id'),
                         'customerId' => ArrayHelper::getValue($task, 'customer_id'),
                         'executorId' => ArrayHelper::getValue($task, 'executor_id'),
-                    ]),
-                    'fieldConfig' => [
-                        'options' => [
-                            'tag' => false,
-                        ]
-                    ]
+                    ])
                 ])
             ?>
-                <div class="form-group">
-                    <?= $form->field($addFeedbackForm, 'message')->textarea(); ?>
-                </div>
-
+                <?= $form->field($addFeedbackForm, 'message')->textarea(); ?>
                 <p class="completion-head control-label">Оценка работы</p>
                 <div class="stars-rating big active-stars"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>
-                <?= $form->field($addFeedbackForm, 'rating', ['template' => '{input}{error}'])->textInput(['hidden' => '', 'id' => 'createreviewform-rate']); ?>
+                <?= $form->field($addFeedbackForm, 'rating', ['template' => '{input}{error}'])->textInput(['hidden' => '', 'class' => 'active-stars-input', 'id' => 'createreviewform-rate']); ?>
 
                 <?= Html::submitButton('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
             <? ActiveForm::end(); ?>

@@ -80,6 +80,11 @@
                 <p class="caption">Список пуст</p>
             <? endif; ?>
         <? endif; ?>
+
+        <?php if ($response && ArrayHelper::getValue($response, 'executor_id') === Yii::$app->user->getId()) : ?>
+            <h4 class="head-regular">Ваш отклик</h4>
+            <?= $this->render('_response-card', compact('response', 'task', 'currentUser')); ?>
+        <? endif; ?>
     </div>
 
     <div class="right-column">

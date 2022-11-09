@@ -26,7 +26,7 @@ class ActionStart extends AbstractAction
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $response = Response::findOne(['task_id' => $taskId, 'executorId' => $executorId]);
+            $response = Response::findOne(['task_id' => $taskId, 'executor_id' => $executorId]);
             $response->status = Response::STATUS_APROVE;
             $response->save(false);
 

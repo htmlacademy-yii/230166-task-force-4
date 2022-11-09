@@ -28,9 +28,12 @@ use TaskForce\Models\BaseTask;
         <?= Html::a(ArrayHelper::getValue($response, 'user_name'), Url::to(['/profile', 'executorId' => ArrayHelper::getValue($response, 'user_id')])) ?>
         <div class="response-wrapper">
             <?= StarsWidget::widget(['className' => 'stars-rating small', 'rating' => ArrayHelper::getValue($response, 'user_rating')]) ?>
-            <p class="reviews">
-                <?= Html::encode($response['user_count_feedbacks']) ?> <?= get_noun_plural_form($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
-            </p>
+
+            <?php if (ArrayHelper::getValue($response, 'user_count_feedbacks')) : ?>
+                <p class="reviews">
+                    <?= $response['user_count_feedbacks'] ?> <?= get_noun_plural_form($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
+                </p>
+            <? endif; ?>
         </div>
         <p class="response-message">
             <?= Html::encode(ArrayHelper::getValue($response, 'message')) ?>
@@ -38,13 +41,18 @@ use TaskForce\Models\BaseTask;
     </div>
 
     <div class="feedback-wrapper">
-        <p class="info-text">
-            <span class="current-time">
-                <?= Html::encode(Yii::$app->formatter->asRelativetime(ArrayHelper::getValue($response, 'created_at'))) ?>
-            </span>
-            назад
-        </p>
-        <p class="price price--small"><?= Html::encode(ArrayHelper::getValue($response, 'price')) ?> ₽</p>
+        <?php if (ArrayHelper::getValue($response, 'created_at')) : ?>
+            <p class="info-text">
+                <span class="current-time">
+                    <?= Html::encode(get_relative_date($response['created_at'])) ?>
+                </span>
+                назад
+            </p>
+        <? endif; ?>
+
+        <?php if (ArrayHelper::getValue($response, 'price')) : ?>
+            <p class="price price--small"><?= Html::encode(ArrayHelper::getValue($response, 'price')) ?> ₽</p>
+        <? endif; ?>
     </div>
 
     <div class="button-popup">

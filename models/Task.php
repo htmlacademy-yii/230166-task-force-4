@@ -112,6 +112,25 @@ class Task extends \yii\db\ActiveRecord
             ->all();
     }
 
+    public static function getExecutorResponse($task, $executor)
+    {
+        return Response::find()
+            ->select([
+                'response.*',
+                'user.id as user_id',
+                'user.avatar as user_avatar',
+                'user.rating as user_rating',
+                'user.name as user_name',
+                'user.email as user_email',
+                'user.count_feedbacks as user_count_feedbacks',
+            ])
+            ->join('INNER JOIN', 'user', 'user.id = response.executor_id')
+            ->where(['response.task_id' => ArrayHelper::getValue($task, 'id'), 'response.executor_id' => ArrayHelper::getValue($executor, 'id')])
+            ->asArray()
+            ->limit(1)
+            ->one();
+    }
+
     public static function getNewTasksForCurrentUser(): ?array
     {
         $currentUser = User::getCurrentUser();

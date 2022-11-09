@@ -99,8 +99,9 @@ class TasksController extends SecuredController
         $files = File::getTaskFilesAsArray($task);
         $addFeedbackForm = new AddFeedbackForm();
         $addResponseForm = new AddResponseForm();
+        $response = Task::getExecutorResponse($task, $currentUser);
 
-        return $this->render('view', compact('task', 'responses', 'currentUser', 'addFeedbackForm', 'addResponseForm', 'files'));
+        return $this->render('view', compact('task', 'responses', 'response', 'currentUser', 'addFeedbackForm', 'addResponseForm', 'files'));
     }
 
     public function actionAddTask()

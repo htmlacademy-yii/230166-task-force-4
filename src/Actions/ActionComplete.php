@@ -29,21 +29,28 @@ class ActionComplete extends AbstractAction
         if (Yii::$app->request->getIsPost()) {
             $addFeedbackForm->load(Yii::$app->request->post());
 
-            if ($addFeedbackForm->validate) {
+            if ($addFeedbackForm->validate()) {
                 $transaction = Yii::$app->db->beginTransaction();
 
                 try {
-                    $feedback = new Feedback();
-                    $feedback->message = $addFeedbackForm['message'];
-                    $feedback->rating = (int) $addFeedbackForm['rating'];
-                    $feedback->customer_id = $customerId;
-                    $feedback->executor_id = $executorId;
+                    $feedback = new Feedback([
+                        'message' => $addFeedbackForm['message'],
+                        'rating' => (int) $addFeedbackForm['rating'],
+                        'task_id' => $taskId,
+                        'customer_id' => $customerId,
+                        'executor_id' => $executorId,
+                    ]);
+
                     $feedback->save(false);
 
                     $executor = User::findOne($executorId);
                     $executor->count_feedbacks += 1;
                     $executor->rating = User::getRating($executor);
                     $executor->save();
+
+                    $task = Task::findOne($taskId);
+                    $task->status = BaseTask::STATUS_DONE;
+                    $task->save(false);
 
                     $transaction->commit();
                 } catch(\Exception $e) {
