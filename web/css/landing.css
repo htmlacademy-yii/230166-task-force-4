@@ -2434,6 +2434,7 @@ footer {
     margin-top: 17px;
     margin-bottom: 16px; }
   .form-modal .form-modal-description {
+    display: block;
     text-transform: uppercase;
     color: rgba(57, 57, 57, 0.86);
     margin-bottom: 7px; }
@@ -2579,12 +2580,6 @@ footer {
   color: #FF116E; }
 /*# sourceMappingURL=style.css.map */
 
-.modal-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 #login-form input {
   width: 260px;
 }
@@ -2600,4 +2595,48 @@ footer {
   width: 378px;
   margin: 0 auto;
   margin-left: -189px;
+}
+
+.auth-clients {
+  padding: 0;
+}
+
+.auth-link {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.help-block {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.auth-client-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: rgba(57, 57, 57, 0.86);
+  background-color: #fff;
+}
+
+.auth-client-title::after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  margin-left: 10px;
+  background-color: #f1f2f6;
+}
+
+.enter-form-email {
+  width: 300px !important;
+  box-sizing: border-box;
+  border-radius: 2px !important;
 }

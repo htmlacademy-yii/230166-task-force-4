@@ -81,7 +81,7 @@ class BaseTask
      *
      * @return array
      */
-    public function getStatusesLabels(): array
+    public static function getStatusesLabels(): array
     {
         return [
             self::STATUS_NEW => 'Новое задание',

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Exception;
 use Yii;
 use GuzzleHttp\Client;
 use yii\helpers\ArrayHelper;
@@ -33,27 +34,35 @@ class GeoCoderController extends SecuredController
 
     public function getName()
     {
-        return ArrayHelper::getValue($this->data, 'GeoObjectCollection.featureMember.GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName');
-    }
-
-    public function getAddress()
-    {
-        return ArrayHelper::getValue($this->data, 'GeoObjectCollection.featureMember.GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine');
+        return ArrayHelper::getValue($this->data, $this->getStartLine() . 'name');
     }
 
     public function getPoint()
     {
-        return ArrayHelper::getValue($this->data, 'GeoObjectCollection.featureMember.GeoObject.Point.pos');
+        return ArrayHelper::getValue($this->data, $this->getStartLine() . 'Point.pos');
     }
 
     public function getLat()
     {
-        return $this-> getPoint()[0];
+        return $this->getPoint()[0];
     }
 
     public function getLng()
     {
-        return $this-> getPoint()[1];
+        return $this->getPoint()[1];
+    }
+
+    public function getStartLine(): ?string
+    {
+        $found = (int) ArrayHelper::getValue($this->data, 'GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found');
+
+        if ($found === 1) {
+            return 'GeoObjectCollection.featureMember.GeoObject.';
+        } elseif ($found > 1) {
+            return 'GeoObjectCollection.featureMember.0.GeoObject.';
+        } else {
+            return null;
+        }
     }
 }
 

@@ -2,67 +2,40 @@
 
 use app\models\User;
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 ?>
 
 <main class="container container--registration">
     <div class="center-block">
         <div class="registration-form regular-form">
-            <?php $form = ActiveForm::begin([
-                'id' => 'registration-form',
-            ]); ?>
+            <?php $form = ActiveForm::begin(); ?>
                 <h3 class="head-main head-task">Регистрация нового пользователя</h3>
                 <div class="form-group">
-                    <?= $form->field($user, 'name')
-                        ->textInput();
-                    ?>
+                    <?= $form->field($signupForm, 'name')->textInput(); ?>
                 </div>
                 <div class="half-wrapper">
-                    <div class="form-group">
-                        <?= $form->field($user, 'email')
-                            ->textInput();
-                        ?>
-                    </div>
-                    <div class="form-group autoComplete_wrapper">
-                        <?= $form->field($user, 'city')
-                            ->input('search', [
-                                'id' => 'city_name',
-                                'dir' => 'ltr',
-                                'spellcheck' => 'false',
-                                'autocorrect' => 'off',
-                                'autocomplete' => 'off',
-                                'autocapitalize' => 'off'
-                            ]);
-                        ?>
-                    </div>
-
-
-                </div>
-                <div class="half-wrapper">
-                    <div class="form-group">
-                        <?= $form->field($user, 'password')
-                            ->passwordInput();
-                        ?>
-                    </div>
-                </div>
-                <div class="half-wrapper">
-                    <div class="form-group">
-                        <?= $form->field($user, 'password_repeat')
-                            ->passwordInput();
-                        ?>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <?= $form->field($user, 'role')
-                        ->checkbox([
-                            'checked' => $user->role === User::ROLE_EXECUTOR,
+                    <?= $form->field($signupForm, 'email')->textInput(); ?>
+                    <?= $form->field($signupForm, 'city')
+                        ->input('text', [
+                            'id' => 'city_name',
+                            'dir' => 'ltr',
+                            'spellcheck' => 'false',
+                            'autocorrect' => 'off',
+                            'autocomplete' => 'off',
+                            'autocapitalize' => 'off'
                         ]);
                     ?>
                 </div>
-
-                <input type="submit" class="button button--blue" value="Создать аккаунт">
+                <div class="half-wrapper">
+                    <?= $form->field($signupForm, 'password', ['inputOptions' => ['autocomplete' => 'off']])->passwordInput(); ?>
+                </div>
+                <div class="half-wrapper">
+                    <?= $form->field($signupForm, 'password_repeat', ['inputOptions' => ['autocomplete' => 'off']])->passwordInput(); ?>
+                </div>
+                <?= $form->field($signupForm, 'role')->checkbox(); ?>
+                <?= Html::submitButton('Создать аккаунт', ['class' => 'button button--blue']) ?>
             <?php ActiveForm::end(); ?>
-
         </div>
     </div>
 </main>

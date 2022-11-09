@@ -20,7 +20,8 @@ use yii\helpers\ArrayHelper;
                     'action' =>  Url::to([
                         '/tasks/complete',
                         'taskId' => ArrayHelper::getValue($task, 'id'),
-                        'userId' => ArrayHelper::getValue($currentUser, 'id')
+                        'customerId' => ArrayHelper::getValue($task, 'customer_id'),
+                        'executorId' => ArrayHelper::getValue($task, 'executor_id'),
                     ]),
                     'fieldConfig' => [
                         'options' => [

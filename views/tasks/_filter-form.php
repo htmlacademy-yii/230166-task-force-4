@@ -8,11 +8,7 @@ use yii\helpers\Html;
 <div class="search-form">
     <?php $form = ActiveForm::begin([
             'id' => 'filter-form',
-            'fieldConfig' => [
-                'options' => [
-                    'tag' => false,
-                ]
-            ]
+            'fieldConfig' => ['options' => ['tag' => false]]
         ]);
     ?>
         <h4 class="head-card">Категории</h4>

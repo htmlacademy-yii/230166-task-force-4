@@ -2,12 +2,16 @@
 
 namespace app\models\forms;
 
-use Yii;
 use Exception;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use app\models\User;
+use app\models\Category;
 use app\models\UserCategory;
 
+/**
+ * SettingsForm
+ */
 class SettingsForm extends Model
 {
     public $avatar;
@@ -34,10 +38,10 @@ class SettingsForm extends Model
         $this->telegram = $this->_user->telegram;
         $this->description = $this->_user->description;
 
-        $this->categories = User::getCategoriesIds($this->_user);
+        $this->categories = $this->getCategoriesIds($this->_user);
     }
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'imageFile' => 'Сменить аватар',
@@ -51,7 +55,7 @@ class SettingsForm extends Model
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['date_of_birth', 'categories'], 'safe'],
@@ -66,9 +70,12 @@ class SettingsForm extends Model
         ];
     }
 
+    /**
+     * Сохраняем настройки пользователя
+     *
+     */
     public function updateUser()
     {
-
         $this->_user->name = $this->name;
         $this->_user->email = $this->email;
         $this->_user->date_of_birth = $this->date_of_birth;
@@ -77,15 +84,26 @@ class SettingsForm extends Model
         $this->_user->description = $this->description;
 
         if ($this->imageFile) {
-            $path = '/uploads/' . uniqid() . '.' . $this->imageFile->extension;
+            /*@var путь до аватара, заменяем название файла на уникальное */
+            $path = '/uploads/avatar' . uniqid() . '.' . $this->imageFile->extension;
 
+            // заменяем аватар
             if ($this->uploadFile($path)) {
                 $this->_user->avatar = $path;
             }
         }
 
         if ($this->categories) {
-            $this->updateUserCategories();
+            // Удаляем из таблицы user_category категории пользователя
+            UserCategory::deleteAll($this->_user->id);
+
+            // сохраняем новые
+            foreach ($this->categories as $category_id) {
+                $userCategory = new UserCategory();
+                $userCategory->user_id = $this->_user->id;
+                $userCategory->category_id = $category_id;
+                $userCategory->save(false);
+            }
         }
 
         try {
@@ -95,6 +113,14 @@ class SettingsForm extends Model
         }
     }
 
+    /**
+     * Проверяем email на уникальность,
+     * если он был изменен
+     *
+     * @param  mixed $attribute
+     * @param  mixed $params
+     * @return void
+     */
     public function validateEmail($attribute, $params): void
     {
         if ($this->email !== $this->_user->email) {
@@ -106,7 +132,15 @@ class SettingsForm extends Model
         }
     }
 
-    private function uploadFile($fileName): bool
+    /**
+     * Сохраняем файл в папку uploads
+     * и возвращаем результат сохранения
+     * в виде булевого значения
+     *
+     * @param  string $fileName
+     * @return bool
+     */
+    private function uploadFile(string $fileName): bool
     {
         if ($this->validate()) {
             $this->imageFile->saveAs('@webroot' . $fileName);
@@ -116,15 +150,24 @@ class SettingsForm extends Model
         }
     }
 
-    private function updateUserCategories()
+    /**
+     * Получаем id категорий пользователя
+     *
+     * @param  User $user
+     * @return array
+     */
+    public static function getCategoriesIds(User $user): ?array
     {
-        UserCategory::deleteAll($this->_user->id);
+        $categories = Category::find()
+            ->join('INNER JOIN', 'user_category', 'user_category.category_id = category.id')
+            ->join('INNER JOIN', 'user', 'user_category.user_id = user.id')
+            ->where(['user.id' => ArrayHelper::getValue($user, 'id')])
+            ->all();
 
-        foreach ($this->categories as $category_id) {
-            $userCategory = new UserCategory();
-            $userCategory->user_id = $this->_user->id;
-            $userCategory->category_id = $category_id;
-            $userCategory->save(false);
+        if ($categories) {
+            return ArrayHelper::getColumn($categories, 'id');
         }
+
+        return null;
     }
 }

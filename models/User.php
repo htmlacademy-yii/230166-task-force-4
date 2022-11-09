@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\controllers\GeoCoderController;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
@@ -16,9 +17,10 @@ use app\models\Feedback;
  *
  * @property int $id
  * @property string|null $created_at
- * @property int|null $role
+ * @property string|null $role
  * @property float|null $rating
  * @property int|null $count_feedbacks
+ * @property int|null $count_failed_tasks
  * @property string $email
  * @property string $name
  * @property string $password
@@ -30,10 +32,13 @@ use app\models\Feedback;
  * @property int|null $city_id
  *
  * @property Auth[] $auths
+ * @property Category[] $categories
  * @property City $city
- * @property File[] $files
+ * @property Feedback[] $feedbacks
+ * @property Feedback[] $feedbacks0
  * @property Response[] $responses
  * @property Task[] $tasks
+ * @property Task[] $tasks0
  * @property UserCategory[] $userCategories
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -42,8 +47,6 @@ class User extends ActiveRecord implements IdentityInterface
     const ROLE_EXECUTOR = 'executor';
 
     public $password_repeat;
-    public $categories;
-    public $city;
 
     /**
      * {@inheritdoc}
@@ -60,19 +63,17 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['created_at', 'date_of_birth'], 'safe'],
-            [['count_feedbacks', 'city_id'], 'integer'],
+            [['count_feedbacks', 'count_failed_tasks', 'city_id'], 'integer'],
             [['role'], 'string'],
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
-            [['name', 'email'], 'string', 'max' => 40, 'message' => 'Максимальное количество символов 40'],
-            [['password', 'avatar', 'telegram'], 'string', 'max' => 200, 'message' => 'Максимальное количество символов 200'],
+            [['name', 'email'], 'string', 'max' => 40],
+            [['password', 'avatar', 'telegram'], 'string', 'max' => 200],
             [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
             [['password'], 'compare'],
             [['phone'], 'match', 'pattern' => '/^[\d]{11}/i', 'message' => 'Номер телефона должен состоять из 11 цифр'],
             [['email'], 'unique', 'message' => 'Пользователь с таким Email уже зарегистрирован'],
-            [['description'], 'string', 'max' => 1000, 'message' => 'Максимальное количество символов 1000'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
-            [['city'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city' => 'name']],
+            [['description'], 'string', 'max' => 1000],
         ];
     }
 
@@ -87,6 +88,7 @@ class User extends ActiveRecord implements IdentityInterface
             'role' => 'Я собираюсь откликаться на заказы',
             'rating' => 'Рейтинг',
             'count_feedbacks' => 'Count Feedbacks',
+            'count_failed_tasks' => 'Count Failed Tasks',
             'email' => 'Email',
             'name' => 'Ваше имя',
             'password' => 'Пароль',
@@ -97,11 +99,16 @@ class User extends ActiveRecord implements IdentityInterface
             'telegram' => 'Telegram',
             'description' => 'Информация о себе',
             'city_id' => 'City ID',
-            'city' => 'Город',
         ];
     }
 
-    public static function getUserAsArray($userId)
+    /**
+     * получаем пользователя в виде массива
+     *
+     * @param  int $userId
+     * @return array
+     */
+    public static function getUserAsArray(int $userId): ?array
     {
         $user = self::find()->where(['user.id' => $userId])->joinWith(['city'])->asArray()->limit(1)->one();
 
@@ -112,7 +119,12 @@ class User extends ActiveRecord implements IdentityInterface
         return $user;
     }
 
-    public static function getCurrentUser()
+    /**
+     * Получаем текущего пользователя
+     *
+     * @return User
+     */
+    public static function getCurrentUser(): User
     {
         if ($currentUserId = Yii::$app->user->getId()) {
             $currentUser = self::find()->where(['user.id' => $currentUserId])->joinWith(['city'])->limit(1)->one();
@@ -121,35 +133,30 @@ class User extends ActiveRecord implements IdentityInterface
         return $currentUser;
     }
 
-    public static function getCategories($user)
+    /**
+     * получаем категории пользователя
+     *
+     * @param  array $user
+     * @return array
+     */
+    public static function getCategoriesAsArray(array $user): ?array
     {
         return
             Category::find()
                 ->join('INNER JOIN', 'user_category', 'user_category.category_id = category.id')
                 ->join('INNER JOIN', 'user', 'user_category.user_id = user.id')
-                ->where(['user.id' => $user['id']])
+                ->where(['user.id' => ArrayHelper::getValue($user, 'id')])
                 ->asArray()
                 ->all();
     }
 
-    public static function getCategoriesIds($user): ?array
-    {
-        $categories = self::getCategories($user);
-
-        if ($categories) {
-            return ArrayHelper::getColumn($categories, 'id');
-        }
-
-        return null;
-    }
-
     public static function getTasks($user)
     {
-        if ($user['role'] === self::ROLE_EXECUTOR) {
-            return Task::find()->where(['task.executor_id' => $user['id']])->asArray()->all();
+        if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR) {
+            return Task::find()->where(['task.executor_id' => ArrayHelper::getValue($user, 'id')])->asArray()->all();
         }
 
-        return Task::find()->where(['task.customer_id' => $user['id']])->asArray()->all();
+        return Task::find()->where(['task.customer_id' => ArrayHelper::getValue($user, 'id')])->asArray()->all();
     }
 
     public static function getRate($user)
@@ -162,7 +169,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getFeedbacks($user)
     {
-        if ($user['role'] === self::ROLE_EXECUTOR){
+        if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR){
             $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
 
             foreach ($tasks as $task) {
@@ -179,8 +186,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getFeedbacksCount($user)
     {
-        if ($user['role'] === self::ROLE_EXECUTOR) {
-            return Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->count();
+        if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR) {
+            return Task::find()->where(['task.executor_id' => ArrayHelper::getValue($user, 'id'), 'task.status' => 'done'])->count();
+        }
+    }
+
+    public function validateCity($attribute, $params): void
+    {
+        $geoCoder = new GeoCoderController($this->city);
+
+        if (!$geoCoder->getName()) {
+            $this->addError($attribute, 'Город не найден');
         }
     }
 

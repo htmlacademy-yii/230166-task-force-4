@@ -67,8 +67,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
                         <a class="header__account-enter open-modal" href="#" data-for="enter-form"><span>Вход</span></a>
                         или
                         <?= Html::a('Регистрация', Url::to('/signup'), ['class' => 'header__account-registration']) ?>
-                    <? else : ?>
-                        <?= Html::a('Новые задачи', Url::to('/tasks', true), ['class' => 'header__account-enter']) ?>
                     <? endif; ?>
                 </div>
 

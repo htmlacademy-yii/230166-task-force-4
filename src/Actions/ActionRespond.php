@@ -23,7 +23,7 @@ class ActionRespond extends AbstractAction
             && !Response::find()->where(['task_id' => $task->id, 'user_id' => $currentUser->id])->limit(1)->one();
     }
 
-    public function run(int $taskId, int $userId)
+    public function run(int $taskId, int $executorId)
     {
         $addResponseForm = new AddResponseForm();
 
@@ -33,7 +33,7 @@ class ActionRespond extends AbstractAction
             if ($addResponseForm->validate()) {
                 $response = new Response();
                 $response->task_id = $taskId;
-                $response->user_id = $userId;
+                $response->executor_id = $executorId;
                 $response->message = $addResponseForm['message'];
                 $response->price = $addResponseForm['price'];
                 $response->save(false);

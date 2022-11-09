@@ -15,9 +15,11 @@ use app\models\File;
 use app\models\forms\FilterForm;
 use app\models\forms\AddFeedbackForm;
 use app\models\forms\AddResponseForm;
+use app\models\forms\AddTaskForm;
 use Exception;
 use TaskForce\Models\BaseTask;
 use yii\web\UploadedFile;
+use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
@@ -30,6 +32,9 @@ class TasksController extends SecuredController
             'roles' => ['@'],
             'matchCallback' => function ($rule, $action) {
                 return (Yii::$app->user->identity->role === User::ROLE_EXECUTOR);
+            },
+            'denyCallback' => function($rule, $action) {
+                throw new NotFoundHttpException('У вас нет прав для создания задачи');
             }
         ];
         array_unshift($rules['access']['rules'], $rule);
@@ -60,15 +65,15 @@ class TasksController extends SecuredController
 
     /**
      * Displays homepage.
-     *
+     *        var_dump($task);
+
      * @return string
      */
     public function actionIndex()
     {
         $pageSize = 4;
-        $this->view->title = 'Список задач';
         $filterForm = new FilterForm();
-        $query = Task::find()->joinWith(['category', 'city'])->where(['task.status' => 'new'])->asArray();
+        $query = Task::find()->joinWith(['category'])->where(['task.status' => 'new'])->asArray();
         $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {
@@ -96,79 +101,60 @@ class TasksController extends SecuredController
         $task = Task::getTaskById($taskId);
         $responses = Task::getAllResponses($task);
         $currentUser = User::getCurrentUser();
+        $files = File::getTaskFilesAsArray($task);
         $addFeedbackForm = new AddFeedbackForm();
         $addResponseForm = new AddResponseForm();
-        $baseTask = new BaseTask(ArrayHelper::getValue($task, 'customer_id'));
 
-        if (Yii::$app->request->getIsPost()) {
-            if ($addFeedbackForm->load(Yii::$app->request->post()) && $addFeedbackForm->validate()) {
-                $transaction = Yii::$app->db->beginTransaction();
-
-                try {
-                    $feedback = new Feedback();
-                    $feedback->message = $addFeedbackForm['message'];
-                    $feedback->rating = $addFeedbackForm['message'];
-                    $feedback->save(false);
-
-                    $currentUser->count_feedbacks += 1;
-                    $currentUser->rating = Feedback::find()->where(['executor_id' => $task->executor_id])->sum('rating') / $currentUser->count_feedbacks;
-                    $currentUser->save();
-
-                    $transaction->commit();
-                } catch(Exception $e) {
-                    $transaction->rollBack();
-                    throw $e;
-                } catch (\Throwable $e) {
-                    $transaction->rollBack();
-                    throw $e;
-                }
-            }
-
-            if ($addResponseForm->load(Yii::$app->request->post()) && $addResponseForm->validate()) {
-                $response = new Response();
-                $response->task_id = $taskId;
-                $response->user_id = $currentUser['id'];
-                $response->message = $addResponseForm['message'];
-                $response->price = $addResponseForm['price'];
-                $response->save(false);
-            }
-        }
-
-        return $this->render('view', compact('task', 'responses', 'currentUser', 'addFeedbackForm', 'addResponseForm'));
+        return $this->render('view', compact('task', 'responses', 'currentUser', 'addFeedbackForm', 'addResponseForm', 'files'));
     }
 
     public function actionAddTask()
     {
-        $task = new Task();
+        $addTaskForm = new AddTaskForm();
         $categories = Category::getMapIdsToLabels();
-        $currentUserId = Yii::$app->user->identity->id;
-        $cities = ArrayHelper::getColumn(City::find()->asArray()->all(), 'name');
+        $currentUser = User::getCurrentUser();
+        $defaultCategory = 1;
 
         if (Yii::$app->request->getIsPost()) {
-            $task->load(Yii::$app->request->post());
-            $task->file = UploadedFile::getInstance($task, 'file');
+            $addTaskForm->load(Yii::$app->request->post());
+            $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
 
-            if ($task->validate()) {
-                $task->customer_id = $currentUserId;
-                $task->city_id = City::find()->select('id')->where(['name' => $task['city']]);
+            if ($addTaskForm->validate()) {
+                $task = new Task();
+                $task->title = ArrayHelper::getValue($addTaskForm, 'title');
+                $task->text = ArrayHelper::getValue($addTaskForm, 'text');
+                $task->category_id = ArrayHelper::getValue($addTaskForm, 'category_id') ?? $defaultCategory;
+                $task->customer_id = ArrayHelper::getValue($currentUser, 'id');
+                $task->price = ArrayHelper::getValue($currentUser, 'price');
+                $task->deadline = ArrayHelper::getValue($currentUser, 'deadline');
 
-                if ($task->file) {
+                $task->location = Task::getLocation(
+                    ArrayHelper::getValue($addTaskForm, 'city'),
+                    ArrayHelper::getValue($addTaskForm, 'district'),
+                    ArrayHelper::getValue($addTaskForm, 'street')
+                );
+
+                $geoCoder = new GeoCoderController($task->location);
+                $task->lat = $geoCoder->getLat();
+                $task->lng = $geoCoder->getLng();
+
+                if ($addTaskForm->file) {
                     $file = new File;
-                    $path = '/uploads/file-' . uniqid() . '.' . $task->file->extension;
+                    $path = '/uploads/file-' . uniqid() . '.' . $addTaskForm->file->extension;
 
-                    if ($task->file->saveAs('@webroot' . $path)) {
+                    if ($addTaskForm->file->saveAs('@webroot' . $path)) {
                         $file->task_id = $task->id;
-                        $file->user_id = $currentUserId;
                         $file->url = $path;
                         $file->save(false);
                     }
                 }
 
-                $task->save(false);
-                $this->redirect('/tasks');
+                if ($task->save(false)) {
+                    $this->redirect('/tasks');
+                }
             }
         }
 
-        return $this->render('add-task', compact('task', 'categories', 'cities'));
+        return $this->render('add-task', compact('addTaskForm', 'categories', 'currentUser'));
     }
 }

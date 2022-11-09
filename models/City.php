@@ -12,10 +12,10 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string|null $created_at
  * @property string $name
- * @property string $address
  * @property float|null $lat
  * @property float|null $lng
  *
+ * @property Task[] $tasks
  * @property User[] $users
  */
 class City extends \yii\db\ActiveRecord
@@ -38,8 +38,6 @@ class City extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['lat', 'lng'], 'number'],
             [['name'], 'string', 'max' => 100],
-            ['name', 'validateName'],
-            [['address'], 'string', 'max' => 500],
         ];
     }
 
@@ -51,40 +49,49 @@ class City extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'created_at' => 'Created At',
-            'name' => 'Город',
-            'address' => 'Address',
+            'name' => 'Name',
             'lat' => 'Lat',
             'lng' => 'Lng',
         ];
     }
 
-    public function validateName($attribute, $params): void
+    public static function getAllNames(): array
     {
-        if (!$this->hasErrors()) {
-            $geoCoder = new GeoCoderController($this->name);
+        return ArrayHelper::getColumn(self::find()->asArray()->all(), 'name');
+    }
 
-            if (!ArrayHelper::getValue($geoCoder->data, 'GeoObjectCollection.featureMember')) {
-                $this->addError($attribute, 'Этот адрес не верен');
-            }
-
-            if (ArrayHelper::getValue($geoCoder->data, 'GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found') > 1) {
-                $this->addError($attribute, 'Есть несколько совпадений, введите более точный адрес');
-            }
+    public static function getCityId($cityName, $cities)
+    {
+        if (!ArrayHelper::isIn($cityName, $cities)) {
+            $geoCoder = new GeoCoderController($cityName);
+            $city = new City;
+            $city->name = $cityName;
+            $city->lat = $geoCoder->getLat();
+            $city->lng = $geoCoder->getLng();
+            $city->save(false);
+            return $city->id;
+        } else {
+            return ArrayHelper::getValue(City::findOne(['name' => $cityName]), 'id');
         }
+    }
+
+    /**
+     * Gets query for [[Tasks]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Task::class, ['city_id' => 'id']);
     }
 
     /**
      * Gets query for [[Users]].
      *
-     * @return \yii\db\ActiveQuery|UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getUsers()
     {
         return $this->hasMany(User::class, ['city_id' => 'id']);
-    }
-
-    public static function getNames(): array
-    {
-        return ArrayHelper::getColumn(self::find()->select('name')->asArray()->all(), 'name');
     }
 }

@@ -1,49 +1,47 @@
 <?php
 
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 
 <section class="modal enter-form form-modal" id="enter-form">
     <h2>Вход на сайт</h2>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form'
-    ]); ?>
+    <?php $form = ActiveForm::begin(); ?>
         <p>
-            <?= $form
-                ->field($loginForm, 'email')
+            <?= $form->field($loginForm, 'email', [
+                    'labelOptions' => [
+                        'class' => 'form-modal-description',
+                    ],
+                ])
                 ->textInput([
                     'class' => 'enter-form-email input input-middle',
-                    'labelOptions' => [
-                        'class' => 'form-modal-description',
-                    ],
                 ]);
             ?>
         </p>
         <p>
-            <?= $form
-                ->field($loginForm, 'password')
-                ->passwordInput([
-                    'class' => 'enter-form-email input input-middle',
+            <?= $form->field($loginForm, 'password', [
                     'labelOptions' => [
                         'class' => 'form-modal-description',
                     ],
+                ])
+                ->passwordInput([
+                    'class' => 'enter-form-email input input-middle',
                 ]);
             ?>
         </p>
+        <?= Html::submitButton('Войти', ['class' => 'button']) ?>
+    <?php ActiveForm::end(); ?>
 
-        <div class="modal-footer">
-            <div>
-                <button class="button" type="submit">Войти</button>
-            </div>
-            <?= yii\authclient\widgets\AuthChoice::widget([
+    <div class="auth-client-title">или войти через ВК</div>
+
+
+    <?= yii\authclient\widgets\AuthChoice::widget([
                 'baseAuthUrl' => ['/start/auth'],
                 'popupMode' => false,
             ]) ?>
-        </div>
-    <?php ActiveForm::end(); ?>
 
-    <button class="form-modal-close" type="button">Закрыть</button>
-
+    <button class="form-modal-close j-form-modal-close" type="button">Закрыть</button>
 </section>

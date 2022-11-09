@@ -20,8 +20,9 @@ class AddResponseForm extends Model
     public function rules()
     {
         return [
-            [['message', 'price'], 'safe'],
             [['message'], 'required', 'message' => 'Это обязательное поле'],
+            [['message'], 'string', 'max' => 500],
+            ['price', 'integer']
         ];
     }
 }

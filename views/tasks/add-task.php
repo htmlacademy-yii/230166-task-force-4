@@ -1,54 +1,50 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 ?>
 
 <main class="main-content main-content--center container">
     <div class="add-task-form regular-form">
         <?php $form = ActiveForm::begin([
-            'id' => 'add-task'
-        ]); ?>
-
+                'id' => 'add-task'
+            ]);
+        ?>
             <h3 class="head-main head-main">Публикация нового задания</h3>
+                <?= $form->field($addTaskForm, 'title'); ?>
+                <?= $form->field($addTaskForm, 'text')->textarea(); ?>
+                <?= $form->field($addTaskForm, 'category_id')->dropDownList($categories); ?>
 
-            <div class="form-group">
-                <?= $form->field($task, 'title'); ?>
-            </div>
-
-            <div class="form-group">
-                <?= $form->field($task, 'text')->textarea(); ?>
-            </div>
-
-            <div class="form-group">
-                <?= $form->field($task, 'category_id')->dropDownList($categories); ?>
-            </div>
-
-            <div class="form-group autoComplete_wrapper">
-                <?= $form->field($task, 'city')
-                    ->input('search', [
-                        'id' => 'city_name',
-                        'dir' => 'ltr',
-                        'spellcheck' => 'false',
-                        'autocorrect' => 'off',
-                        'autocomplete' => 'off',
-                        'autocapitalize' => 'off'
-                    ]);
-                ?>
-            </div>
-
-            <div class="half-wrapper">
-                <div class="form-group">
-                    <?= $form->field($task, 'price')->input('number') ?>
+                <div class="inline-fields">
+                    <?= $form->field($addTaskForm, 'city')
+                        ->textInput([
+                            'id' => 'location',
+                            'class' => 'location-icon',
+                            'value' => ArrayHelper::getValue($currentUser, 'city.name'),
+                            'readonly' => true
+                        ]);
+                    ?>
+                    <?= $form->field($addTaskForm, 'district')
+                        ->textInput([
+                            'id' => 'district',
+                            'class' => 'location-icon',
+                        ]);
+                    ?>
+                    <?= $form->field($addTaskForm, 'street')
+                        ->textInput([
+                            'id' => 'street',
+                            'class' => 'location-icon',
+                        ]);
+                    ?>
                 </div>
-                <div class="form-group">
-                    <?= $form->field($task, 'deadline')->input('date'); ?>
-                </div>
+            <div class="inline-fields">
+                <?= $form->field($addTaskForm, 'price')->input('number') ?>
+                <?= $form->field($addTaskForm, 'deadline')->input('date'); ?>
             </div>
-
             <p class="form-label">Файлы</p>
-
-            <?= $form->field($task, 'file', [
+            <?= $form->field($addTaskForm, 'file', [
                     'template' => '{input}{label}{error}',
                     'labelOptions' => [
                         'class' => 'new-file'
@@ -59,18 +55,16 @@ use yii\widgets\ActiveForm;
                     'id' => 'button-input'
                 ]);
             ?>
-
-            <input type="submit" class="button button--blue" value="Опубликовать">
-
+            <?= Html::submitButton('Опубликовать', ['class' => 'button button--blue']) ?>
         <?php ActiveForm::end(); ?>
     </div>
 </main>
-
+<!--
 <script>
     const autoCompleteJS = new autoComplete({
         selector: '#city_name',
         data: {
-            src: ["<?= implode('", "', $cities) ?>"],
+            src: [""],
             cache: true,
         },
         resultItem: {
@@ -85,4 +79,4 @@ use yii\widgets\ActiveForm;
             }
         }
     });
-</script>
+</script> -->

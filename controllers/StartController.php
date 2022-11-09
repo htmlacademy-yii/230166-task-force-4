@@ -9,6 +9,9 @@ use app\models\User;
 use app\models\City;
 use app\models\Auth;
 use app\models\forms\LoginForm;
+use app\models\forms\SignupForm;
+use yii\web\NotFoundHttpException;
+use app\models\forms\AuthClientForm;
 
 class StartController extends Controller
 {
@@ -22,45 +25,82 @@ class StartController extends Controller
         ];
     }
 
-    public function actionIndex()
+    /**
+     * показываем лендинг с формой входа
+     */
+    public function actionIndex($authClient = null, $userId = null)
     {
         $this->layout = 'start';
+        /* @var $loginForm создаем модель формы логина */
         $loginForm = new LoginForm();
+        /* @var $duration срок логина пользователя (сутки) */
+        $duration = 86400;
+        $cities = [];
+        $authClientForm = null;
 
+        // получаем данные из формы логина
         if (Yii::$app->request->getIsPost()) {
             $loginForm->load(Yii::$app->request->post());
 
             if ($loginForm->validate()) {
                 $user = $loginForm->getUser();
-                Yii::$app->user->login($user);
 
-                return $this->redirect(['/profile', 'userId' => $user['id']]);
+                // если пользователь залогинился, показываем страницу профиля
+                if (Yii::$app->user->login($user, $duration)) {
+                    return $this->redirect(['/profile', 'userId' => $user['id']]);
+                } else {
+                    throw new NotFoundHttpException('Пользователь не залогинен!');
+                }
             }
         }
 
-        return $this->render('index', compact('loginForm'));
+        if ($authClient === 'vk' && $userId) {
+            $cities = City::getAllNames();
+            $authClientForm = new AuthClientForm();
+
+            if (Yii::$app->request->getIsPost()) {//добавляем роль и город для пользователя ВК
+                $authClientForm->load(Yii::$app->request->post());
+
+                if ($authClientForm->validate()) {
+                    $user = User::findOne($userId);
+                    $cityName = ArrayHelper::getValue($authClientForm, 'city');
+                    $user->city_id = City::getCityId($cityName, $cities);
+                    $user->role = ArrayHelper::getValue($authClientForm, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
+
+                    if ($user->save(false)) {
+                        $this->redirect('/tasks');
+                    }
+                }
+            }
+        }
+
+        return $this->render('index', compact('loginForm', 'authClient', 'authClientForm', 'cities'));
     }
 
     public function actionSignup()
     {
-        $user = new User();
-        $city = new City();
-        $cities = ArrayHelper::getColumn(City::find()->asArray()->all(), 'name');
+        $signupForm = new SignupForm();
+        $cities = City::getAllNames();
 
         if (Yii::$app->request->getIsPost()) {
-            $user->load(Yii::$app->request->post());
+            $signupForm->load(Yii::$app->request->post());
 
-            if ($user->validate()) {
-                $user->password = Yii::$app->security->generatePasswordHash($user->password);
-                $user->role = $user['role'] ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
-                $user->city_id = City::find()->select('id')->where(['name' => $user['city']]);
+            if ($signupForm->validate()) {
+                $user = new User;
+                $cityName = (string) ArrayHelper::getValue($signupForm, 'city');
+                $user->city_id = City::getCityId($cityName, $cities);
+                $user->name = ArrayHelper::getValue($signupForm, 'name');
+                $user->email = ArrayHelper::getValue($signupForm, 'email');
+                $user->password = Yii::$app->security->generatePasswordHash($signupForm->password);
+                $user->role = ArrayHelper::getValue($signupForm, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
 
-                $user->save(false);
-                $this->redirect('/');
+                if ($user->save(false)) {
+                    $this->redirect('/');
+                }
             }
         }
 
-        return $this->render('signup', compact('user', 'city', 'cities'));
+        return $this->render('signup', compact('signupForm', 'cities'));
     }
 
     public function onAuthSuccess($client)
@@ -84,8 +124,8 @@ class StartController extends Controller
                     ]);
                 } else {
                     $password = Yii::$app->security->generateRandomString(6);
-
                     $user = new User;
+
                     $user->name = $attributes['first_name'] . ' ' . $attributes['last_name'];
                     $user->email = $attributes['email'];
                     $user->date_of_birth = date('Y-m-d', Yii::$app->formatter->asTimestamp($attributes['bdate']));
@@ -110,8 +150,10 @@ class StartController extends Controller
                         $transaction->commit();
                         Yii::$app->user->login($user);
                     } else {
-                        print_r($auth->getErrors());
+                        throw new NotFoundHttpException($auth->getErrors());
                     }
+
+                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]); // уточняем роль город пользователя
                 }
             }
         } else { // Пользователь уже зарегистрирован
@@ -126,5 +168,14 @@ class StartController extends Controller
         }
 
         $this->redirect('/tasks');
+    }
+
+    /**
+     * разлогинивание текущего пользователя
+    */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->redirect('/');
     }
 }

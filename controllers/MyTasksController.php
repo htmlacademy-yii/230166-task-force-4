@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Task;
 
-class MyTaskController extends SecuredController
+class MyTasksController extends SecuredController
 {
     /**
      * Выводит список новых задач для текущего пользователя

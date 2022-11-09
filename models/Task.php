@@ -6,23 +6,25 @@ use Yii;
 use TaskForce\Models\BaseTask as BaseTask;
 use yii\web\NotFoundHttpException;
 use app\models\User;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "task".
  *
  * @property int $id
  * @property string|null $created_at
- * @property int|null $customer_id
- * @property int|null $executor_id
- * @property int|null $category_id
  * @property string|null $status
  * @property string $title
  * @property string $text
  * @property int|null $price
  * @property string|null $deadline
- * @property int|null $city_id
+ * @property int $customer_id
+ * @property int|null $executor_id
+ * @property int $category_id
+ * @property string|null $location
+ * @property float|null $lat
+ * @property float|null $lng
  *
- * @property City $city
  * @property Category $category
  * @property User $customer
  * @property User $executor
@@ -32,9 +34,6 @@ use app\models\User;
  */
 class Task extends \yii\db\ActiveRecord
 {
-    public $city;
-    public $file;
-
     /**
      * {@inheritdoc}
      */
@@ -49,19 +48,16 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'deadline', 'date_of_birth', 'file'], 'safe'],
-            [['customer_id', 'executor_id', 'category_id'], 'integer'],
+            [['created_at', 'deadline'], 'safe'],
             [['status'], 'string'],
-            [['title', 'text'], 'required'],
-            [['price', 'id'], 'number'],
+            [['title', 'text', 'customer_id', 'category_id'], 'required'],
+            [['price', 'customer_id', 'executor_id', 'category_id'], 'integer'],
+            [['lat', 'lng'], 'number'],
             [['title'], 'string', 'max' => 100],
-            [['text'], 'string', 'max' => 500],
+            [['text', 'location'], 'string', 'max' => 1000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
-            [['city'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city' => 'name']],
-            ['file', 'file']
         ];
     }
 
@@ -73,23 +69,23 @@ class Task extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'created_at' => 'Created At',
+            'status' => 'Status',
+            'title' => 'Title',
+            'text' => 'Text',
+            'price' => 'Price',
+            'deadline' => 'Deadline',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'category_id' => 'Категории',
-            'city_id' => 'City Id',
-            'status' => 'Status',
-            'title' => 'Опишите суть работы',
-            'text' => 'Подробности задания',
-            'price' => 'Бюджет',
-            'deadline' => 'Срок исполнения',
-            'city' => 'Город',
-            'file' => 'Добавить новый файл',
+            'category_id' => 'Category ID',
+            'location' => 'Location',
+            'lat' => 'Lat',
+            'lng' => 'Lng',
         ];
     }
 
     public static function getTaskById($taskId)
     {
-        $task = self::find()->joinWith(['city', 'category'])->where(['task.id' => $taskId])->limit(1)->one();
+        $task = self::find()->joinWith(['category'])->where(['task.id' => $taskId])->limit(1)->one();
 
         if (!$task) {
             throw new NotFoundHttpException("Контакт с задачей с ID $taskId не найден");
@@ -100,7 +96,7 @@ class Task extends \yii\db\ActiveRecord
 
     public static function getAllResponses(Task $task): array
     {
-        return Response::find()->where(['task_id' => $task->id])->joinWith('user')->asArray()->all();
+        return Response::find()->where(['task_id' => ArrayHelper::getValue($task, 'id')])->asArray()->all();
     }
 
     public static function getNewTasksForCurrentUser(): ?array
@@ -108,9 +104,9 @@ class Task extends \yii\db\ActiveRecord
         $currentUser = User::getCurrentUser();
 
         if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
         } else {
-            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_NEW])->asArray()->all();
         }
     }
 
@@ -119,9 +115,9 @@ class Task extends \yii\db\ActiveRecord
         $currentUser = User::getCurrentUser();
 
         if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
         } else {
-            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_INPROGRESS])->asArray()->all();
         }
     }
 
@@ -130,26 +126,21 @@ class Task extends \yii\db\ActiveRecord
         $currentUser = User::getCurrentUser();
 
         if ($currentUser->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category', 'city'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['executor_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
         } else {
-            return self::find()->joinWith(['category', 'city'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
+            return self::find()->joinWith(['category'])->where(['customer_id' => $currentUser->id, 'status' => BaseTask::STATUS_DONE])->asArray()->all();
         }
     }
 
-    /**
-     * Gets query for [[City]].
-     *
-     * @return \yii\db\ActiveQuery|CityQuery
-     */
-    public function getCity()
+    public static function getLocation($city, $district = null, $street = null)
     {
-        return $this->hasOne(City::class, ['id' => 'city_id']);
+        return implode(', ', array_filter([$city, $district, $street]));
     }
 
     /**
      * Gets query for [[Category]].
      *
-     * @return \yii\db\ActiveQuery|CategoryQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getCategory()
     {
@@ -159,7 +150,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Customer]].
      *
-     * @return \yii\db\ActiveQuery|UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getCustomer()
     {
@@ -169,7 +160,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Executor]].
      *
-     * @return \yii\db\ActiveQuery|UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getExecutor()
     {
@@ -179,7 +170,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Feedbacks]].
      *
-     * @return \yii\db\ActiveQuery|FeedbackQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getFeedbacks()
     {
@@ -189,7 +180,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Files]].
      *
-     * @return \yii\db\ActiveQuery|FileQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getFiles()
     {
@@ -199,7 +190,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Responses]].
      *
-     * @return \yii\db\ActiveQuery|ResponseQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getResponses()
     {

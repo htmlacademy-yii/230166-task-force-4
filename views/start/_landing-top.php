@@ -15,5 +15,10 @@ use yii\helpers\Url;
         У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
         Быстро, безопасно и с гарантией. Просто, как раз, два, три.
     </p>
-    <?= Html::a('Создать аккаунт', Url::to('/signup'), ['class' => 'button']) ?>
+
+    <?php if(Yii::$app->user->isGuest) : ?>
+        <?= Html::a('Создать аккаунт', Url::to('/signup'), ['class' => 'button']) ?>
+    <? else : ?>
+        <?= Html::a('Новые задачи', Url::to('/tasks', true), ['class' => 'button']) ?>
+    <? endif; ?>
 </div>

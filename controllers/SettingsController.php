@@ -21,7 +21,7 @@ class SettingsController extends SecuredController
             if ($settingsForm->validate()) {
                 $settingsForm->updateUser();
 
-                return $this->redirect('/profile');
+                return $this->redirect('/tasks');
             }
         }
 

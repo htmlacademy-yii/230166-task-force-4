@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "file".
@@ -39,6 +40,11 @@ class File extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
+    }
+
+    public static function getTaskFilesAsArray($task): ?array
+    {
+        return self::find()->where(['task_id' => ArrayHelper::getValue($task, 'id')])->asArray()->all();
     }
 
     /**

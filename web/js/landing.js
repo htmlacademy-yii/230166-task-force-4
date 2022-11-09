@@ -1,5 +1,5 @@
 var openModalLinks = document.getElementsByClassName("open-modal");
-var closeModalLinks = document.getElementsByClassName("form-modal-close");
+var closeModalLinks = document.getElementsByClassName("j-form-modal-close");
 var overlay = document.getElementsByClassName("overlay")[0];
 
 for (var i = 0; i < openModalLinks.length; i++) {

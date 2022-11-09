@@ -7,5 +7,9 @@
 
 <?= $this->render('_login-modal', compact('loginForm')) ?>
 
+<?php if ($authClient && $authClient === 'vk') : ?>
+    <?= $this->render('_vk-modal', compact('authClientForm', 'cities')) ?>
+<? endif; ?>
+
 <div class="overlay"></div>
 
