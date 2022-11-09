@@ -20,7 +20,7 @@ $this->registerMetaTag(['name' => 'description', 'content' => $this->params['met
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@web/favicon.ico']);
 
-$role = Yii::$app->user->identity->role;
+$is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;
 
 ?>
 
@@ -65,7 +65,7 @@ $role = Yii::$app->user->identity->role;
                         'items' => [
                             ['label' => 'Новое', 'url' => ['/tasks/index']],
                             ['label' => 'Мои задания', 'url' => ['/my-tasks/new']],
-                            ['label' => 'Создать задание', 'url' => ['/tasks/add-task'], 'visible' => $role === User::ROLE_CUSTOMER],
+                            ['label' => 'Создать задание', 'url' => ['/tasks/add-task'], 'visible' => !$is_executor],
                             ['label' => 'Настройки', 'url' => ['/settings/index']],
                         ],
                         'options' => [
@@ -86,7 +86,7 @@ $role = Yii::$app->user->identity->role;
     <?php if (!Yii::$app->user->isGuest) : ?>
         <div class="user-block">
             <?= AvatarWidget::widget([
-                    'userId' => $role === User::ROLE_EXECUTOR ? Yii::$app->user->getId() : null,
+                    'userId' => $is_executor ? Yii::$app->user->getId() : null,
                     'src' => Yii::$app->user->identity->avatar,
                     'width' => 55,
                     'height' => 55,
@@ -95,8 +95,8 @@ $role = Yii::$app->user->identity->role;
             ?>
             <div class="user-menu">
                 <p class="user-name">
-                    <?php if ($role === User::ROLE_EXECUTOR) : ?>
-                        <?= Html::a(Html::encode(Yii::$app->user->identity->name), Url::to(['/profile', 'userId' => Yii::$app->user->getId()]), ['class' => 'link']) ?>
+                    <?php if ($is_executor) : ?>
+                        <?= Html::a(Html::encode(Yii::$app->user->identity->name), Url::to(['/profile', 'executorId' => Yii::$app->user->getId()]), ['class' => 'link']) ?>
                     <? else : ?>
                         <span class="link"><?= Html::encode(Yii::$app->user->identity->name) ?></span>
                     <? endif; ?>

@@ -65,7 +65,7 @@
                 </script>
                 <div id="map" style="width: 725px; height: 346px;"></div>
                 <?php if (ArrayHelper::getValue($task, 'location')) : ?>
-                    <?= Html::encode(ArrayHelper::getValue($task, 'location')) ?>
+                    <p class="map-address town"><?= Html::encode(ArrayHelper::getValue($task, 'location')) ?></p>
                 <? endif; ?>
             </div>
         <? endif; ?>

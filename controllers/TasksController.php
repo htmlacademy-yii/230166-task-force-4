@@ -7,17 +7,12 @@ use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 use app\models\Task;
 use app\models\Category;
-use app\models\City;
-use app\models\Feedback;
-use app\models\Response;
 use app\models\User;
 use app\models\File;
 use app\models\forms\FilterForm;
 use app\models\forms\AddFeedbackForm;
 use app\models\forms\AddResponseForm;
 use app\models\forms\AddTaskForm;
-use Exception;
-use TaskForce\Models\BaseTask;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 
@@ -99,7 +94,7 @@ class TasksController extends SecuredController
     public function actionView($taskId)
     {
         $task = Task::getTaskById($taskId);
-        $responses = Task::getAllResponses($task);
+        $responses = Task::getAllResponsesAsArray($task);
         $currentUser = User::getCurrentUser();
         $files = File::getTaskFilesAsArray($task);
         $addFeedbackForm = new AddFeedbackForm();

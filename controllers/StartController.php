@@ -45,9 +45,8 @@ class StartController extends Controller
             if ($loginForm->validate()) {
                 $user = $loginForm->getUser();
 
-                // если пользователь залогинился, показываем страницу профиля
                 if (Yii::$app->user->login($user, $duration)) {
-                    return $this->redirect(['/profile', 'userId' => $user['id']]);
+                    return $this->redirect(['/tasks']);
                 } else {
                     throw new NotFoundHttpException('Пользователь не залогинен!');
                 }
@@ -58,7 +57,7 @@ class StartController extends Controller
             $cities = City::getAllNames();
             $authClientForm = new AuthClientForm();
 
-            if (Yii::$app->request->getIsPost()) {//добавляем роль и город для пользователя ВК
+            if (Yii::$app->request->getIsPost()) {//добавляем роль и город для профиля ВК
                 $authClientForm->load(Yii::$app->request->post());
 
                 if ($authClientForm->validate()) {

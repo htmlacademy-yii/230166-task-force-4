@@ -36,13 +36,13 @@ class ActionComplete extends AbstractAction
                     $feedback = new Feedback();
                     $feedback->message = $addFeedbackForm['message'];
                     $feedback->rating = (int) $addFeedbackForm['rating'];
-                    $feedback->customerId = $customerId;
-                    $feedback->executorId = $executorId;
+                    $feedback->customer_id = $customerId;
+                    $feedback->executor_id = $executorId;
                     $feedback->save(false);
 
                     $executor = User::findOne($executorId);
                     $executor->count_feedbacks += 1;
-                    $executor->rating = Feedback::find()->where(['executor_id' => $executorId])->sum('rating') / $executor->count_feedbacks + $executor->count_failed_tasks;
+                    $executor->rating = User::getRating($executor);
                     $executor->save();
 
                     $transaction->commit();

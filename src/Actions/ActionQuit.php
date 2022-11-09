@@ -6,6 +6,7 @@ use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Task;
 use app\models\User;
+use Yii;
 
 class ActionQuit extends AbstractAction
 {
@@ -19,18 +20,28 @@ class ActionQuit extends AbstractAction
             && $currentUser->id === $task->executor_id;
     }
 
-    public function run(int $taskId, int $userId)
+    public function run(int $taskId, int $executorId)
     {
-        $task = Task::find()
-            ->where([
-                    'task.id' => $taskId,
-                    'task.executor_id' => $userId
-                ])
-            ->limit(1)
-            ->one();
+        $transaction = Yii::$app->db->beginTransaction();
 
-        $task->status = 'failed';
-        $task->save(false);
+        try {
+            $executor = User::findOne($executorId);
+            $executor->count_failed_tasks += 1;
+            $executor->rating = User::getRating($executor);
+            $executor->save(false);
+
+            $task = Task::findOne($taskId);
+            $task->status = BaseTask::STATUS_FAILED;
+            $task->save(false);
+
+            $transaction->commit();
+        } catch(\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
 
         header('Location: /tasks/' . $taskId);
     }

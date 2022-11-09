@@ -2,6 +2,8 @@
 
 namespace TaskForce\Actions;
 
+use app\models\Feedback;
+use Yii;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Response;
@@ -22,11 +24,12 @@ class ActionRefuse extends AbstractAction
             && $task->customer_id === $currentUser->id;
     }
 
-    public function run(int $taskId, int $userId)
+    public function run(int $taskId, int $executorId)
     {
-        $response = Response::findOne(['task_id' => $taskId, 'user_id' => $userId]);
+        $response = Response::findOne(['task_id' => $taskId, 'executor_id' => $executorId]);
         $response->status = Response::STATUS_REFUSE;
         $response->save(false);
+
         header('Location: /tasks/' . $taskId);
     }
 }

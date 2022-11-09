@@ -20,7 +20,7 @@ class ActionRespond extends AbstractAction
         return
             $task->status === BaseTask::STATUS_NEW
             && $currentUser->role === User::ROLE_EXECUTOR
-            && !Response::find()->where(['task_id' => $task->id, 'user_id' => $currentUser->id])->limit(1)->one();
+            && !Response::find()->where(['task_id' => $task->id, 'executor_id' => $currentUser->id])->limit(1)->one();
     }
 
     public function run(int $taskId, int $executorId)

@@ -18,7 +18,7 @@ use TaskForce\Actions\ActionQuit;
         <?= Html::a(ActionQuit::LABEL, Url::to([
                 '/tasks/quit',
                 'taskId' => ArrayHelper::getValue($task, 'id'),
-                'userId' => ArrayHelper::getValue($currentUser, 'id')
+                'executorId' => ArrayHelper::getValue($currentUser, 'id')
             ]),
             [
                 'class' => 'button button--pop-up button--orange'

@@ -191,6 +191,15 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public static function getRating($executor)
+    {
+        $sum = Feedback::find()->where(['executor_id' => ArrayHelper::getValue($executor, 'id')])->sum('rating');
+        $countFeedbacks = ArrayHelper::getValue($executor, 'count_feedbacks');
+        $countFailedTasks = ArrayHelper::getValue($executor, 'count_failed_tasks');
+
+        return $sum / $countFeedbacks + $countFailedTasks;
+    }
+
     public function validateCity($attribute, $params): void
     {
         $geoCoder = new GeoCoderController($this->city);

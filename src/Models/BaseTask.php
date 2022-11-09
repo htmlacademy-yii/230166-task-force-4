@@ -2,7 +2,6 @@
 
 namespace TaskForce\Models;
 
-use yii\helpers\ArrayHelper;
 use app\models\Task;
 use app\models\User;
 use TaskForce\Actions\AbstractAction;
@@ -21,7 +20,6 @@ class BaseTask
     public const STATUS_DONE = 'done';
     public const STATUS_FAILED = 'failed';
     private $customerId;
-    private $executorId;
     private $status;
 
     /**

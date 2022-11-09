@@ -7,6 +7,7 @@ use TaskForce\Models\BaseTask;
 use app\models\Response;
 use app\models\Task;
 use app\models\User;
+use Yii;
 
 class ActionStart extends AbstractAction
 {
@@ -20,16 +21,28 @@ class ActionStart extends AbstractAction
             && $currentUser->id === $task->customer_id;
     }
 
-    public function run(int $taskId, int $userId)
+    public function run(int $taskId, int $executorId)
     {
-        $response = Response::findOne(['task_id' => $taskId, 'user_id' => $userId]);
-        $response->is_approved = 1;
-        $response->save(false);
+        $transaction = Yii::$app->db->beginTransaction();
 
-        $task = Task::findOne(['id' => $taskId]);
-        $task->executor_id = $userId;
-        $task->status = BaseTask::STATUS_INPROGRESS;
-        $task->save(false);
+        try {
+            $response = Response::findOne(['task_id' => $taskId, 'executorId' => $executorId]);
+            $response->status = Response::STATUS_APROVE;
+            $response->save(false);
+
+            $task = Task::findOne(['id' => $taskId]);
+            $task->executor_id = $executorId;
+            $task->status = BaseTask::STATUS_INPROGRESS;
+            $task->save(false);
+
+            $transaction->commit();
+        } catch(\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
 
         header('Location: /tasks/' . $taskId);
     }

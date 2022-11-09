@@ -94,9 +94,22 @@ class Task extends \yii\db\ActiveRecord
         return $task;
     }
 
-    public static function getAllResponses(Task $task): array
+    public static function getAllResponsesAsArray(Task $task): array
     {
-        return Response::find()->where(['task_id' => ArrayHelper::getValue($task, 'id')])->asArray()->all();
+        return Response::find()
+            ->select([
+                'response.*',
+                'user.id as user_id',
+                'user.avatar as user_avatar',
+                'user.rating as user_rating',
+                'user.name as user_name',
+                'user.email as user_email',
+                'user.count_feedbacks as user_count_feedbacks',
+            ])
+            ->join('INNER JOIN', 'user', 'user.id = response.executor_id')
+            ->where(['response.task_id' => ArrayHelper::getValue($task, 'id')])
+            ->asArray()
+            ->all();
     }
 
     public static function getNewTasksForCurrentUser(): ?array
