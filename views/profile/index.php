@@ -80,11 +80,7 @@ use app\models\User;
                 <dt>Дата регистрации</dt>
                 <dd><?= Yii::$app->formatter->asDatetime(Html::encode($user['created_at'])) ?></dd>
                 <dt>Статус</dt>
-                <?php if (!User::isAvailable(ArrayHelper::getValue($user, 'id'))) : ?>
-                    <dd>Открыт для новых заказов</dd>
-                <? else : ?>
-                    <dd>Есть задачи в работе</dd>
-                <? endif; ?>
+                <dd><?= ArrayHelper::getValue(User::getStatusesLabels(), User::getStatus(ArrayHelper::getValue($user, 'id'))) ?></dd>
             </dl>
         </div>
 
