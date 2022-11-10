@@ -35,13 +35,12 @@ class StartController extends Controller
      */
     public function actionIndex(string $authClient = null, int $userId = null): string|Response
     {
-        $this->layout = 'start';
-        /* @var $loginForm создаем модель формы логина */
+        /* @var app\models\forms\LoginForm $loginForm форма логина */
         $loginForm = new LoginForm();
-        /* @var $duration срок логина пользователя (сутки) */
-        $duration = 86400;
+        /* @var array $cities массив с названиями городов, для регистрации через vk */
         $cities = [];
-        $authClientForm = null;
+        /* @var app\models\forms\AuthClientForm $authClientForm форма с выбором города и роли для регистрации через vk */
+        $authClientForm = new AuthClientForm();
 
         // получаем данные из формы логина
         if (Yii::$app->request->getIsPost()) {
@@ -50,7 +49,7 @@ class StartController extends Controller
             if ($loginForm->validate()) {
                 $user = $loginForm->getUser();
 
-                if (Yii::$app->user->login($user, $duration)) {
+                if (Yii::$app->user->login($user)) {
                     return $this->redirect(['/tasks']);
                 } else {
                     throw new NotFoundHttpException('Пользователь не залогинен!');
@@ -60,9 +59,8 @@ class StartController extends Controller
 
         if ($authClient === 'vk' && $userId) {
             $cities = City::getAllNames();
-            $authClientForm = new AuthClientForm();
 
-            if (Yii::$app->request->getIsPost()) {//добавляем роль и город для профиля ВК
+            if (Yii::$app->request->getIsPost()) { //добавляем роль и город для профиля ВК
                 $authClientForm->load(Yii::$app->request->post());
 
                 if ($authClientForm->validate()) {
@@ -164,8 +162,8 @@ class StartController extends Controller
                     } else {
                         throw new NotFoundHttpException($auth->getErrors());
                     }
-
-                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]); // уточняем роль город пользователя
+                    // открываем  попап с формой для получения роли и города пользователя
+                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]);
                 }
             }
         } else { // Пользователь уже зарегистрирован
@@ -184,7 +182,7 @@ class StartController extends Controller
 
     /**
      * разлогинивание текущего пользователя
-    */
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
