@@ -83,7 +83,7 @@ use app\models\User;
                 <?php if (!User::isAvailable(ArrayHelper::getValue($user, 'id'))) : ?>
                     <dd>Открыт для новых заказов</dd>
                 <? else : ?>
-                    <dd>Занят</dd>
+                    <dd>Есть задачи в работе</dd>
                 <? endif; ?>
             </dl>
         </div>
