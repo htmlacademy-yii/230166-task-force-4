@@ -44,12 +44,12 @@ class GeoCoderController extends SecuredController
 
     public function getLat()
     {
-        return $this->getPoint()[0];
+        return explode(' ', $this->getPoint())[1];
     }
 
     public function getLng()
     {
-        return $this->getPoint()[1];
+        return explode(' ', $this->getPoint())[0];
     }
 
     public function getStartLine(): ?string

@@ -57,7 +57,7 @@
                     function init(){
                         var myMap = new ymaps.Map("map", {
                             center: [<?= ArrayHelper::getValue($task, 'lat') ?>, <?= ArrayHelper::getValue($task, 'lng') ?>],
-                            zoom: 12,
+                            zoom: 10,
                             scrollZoom: false,
                             controls: [],
                         });
