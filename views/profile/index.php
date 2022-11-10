@@ -12,8 +12,6 @@ use app\components\StarsWidget;
 use app\components\AvatarWidget;
 use app\models\User;
 
-$is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;
-
 ?>
 
 <main class="main-content container">
@@ -72,21 +70,23 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
     </div>
 
     <div class="right-column">
-        <?php if ($is_executor) : ?>
-            <div class="right-card black">
-                <h4 class="head-card">Статистика исполнителя</h4>
-                <dl class="black-list">
-                    <dt>Всего заказов</dt>
-                    <dd><?= Html::encode($user['tasks_count']['all']) ?> выполнено, <?= Html::encode($user['tasks_count']['failed']) ?> провалено</dd>
-                    <dt>Место в рейтинге</dt>
-                    <dd><?= ArrayHelper::getValue($user, 'rate') ?> место</dd>
-                    <dt>Дата регистрации</dt>
-                    <dd><?= Yii::$app->formatter->asDatetime(Html::encode($user['created_at'])) ?></dd>
-                    <dt>Статус</dt>
+        <div class="right-card black">
+            <h4 class="head-card">Статистика исполнителя</h4>
+            <dl class="black-list">
+                <dt>Всего заказов</dt>
+                <dd><?= Html::encode($user['tasks_count']['all']) ?> выполнено, <?= Html::encode($user['tasks_count']['failed']) ?> провалено</dd>
+                <dt>Место в рейтинге</dt>
+                <dd><?= ArrayHelper::getValue($user, 'rate') ?> место</dd>
+                <dt>Дата регистрации</dt>
+                <dd><?= Yii::$app->formatter->asDatetime(Html::encode($user['created_at'])) ?></dd>
+                <dt>Статус</dt>
+                <?php if (!User::isAvailable(ArrayHelper::getValue($user, 'id'))) : ?>
                     <dd>Открыт для новых заказов</dd>
-                </dl>
-            </div>
-        <? endif; ?>
+                <? else : ?>
+                    <dd>Есть задачи в работе</dd>
+                <? endif; ?>
+            </dl>
+        </div>
 
         <div class="right-card white">
             <h4 class="head-card">Контакты</h4>

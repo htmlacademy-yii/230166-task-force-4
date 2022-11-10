@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Category;
 use app\models\Task;
 use app\models\Feedback;
+use TaskForce\Models\BaseTask;
 
 /**
  * This is the model class for table "user".
@@ -218,7 +219,18 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * isAuthClientUser
+     * isAvailable
+     *
+     * @param  int $executorId
+     * @return bool
+     */
+    public static function isAvailable(int $executorId): bool
+    {
+        return (bool) Task::find()->where(['executor_id' => $executorId, 'status' => BaseTask::STATUS_INPROGRESS])->limit(1)->one();
+    }
+
+    /**
+     * проверяем зарегистрирован ли пользователь через соцсеть
      *
      * @return bool
      */

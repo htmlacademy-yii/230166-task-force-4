@@ -33,7 +33,7 @@ class StartController extends Controller
      * @param  ?ing $userId
      * @return string
      */
-    public function actionIndex(int $authClient = null, int $userId = null): string|Response
+    public function actionIndex(string $authClient = null, int $userId = null): string|Response
     {
         $this->layout = 'start';
         /* @var $loginForm создаем модель формы логина */
