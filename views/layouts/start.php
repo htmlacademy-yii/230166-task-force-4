@@ -101,7 +101,7 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
 
                             <?php if ($is_executor) : ?>
                                 <li class="links__item">
-                                    <?= Html::a('Мой профиль', Url::to(['/profile', 'executorId' => Yii::$app->user->getId()])) ?>
+                                    <?= Html::a('Мой профиль', Url::to(['/profile', 'userId' => Yii::$app->user->getId()])) ?>
                                 </li>
                             <? endif; ?>
 

@@ -10,6 +10,9 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
+use app\models\User;
+
+$is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;
 
 ?>
 
@@ -37,8 +40,8 @@ use app\components\AvatarWidget;
 
         <div class="specialization-bio">
             <div class="specialization">
-                <p class="head-info">Специализации</p>
                 <?php if ($categories) : ?>
+                    <p class="head-info">Специализации</p>
                     <ul class="special-list">
                         <?php foreach ($categories as $category) : ?>
                             <li class="special-item">
@@ -46,8 +49,6 @@ use app\components\AvatarWidget;
                             </li>
                         <? endforeach; ?>
                     </ul>
-                <? else : ?>
-                    <div class="caption">Список пуст</div>
                 <? endif; ?>
             </div>
 
@@ -71,19 +72,21 @@ use app\components\AvatarWidget;
     </div>
 
     <div class="right-column">
-        <div class="right-card black">
-            <h4 class="head-card">Статистика исполнителя</h4>
-            <dl class="black-list">
-                <dt>Всего заказов</dt>
-                <dd><?= Html::encode($user['tasks_count']['all']) ?> выполнено, <?= Html::encode($user['tasks_count']['failed']) ?> провалено</dd>
-                <dt>Место в рейтинге</dt>
-                <dd><?= ArrayHelper::getValue($user, 'rate') ?> место</dd>
-                <dt>Дата регистрации</dt>
-                <dd><?= Yii::$app->formatter->asDatetime(Html::encode($user['created_at'])) ?></dd>
-                <dt>Статус</dt>
-                <dd>Открыт для новых заказов</dd>
-            </dl>
-        </div>
+        <?php if ($is_executor) : ?>
+            <div class="right-card black">
+                <h4 class="head-card">Статистика исполнителя</h4>
+                <dl class="black-list">
+                    <dt>Всего заказов</dt>
+                    <dd><?= Html::encode($user['tasks_count']['all']) ?> выполнено, <?= Html::encode($user['tasks_count']['failed']) ?> провалено</dd>
+                    <dt>Место в рейтинге</dt>
+                    <dd><?= ArrayHelper::getValue($user, 'rate') ?> место</dd>
+                    <dt>Дата регистрации</dt>
+                    <dd><?= Yii::$app->formatter->asDatetime(Html::encode($user['created_at'])) ?></dd>
+                    <dt>Статус</dt>
+                    <dd>Открыт для новых заказов</dd>
+                </dl>
+            </div>
+        <? endif; ?>
 
         <div class="right-card white">
             <h4 class="head-card">Контакты</h4>

@@ -6,7 +6,7 @@ use yii\helpers\Url;
 ?>
 
 <?php if ($userId) : ?>
-    <a href="<?= Url::to(['/profile', 'executorId' => $userId]) ?>" class="<?= $linkClass ?>">
+    <a href="<?= Url::to(['/profile', 'userId' => $userId]) ?>" class="<?= $linkClass ?>">
         <?= Html::img($src, [
                 'imageClass' => $imageClass,
                 'width' => $width,

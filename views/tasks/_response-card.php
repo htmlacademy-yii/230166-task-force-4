@@ -26,7 +26,7 @@ use TaskForce\Models\BaseTask;
     ?>
 
     <div class="feedback-wrapper">
-        <?= Html::a(ArrayHelper::getValue($response, 'user_name'), Url::to(['/profile', 'executorId' => ArrayHelper::getValue($response, 'user_id')])) ?>
+        <?= Html::a(ArrayHelper::getValue($response, 'user_name'), Url::to(['/profile', 'userId' => ArrayHelper::getValue($response, 'user_id')])) ?>
         <div class="response-wrapper">
             <?= StarsWidget::widget(['className' => 'stars-rating small', 'rating' => ArrayHelper::getValue($response, 'user_rating')]) ?>
 

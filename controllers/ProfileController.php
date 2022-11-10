@@ -13,15 +13,15 @@ class ProfileController extends SecuredController
      * показываем страницу с профилем пользователя
      *
      * @throws NotFoundHttpException
-     * @param  int $executorId
+     * @param  int $userId
      * @return string
      */
-    public function actionIndex($executorId): string
+    public function actionIndex($userId): string
     {
-        $user = User::getUserAsArray($executorId);
+        $user = User::getUserAsArray($userId);
 
         // показываем 404
-        if (ArrayHelper::getValue($user, 'role') === User::ROLE_CUSTOMER) {
+        if (ArrayHelper::getValue($user, 'role') !== User::ROLE_EXECUTOR) {
             throw new NotFoundHttpException('Можно просматривать только профили исполнителей');
         }
 
