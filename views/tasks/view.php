@@ -118,8 +118,12 @@ $text = ArrayHelper::getValue($task, 'text');
                 <ul class="enumeration-list">
                     <?php foreach($files as $file) : ?>
                         <li class="enumeration-item">
-                            <a href="<?= ArrayHelper::getValue($currentUser, 'url') ?>" class="link link--block link--clip">my_picture.jpg</a>
-                            <p class="file-size">356 Кб</p>
+                            <a href="<?= ArrayHelper::getValue($currentUser, 'url') ?>" class="link link--block link--clip" download>
+                                <?=  Html::encode(ArrayHelper::getValue($file, 'name')) ?>
+                            </a>
+                            <p class="file-size">
+                                <?= Yii::$app->formatter->asSize(ArrayHelper::getValue($file, 'size')) ?>
+                            </p>
                         </li>
                     <? endforeach; ?>
                 </ul>

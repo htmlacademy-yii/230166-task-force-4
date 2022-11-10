@@ -124,6 +124,7 @@ class TasksController extends SecuredController
         $categories = Category::getMapIdsToLabels();
         $currentUser = User::getCurrentUser();
         $defaultCategory = 1;
+        $files = [];
 
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());
@@ -138,33 +139,43 @@ class TasksController extends SecuredController
                 $task->price = ArrayHelper::getValue($currentUser, 'price');
                 $task->deadline = ArrayHelper::getValue($currentUser, 'deadline');
 
+                // добавляем строку с полной локацией
                 $task->location = Task::getLocation(
                     ArrayHelper::getValue($addTaskForm, 'city'),
                     ArrayHelper::getValue($addTaskForm, 'district'),
                     ArrayHelper::getValue($addTaskForm, 'street')
                 );
 
+                // добавляем координаты локации
                 $geoCoder = new GeoCoderController($task->location);
                 $task->lat = $geoCoder->getLat();
                 $task->lng = $geoCoder->getLng();
 
-                if ($addTaskForm->file) {
-                    $file = new File;
-                    $path = '/uploads/file-' . uniqid() . '.' . $addTaskForm->file->extension;
-
-                    if ($addTaskForm->file->saveAs('@webroot' . $path)) {
-                        $file->task_id = $task->id;
-                        $file->url = $path;
-                        $file->save(false);
-                    }
-                }
+                $transaction = Yii::$app->db->beginTransaction();
 
                 if ($task->save(false)) {
+                    if ($addTaskForm->file) {
+                        $file = new File;
+                        $path = '/uploads/file-' . uniqid() . '.' . $addTaskForm->file->extension;
+
+                        if ($addTaskForm->file->saveAs('@webroot' . $path)) {
+                            $file->task_id = ArrayHelper::getValue($task, 'id');
+                            $file->url = $path;
+                            $file->name = $addTaskForm->file->name;
+                            $file->size = $addTaskForm->file->size;
+                            $file->save(false);
+                        }
+                    }
+
+                    // var_dump($addTaskForm->file->name);
+                    $transaction->commit();
                     $this->redirect('/tasks');
+                } else {
+                    throw new \Exception('Задача не сохранилась');
                 }
             }
         }
 
-        return $this->render('add-task', compact('addTaskForm', 'categories', 'currentUser'));
+        return $this->render('add-task', compact('addTaskForm', 'categories', 'currentUser', 'files'));
     }
 }
