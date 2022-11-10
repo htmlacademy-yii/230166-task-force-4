@@ -60,15 +60,14 @@ class TasksController extends SecuredController
 
     /**
      * Displays homepage.
-     *        var_dump($task);
-
+     *
      * @return string
      */
     public function actionIndex()
     {
         $pageSize = 4;
         $filterForm = new FilterForm();
-        $query = Task::find()->joinWith(['category'])->where(['task.status' => 'new'])->asArray();
+        $query = Task::find()->joinWith(['category'])->where(['task.status' => 'new'])->orderBy(['task.created_at' => SORT_DESC])->asArray();
         $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {
@@ -146,6 +145,7 @@ class TasksController extends SecuredController
                 }
 
                 if ($task->save(false)) {
+                    // var_dump($task);
                     $this->redirect('/tasks');
                 }
             }
