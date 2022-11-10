@@ -35,12 +35,10 @@ class StartController extends Controller
      */
     public function actionIndex(string $authClient = null, int $userId = null): string|Response
     {
-        /* @var app\models\forms\LoginForm $loginForm форма логина */
+        $this->layout = 'start';
         $loginForm = new LoginForm();
-        /* @var array $cities массив с названиями городов, для регистрации через vk */
         $cities = [];
-        /* @var app\models\forms\AuthClientForm $authClientForm форма с выбором города и роли для регистрации через vk */
-        $authClientForm = new AuthClientForm();
+        $authClientForm = null;
 
         // получаем данные из формы логина
         if (Yii::$app->request->getIsPost()) {
@@ -59,8 +57,9 @@ class StartController extends Controller
 
         if ($authClient === 'vk' && $userId) {
             $cities = City::getAllNames();
+            $authClientForm = new AuthClientForm();
 
-            if (Yii::$app->request->getIsPost()) { //добавляем роль и город для профиля ВК
+            if (Yii::$app->request->getIsPost()) {//добавляем роль и город для профиля ВК
                 $authClientForm->load(Yii::$app->request->post());
 
                 if ($authClientForm->validate()) {
@@ -162,8 +161,8 @@ class StartController extends Controller
                     } else {
                         throw new NotFoundHttpException($auth->getErrors());
                     }
-                    // открываем  попап с формой для получения роли и города пользователя
-                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]);
+
+                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]); // уточняем роль город пользователя
                 }
             }
         } else { // Пользователь уже зарегистрирован
@@ -182,7 +181,7 @@ class StartController extends Controller
 
     /**
      * разлогинивание текущего пользователя
-     */
+    */
     public function actionLogout()
     {
         Yii::$app->user->logout();
