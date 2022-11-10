@@ -162,7 +162,8 @@ class StartController extends Controller
                         throw new NotFoundHttpException($auth->getErrors());
                     }
 
-                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]); // уточняем роль город пользователя
+                    // открываем попап с формой для получения роли и города пользователя
+                    return $this->redirect(['index', 'authClient' => 'vk', 'userId' => $user->id]);
                 }
             }
         } else { // Пользователь уже зарегистрирован
