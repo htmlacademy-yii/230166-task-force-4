@@ -69,6 +69,7 @@ class TasksController extends SecuredController
      */
     public function actionIndex(): string
     {
+        // var_dump(\Yii::$app->authManager);
         $pageSize = 4;
         $filterForm = new FilterForm();
         $query = Task::getNewTaskQuery();
