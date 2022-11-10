@@ -84,6 +84,16 @@ class Task extends \yii\db\ActiveRecord
     }
 
     /**
+     * получение строки запроса для новых задач
+     *
+     * @return yii\db\ActiveQuery
+     */
+    public static function getNewTaskQuery(): yii\db\ActiveQuery
+    {
+        return Task::find()->joinWith(['category'])->where(['task.status' => 'new'])->orderBy(['task.created_at' => SORT_DESC])->asArray();
+    }
+
+    /**
      * получение задачи по id
      *
      * @param  int $taskId

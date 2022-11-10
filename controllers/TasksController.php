@@ -15,6 +15,7 @@ use app\models\forms\AddResponseForm;
 use app\models\forms\AddTaskForm;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class TasksController extends SecuredController
 {
@@ -37,6 +38,9 @@ class TasksController extends SecuredController
         return $rules;
     }
 
+    /**
+     * действия для отклика и начала, отказа, завершения задачи
+    */
     public function actions()
     {
         return [
@@ -59,15 +63,15 @@ class TasksController extends SecuredController
     }
 
     /**
-     * Displays homepage.
+     * выводит новые задачи
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $pageSize = 4;
         $filterForm = new FilterForm();
-        $query = Task::find()->joinWith(['category'])->where(['task.status' => 'new'])->orderBy(['task.created_at' => SORT_DESC])->asArray();
+        $query = Task::getNewTaskQuery();
         $categories = Category::getMapIdsToLabels();
 
         if (Yii::$app->request->getIsPost()) {
@@ -90,7 +94,13 @@ class TasksController extends SecuredController
         return $this->render('index', compact('tasks', 'pages', 'filterForm', 'categories'));
     }
 
-    public function actionView($taskId)
+    /**
+     * выводит задачу
+     *
+     * @param  int $taskId
+     * @return string
+     */
+    public function actionView(int $taskId): string
     {
         $task = Task::getTaskById($taskId);
         $responses = Task::getAllResponsesAsArray($task);
@@ -103,7 +113,12 @@ class TasksController extends SecuredController
         return $this->render('view', compact('task', 'responses', 'response', 'currentUser', 'addFeedbackForm', 'addResponseForm', 'files'));
     }
 
-    public function actionAddTask()
+    /**
+     * выводит форму с добавлением задачи
+     *
+     * @return string
+     */
+    public function actionAddTask(): string|Response
     {
         $addTaskForm = new AddTaskForm();
         $categories = Category::getMapIdsToLabels();
@@ -145,7 +160,6 @@ class TasksController extends SecuredController
                 }
 
                 if ($task->save(false)) {
-                    // var_dump($task);
                     $this->redirect('/tasks');
                 }
             }

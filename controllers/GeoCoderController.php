@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use Exception;
 use Yii;
 use GuzzleHttp\Client;
 use yii\helpers\ArrayHelper;
@@ -11,6 +10,12 @@ class GeoCoderController extends SecuredController
 {
     public $data;
 
+    /**
+     * получаем данные из геокодера
+     *
+     * @param  mixed $location
+     * @return void
+     */
     public function __construct($location)
     {
         $url = Yii::$app->params['geocoder']['url'];
@@ -32,27 +37,53 @@ class GeoCoderController extends SecuredController
         }
     }
 
-    public function getName()
+    /**
+     * получаем им города, если получено название города
+     * в другом случае вывод этой строки непредсказуем
+     *
+     * @return string
+     */
+    public function getName(): string
     {
         return ArrayHelper::getValue($this->data, $this->getStartLine() . 'name');
     }
 
-    public function getPoint()
+    /**
+     * получена строка координат
+     *
+     * @return string
+     */
+    public function getPoint(): string
     {
         return ArrayHelper::getValue($this->data, $this->getStartLine() . 'Point.pos');
     }
 
-    public function getLat()
+    /**
+     * Получаем широту
+     *
+     * @return string
+     */
+    public function getLat(): string
     {
         return explode(' ', $this->getPoint())[1];
     }
 
-    public function getLng()
+    /**
+     * получаем долготу
+     *
+     * @return string
+     */
+    public function getLng(): string
     {
         return explode(' ', $this->getPoint())[0];
     }
 
-    public function getStartLine(): ?string
+    /**
+     * получаем стартовую строку для поиска
+     *
+     * @return string
+     */
+    private function getStartLine(): ?string
     {
         $found = (int) ArrayHelper::getValue($this->data, 'GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found');
 

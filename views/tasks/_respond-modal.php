@@ -1,5 +1,7 @@
 <?php
 
+/** @var app\models\forms\AddResponseForm $addResponseForm */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;

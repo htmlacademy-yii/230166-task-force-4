@@ -5,11 +5,17 @@ namespace app\controllers;
 use Yii;
 use app\models\forms\SettingsForm;
 use app\models\Category;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 class SettingsController extends SecuredController
 {
-    public function actionIndex()
+    /**
+     * показываем страницу с нстройками
+     *
+     * @return string|Response
+     */
+    public function actionIndex(): string|Response
     {
         $settingsForm = new SettingsForm();
         $categories = Category::getMapIdsToLabels();

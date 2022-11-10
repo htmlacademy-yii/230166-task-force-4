@@ -1,5 +1,7 @@
 <?php
 
+/** @var array $task */
+
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;

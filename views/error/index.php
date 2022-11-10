@@ -1,5 +1,7 @@
 <?php
 
+/** @var Exception$exception */
+
 use yii\helpers\Html;
 
 ?>

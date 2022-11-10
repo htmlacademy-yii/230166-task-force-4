@@ -12,6 +12,7 @@ use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use yii\web\NotFoundHttpException;
 use app\models\forms\AuthClientForm;
+use yii\web\Response;
 
 class StartController extends Controller
 {
@@ -27,8 +28,12 @@ class StartController extends Controller
 
     /**
      * показываем лендинг с формой входа
+     *
+     * @param  ?int $authClient
+     * @param  ?ing $userId
+     * @return string
      */
-    public function actionIndex($authClient = null, $userId = null)
+    public function actionIndex(int $authClient = null, int $userId = null): string|Response
     {
         $this->layout = 'start';
         /* @var $loginForm создаем модель формы логина */
@@ -76,7 +81,12 @@ class StartController extends Controller
         return $this->render('index', compact('loginForm', 'authClient', 'authClientForm', 'cities'));
     }
 
-    public function actionSignup()
+    /**
+     * actionSignup
+     *
+     * @return string
+     */
+    public function actionSignup(): string|Response
     {
         $signupForm = new SignupForm();
         $cities = City::getAllNames();
@@ -102,6 +112,9 @@ class StartController extends Controller
         return $this->render('signup', compact('signupForm', 'cities'));
     }
 
+    /**
+     * регистрация/вход через ВК
+     */
     public function onAuthSuccess($client)
     {
         $attributes = $client->getUserAttributes();
