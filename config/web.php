@@ -80,7 +80,7 @@ $config = [
                 '/tasks/quit/<taskId:\d+>/<executorId:\d+>' => '/tasks/quit',
                 '/tasks/complete/<taskId:\d+>/<customerId:\d+>/<executorId:\d+>' => '/tasks/complete',
                 '/settings' => '/settings/index',
-                '/profile/<executorId:\d+>' => '/profile',
+                '/profile/<userId:\d+>' => '/profile',
                 '/my-task/<status:[\w_\/-]+>' => '/my-task',
             ],
         ],

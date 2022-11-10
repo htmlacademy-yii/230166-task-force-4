@@ -97,7 +97,7 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
             <div class="user-menu">
                 <p class="user-name">
                     <?php if ($is_executor) : ?>
-                        <?= Html::a(Html::encode(Yii::$app->user->identity->name), Url::to(['/profile', 'executorId' => Yii::$app->user->getId()]), ['class' => 'link']) ?>
+                        <?= Html::a(Html::encode(Yii::$app->user->identity->name), Url::to(['/profile', 'userId' => Yii::$app->user->getId()]), ['class' => 'link']) ?>
                     <? else : ?>
                         <span class="link"><?= Html::encode(Yii::$app->user->identity->name) ?></span>
                     <? endif; ?>

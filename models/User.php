@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use app\controllers\GeoCoderController;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
@@ -134,6 +133,16 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * getCurrentUserId
+     *
+     * @return int
+     */
+    public static function getCurrentUserId(): int
+    {
+        return Yii::$app->user->id;
+    }
+
+    /**
      * получаем категории пользователя
      *
      * @param  array $user
@@ -206,6 +215,16 @@ class User extends ActiveRecord implements IdentityInterface
         $countFailedTasks = ArrayHelper::getValue($executor, 'count_failed_tasks');
 
         return $sum / $countFeedbacks + $countFailedTasks;
+    }
+
+    /**
+     * isAuthClientUser
+     *
+     * @return bool
+     */
+    public static function isAuthClientUser(): bool
+    {
+        return (bool) Auth::find()->where(['user_id' => self::getCurrentUserId()])->one();
     }
 
     /**

@@ -21,7 +21,7 @@ class SignupForm extends Model
             [['city', 'role'], 'safe'],
             [['name', 'email', 'password', 'password_repeat', 'city'], 'required'],
             [['name', 'email'], 'string', 'max' => 40],
-            [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
+            [['password'], 'string', 'min' => 6],
             [['password'], 'string', 'max' => 200],
             ['email', 'validateEmail'],
             [['password'], 'compare'],
