@@ -216,8 +216,8 @@ class Task extends \yii\db\ActiveRecord
         } else {
             return self::find()->joinWith(['category'])->where([
                 'customer_id' => ArrayHelper::getValue($user, 'id'),
-                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_COMPLETE]
-            ])->asArray()->all();
+                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED, BaseTask::STATUS_CANCELED]
+            ])->orderBy(['created_at' => SORT_DESC])->asArray()->all();
         }
     }
 

@@ -45,6 +45,8 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const ROLE_CUSTOMER = 'customer';
     const ROLE_EXECUTOR = 'executor';
+    const STATUS_BUSY = 'busy';
+    const STATUS_FREE = 'free';
 
     public $password_repeat;
 
@@ -99,6 +101,19 @@ class User extends ActiveRecord implements IdentityInterface
             'telegram' => 'Telegram',
             'description' => 'Информация о себе',
             'city_id' => 'City ID',
+        ];
+    }
+
+    /**
+     * getStatusesLabels
+     *
+     * @return array
+     */
+    public static function getStatusesLabels(): array
+    {
+        return [
+            self::STATUS_BUSY => 'Есть задачи в работе',
+            self::STATUS_FREE => 'Открыт для новых заказов',
         ];
     }
 
@@ -227,14 +242,20 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * isAvailable
+     * getStatus получение статуса, проверяем есть ли у исполнителя задачи в работе
      *
      * @param  int $executorId
      * @return bool
      */
-    public static function isAvailable(int $executorId): bool
+    public static function getStatus(int $executorId): string
     {
-        return (bool) Task::find()->where(['executor_id' => $executorId, 'status' => BaseTask::STATUS_INPROGRESS])->limit(1)->one();
+        $isCurrentTask = (bool) Task::find()->where(['executor_id' => $executorId, 'status' => BaseTask::STATUS_INPROGRESS])->limit(1)->one();
+
+        if ($isCurrentTask) {
+            return self::STATUS_BUSY;
+        }
+
+        return self::STATUS_FREE;
     }
 
     /**
