@@ -16,7 +16,7 @@ class BaseTask
 {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
-    public const STATUS_INPROGRESS = 'in progress';
+    public const STATUS_INPROGRESS = 'inprogress';
     public const STATUS_COMPLETE = 'done';
     public const STATUS_FAILED = 'failed';
     private $customerId;
