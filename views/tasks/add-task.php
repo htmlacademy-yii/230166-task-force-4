@@ -57,6 +57,9 @@ use yii\helpers\Html;
                     'id' => 'button-input'
                 ]);
             ?>
+            <?php foreach ($files as $file) : ?>
+                <div class="caption"></div>
+            <? endforeach; ?>
             <?= Html::submitButton('Опубликовать', ['class' => 'button button--blue']) ?>
         <?php ActiveForm::end(); ?>
     </div>
