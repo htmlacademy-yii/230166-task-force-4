@@ -1,5 +1,8 @@
 <?php
 
+/** @var array $tasks */
+/** @var string $status */
+
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Menu;

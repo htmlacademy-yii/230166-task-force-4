@@ -1,5 +1,9 @@
 <?php
 
+/** @var array $feedbacks */
+/** @var array $categories */
+/** @var array $user */
+
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;

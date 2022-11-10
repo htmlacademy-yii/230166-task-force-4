@@ -1,14 +1,24 @@
 <?php
-    use Yii;
-    use yii\helpers\Html;
-    use yii\helpers\ArrayHelper;
-    use TaskForce\Actions\ActionQuit;
-    use TaskForce\Actions\ActionRespond;
-    use TaskForce\Actions\ActionComplete;
-    use TaskForce\Models\BaseTask;
 
-    $price = ArrayHelper::getValue($task, 'price');
-    $text = ArrayHelper::getValue($task, 'text');
+/** @var yii\web\View $this */
+/** @var app\models\Task $task */
+/** @var app\models\User $currentUser */
+/** @var array $responses */
+/** @var array $response */
+/** @var array $files */
+/** @var app\models\forms\AddResponseForm $addResponseForm */
+/** @var app\models\forms\AddFeedbackForm $addFeedbackForm */
+
+use Yii;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use TaskForce\Actions\ActionQuit;
+use TaskForce\Actions\ActionRespond;
+use TaskForce\Actions\ActionComplete;
+use TaskForce\Models\BaseTask;
+
+$price = ArrayHelper::getValue($task, 'price');
+$text = ArrayHelper::getValue($task, 'text');
 ?>
 
 <main class="main-content container">

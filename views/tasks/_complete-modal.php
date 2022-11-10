@@ -1,5 +1,8 @@
 <?php
 
+/** @var app\models\Task $task */
+/** @var app\models\forms\AddFeedbackForm $addFeedbackForm */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;

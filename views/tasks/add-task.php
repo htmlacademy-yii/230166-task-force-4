@@ -1,5 +1,7 @@
 <?php
 
+/** @var app\models\forms\AddTaskForm $addTaskForm */
+
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -59,24 +61,3 @@ use yii\helpers\Html;
         <?php ActiveForm::end(); ?>
     </div>
 </main>
-<!--
-<script>
-    const autoCompleteJS = new autoComplete({
-        selector: '#city_name',
-        data: {
-            src: [""],
-            cache: true,
-        },
-        resultItem: {
-            highlight: true
-        },
-        events: {
-            input: {
-                selection: (event) => {
-                    const selection = event.detail.selection.value;
-                    autoCompleteJS.input.value = selection;
-                }
-            }
-        }
-    });
-</script> -->

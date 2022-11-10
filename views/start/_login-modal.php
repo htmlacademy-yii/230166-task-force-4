@@ -1,8 +1,9 @@
 <?php
 
+/** @var app\models\forms\LoginForm $loginForm */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 ?>
 

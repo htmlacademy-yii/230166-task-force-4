@@ -1,5 +1,7 @@
 <?php
 
+/** @var app\models\forms\FilterForm $filterForm */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 

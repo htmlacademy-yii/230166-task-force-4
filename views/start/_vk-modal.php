@@ -1,5 +1,8 @@
 <?php
 
+/** @var app\models\forms\AuthClientForm $authClientForm */
+/** @var array $cities */
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

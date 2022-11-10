@@ -1,6 +1,10 @@
 <?php
+
+/** @var array $tasks */
+/** @var array $pages */
+
 use yii\widgets\LinkPager;
-use yii\helpers\Html;
+
 ?>
 
 <main class="main-content container">

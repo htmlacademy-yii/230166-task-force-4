@@ -6,7 +6,12 @@ use Yii;
 
 class ErrorController extends Controller
 {
-    public function actionIndex()
+    /**
+     * показываем страницу с ошибкой
+     *
+     * @return string
+     */
+    public function actionIndex(): string
     {
         $this->layout = 'error';
         $exception = Yii::$app->errorHandler->exception;

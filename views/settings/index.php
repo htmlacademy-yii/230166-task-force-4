@@ -1,5 +1,7 @@
 <?php
 
+/** @var app\models\forms\SettingsForm $settingsForm */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 

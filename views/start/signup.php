@@ -1,6 +1,8 @@
 <?php
 
-use app\models\User;
+/** @var app\models\forms\SignupForm $signupForm */
+/** @var array $cities */
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 

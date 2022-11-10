@@ -10,8 +10,11 @@ class MyTasksController extends SecuredController
 {
     /**
      * Выводит список задач для текущего пользователя
-    */
-    public function actionIndex($status)
+     *
+     * @param  string $status
+     * @return string
+     */
+    public function actionIndex(string $status): string
     {
         $currentUser = User::getCurrentUser();
         $tasks = [];

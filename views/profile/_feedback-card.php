@@ -1,9 +1,12 @@
 <?php
-    use yii\helpers\Html;
-    use yii\helpers\Url;
-    use yii\helpers\ArrayHelper;
-    use app\components\StarsWidget;
-    use app\components\AvatarWidget;
+
+/** @var array $feedback */
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use app\components\StarsWidget;
+use app\components\AvatarWidget;
 ?>
 
 <div class="response-card">
