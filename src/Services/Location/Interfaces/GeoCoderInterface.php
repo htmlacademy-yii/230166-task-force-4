@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\Services\Location\Interfaces;
+namespace Taskforce\Services\Location\Interfaces;
 
 interface GeoCoderInterface
 {

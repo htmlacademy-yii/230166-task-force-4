@@ -1,10 +1,10 @@
-DROP DATABASE IF EXISTS taskforce;
+DROP DATABASE IF EXISTS Taskforce;
 
-CREATE DATABASE taskforce
+CREATE DATABASE Taskforce
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_general_ci;
 
-USE taskforce;
+USE Taskforce;
 
 CREATE TABLE category (
   id INT AUTO_INCREMENT PRIMARY KEY,

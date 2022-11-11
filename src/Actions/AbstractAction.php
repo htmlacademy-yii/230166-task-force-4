@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\Actions;
+namespace Taskforce\Actions;
 
 use yii\base\Action;
 use app\models\User;

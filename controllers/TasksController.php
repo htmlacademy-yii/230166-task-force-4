@@ -17,7 +17,7 @@ use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
-use TaskForce\Services\Location\GeoCoder;
+use Taskforce\Services\Location\GeoCoder;
 
 class TasksController extends SecuredController
 {
@@ -47,19 +47,19 @@ class TasksController extends SecuredController
     {
         return [
             'respond' => [
-                'class' => 'TaskForce\Actions\ActionRespond',
+                'class' => 'Taskforce\Actions\ActionRespond',
             ],
             'start' => [
-                'class' => 'TaskForce\Actions\ActionStart',
+                'class' => 'Taskforce\Actions\ActionStart',
             ],
             'refuse' => [
-                'class' => 'TaskForce\Actions\ActionRefuse',
+                'class' => 'Taskforce\Actions\ActionRefuse',
             ],
             'quit' => [
-                'class' => 'TaskForce\Actions\ActionQuit',
+                'class' => 'Taskforce\Actions\ActionQuit',
             ],
             'complete' => [
-                'class' => 'TaskForce\Actions\ActionComplete',
+                'class' => 'Taskforce\Actions\ActionComplete',
             ],
         ];
     }

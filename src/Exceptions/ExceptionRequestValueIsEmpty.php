@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\Exceptions;
+namespace Taskforce\Exceptions;
 
 class ExceptionRequestValueIsEmpty extends \Exception
 {

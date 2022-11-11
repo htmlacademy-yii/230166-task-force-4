@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Menu;
 use app\models\User;
-use TaskForce\Models\BaseMyTasks;
+use Taskforce\Models\BaseMyTasks;
 use yii\widgets\LinkPager;
 
 $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;

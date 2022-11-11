@@ -8,9 +8,9 @@ use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
 use app\models\Response;
-use TaskForce\Actions\ActionStart;
-use TaskForce\Actions\ActionRefuse;
-use TaskForce\Models\BaseTask;
+use Taskforce\Actions\ActionStart;
+use Taskforce\Actions\ActionRefuse;
+use Taskforce\Models\BaseTask;
 use Taskforce\Services\NounPluralForm;
 use Taskforce\Services\RelativeDate;
 

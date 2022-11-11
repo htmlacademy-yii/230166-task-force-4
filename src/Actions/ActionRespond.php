@@ -1,10 +1,10 @@
 <?php
 
-namespace TaskForce\Actions;
+namespace Taskforce\Actions;
 
 use Yii;
-use TaskForce\Actions\AbstractAction;
-use TaskForce\Models\BaseTask;
+use Taskforce\Actions\AbstractAction;
+use Taskforce\Models\BaseTask;
 use app\models\Response;
 use app\models\forms\AddResponseForm;
 use app\models\Task;
