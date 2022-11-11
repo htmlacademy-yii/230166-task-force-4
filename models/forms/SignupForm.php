@@ -3,7 +3,7 @@
 namespace app\models\forms;
 
 use yii\base\Model;
-use app\controllers\GeoCoderController;
+use TaskForce\Services\Location\GeoCoder;
 use app\models\User;
 
 class SignupForm extends Model
@@ -50,7 +50,7 @@ class SignupForm extends Model
 
     public function validateCity($attribute, $params)
     {
-        $geoCoder = new GeoCoderController($this->city);
+        $geoCoder = new GeoCoder($this->city);
         if (!$geoCoder->getName()) {
             $this->addError($attribute, 'Город не найден');
         }

@@ -3,10 +3,11 @@
 namespace app\models\forms;
 
 use yii\base\Model;
-use app\controllers\GeoCoderController;
+use yii\helpers\ArrayHelper;
 use app\models\User;
 use app\models\Category;
-use yii\helpers\ArrayHelper;
+use app\models\File;
+use TaskForce\Services\Location\GeoCoder;
 
 class AddTaskForm extends Model
 {
@@ -63,7 +64,7 @@ class AddTaskForm extends Model
 
     public function validateDistrict($attribute, $params)
     {
-        $geoCoder = new GeoCoderController($this->city . $this->district);
+        $geoCoder = new GeoCoder($this->city . $this->district);
 
         if (!$geoCoder->getName()) {
             $this->addError($attribute, 'Район не найден');
@@ -72,7 +73,7 @@ class AddTaskForm extends Model
 
     public function validateStreet($attribute, $params)
     {
-        $geoCoder = new GeoCoderController($this->city . ' ' . $this->district . ' ' . $this->street);
+        $geoCoder = new GeoCoder($this->city . ' ' . $this->district . ' ' . $this->street);
 
         if (!$geoCoder->getName()) {
             $this->addError($attribute, 'Улица не найдена');
@@ -86,6 +87,22 @@ class AddTaskForm extends Model
 
         if ($deadline < $currentDate) {
             $this->addError($attribute, 'Дата не может быть раньше текущего дня');
+        }
+    }
+
+    public function addFile($task)
+    {
+        if ($this->file) {
+            $file = new File;
+            $path = '/uploads/file-' . uniqid() . '.' . $this->file->extension;
+
+            if ($this->file->saveAs('@webroot' . $path)) {
+                $file->task_id = ArrayHelper::getValue($task, 'id');
+                $file->url = $path;
+                $file->name = $this->file->name;
+                $file->size = $this->file->size;
+                $file->save(false);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskforce\Utils;
+namespace Taskforce\Services;
 
 use \SplFileObject;
 use \RuntimeException;

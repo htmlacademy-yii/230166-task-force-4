@@ -79,7 +79,7 @@
             "TaskForce\\Models\\": "src/Models",
             "TaskForce\\Actions\\": "src/Actions",
             "TaskForce\\Exceptions\\": "src/Exceptions",
-            "TaskForce\\Utils\\": "src/Utils"
+            "TaskForce\\Services\\": "src/Services"
         }
     }
 }

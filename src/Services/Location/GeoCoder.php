@@ -1,12 +1,13 @@
 <?php
 
-namespace app\controllers;
+namespace TaskForce\Services\Location;
 
 use Yii;
-use GuzzleHttp\Client;
 use yii\helpers\ArrayHelper;
+use GuzzleHttp\Client;
+use TaskForce\Services\Location\Interfaces\GeoCoderInterface;
 
-class GeoCoderController extends SecuredController
+class GeoCoder implements GeoCoderInterface
 {
     public $data;
 

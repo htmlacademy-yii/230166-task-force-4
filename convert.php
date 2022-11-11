@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-use TaskForce\Utils\Converter;
+use TaskForce\Services\Converter;
 
 $path = 'data/cities.csv';
 $table = 'city';

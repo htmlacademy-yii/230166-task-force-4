@@ -16,6 +16,8 @@ use app\models\forms\AddTaskForm;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
+use TaskForce\Services\Location\GeoCoder;
 
 class TasksController extends SecuredController
 {
@@ -147,31 +149,18 @@ class TasksController extends SecuredController
                 );
 
                 // добавляем координаты локации
-                $geoCoder = new GeoCoderController($task->location);
+                $geoCoder = new GeoCoder($task->location);
                 $task->lat = $geoCoder->getLat();
                 $task->lng = $geoCoder->getLng();
 
                 $transaction = Yii::$app->db->beginTransaction();
 
                 if ($task->save(false)) {
-                    if ($addTaskForm->file) {
-                        $file = new File;
-                        $path = '/uploads/file-' . uniqid() . '.' . $addTaskForm->file->extension;
-
-                        if ($addTaskForm->file->saveAs('@webroot' . $path)) {
-                            $file->task_id = ArrayHelper::getValue($task, 'id');
-                            $file->url = $path;
-                            $file->name = $addTaskForm->file->name;
-                            $file->size = $addTaskForm->file->size;
-                            $file->save(false);
-                        }
-                    }
-
-                    // var_dump($addTaskForm->file->name);
+                    $addTaskForm->addFile($task);
                     $transaction->commit();
                     $this->redirect('/tasks');
                 } else {
-                    throw new \Exception('Задача не сохранилась');
+                    throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
                 }
             }
         }

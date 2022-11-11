@@ -23,6 +23,12 @@ class ActionRespond extends AbstractAction
             && !Response::find()->where(['task_id' => $task->id, 'executor_id' => $currentUser->id])->limit(1)->one();
     }
 
+    /**
+     * run
+     *
+     * @param int $taskId
+     * @param int $executorId
+     */
     public function run(int $taskId, int $executorId)
     {
         $addResponseForm = new AddResponseForm();

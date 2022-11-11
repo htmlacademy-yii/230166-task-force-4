@@ -9,6 +9,7 @@ use app\models\Feedback;
 use app\models\forms\AddFeedbackForm;
 use app\models\Task;
 use app\models\User;
+use yii\web\ServerErrorHttpException;
 
 class ActionComplete extends AbstractAction
 {
@@ -22,6 +23,14 @@ class ActionComplete extends AbstractAction
             && $currentUser->id === $task->customer_id;
     }
 
+    /**
+     * run
+     *
+     * @param  int $taskId
+     * @param  int $customerId
+     * @param  int $executorId
+     * @throws ServerErrorHttpException
+     */
     public function run(int $taskId, int $customerId, int $executorId)
     {
         $addFeedbackForm = new AddFeedbackForm();
@@ -53,9 +62,9 @@ class ActionComplete extends AbstractAction
                     $task->save(false);
 
                     $transaction->commit();
-                } catch(\Exception $e) {
+                } catch(ServerErrorHttpException $e) {
                     $transaction->rollBack();
-                    throw $e;
+                    throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
                 } catch (\Throwable $e) {
                     $transaction->rollBack();
                     throw $e;

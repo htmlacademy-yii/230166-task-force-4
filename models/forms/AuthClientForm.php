@@ -3,7 +3,7 @@
 namespace app\models\forms;
 
 use yii\base\Model;
-use app\controllers\GeoCoderController;
+use TaskForce\Services\Location\GeoCoder;
 
 class AuthClientForm extends Model
 {
@@ -27,9 +27,12 @@ class AuthClientForm extends Model
         ];
     }
 
+    /**
+     * validateCity
+    */
     public function validateCity($attribute, $params)
     {
-        $geoCoder = new GeoCoderController($this->city);
+        $geoCoder = new GeoCoder($this->city);
         if (!$geoCoder->getName()) {
             $this->addError($attribute, 'Город не найден');
         }
