@@ -155,7 +155,7 @@ class StartController extends Controller
                         'source_id' => (string)$attributes['id'],
                     ]);
 
-                    if ($auth->save()) {
+                    if ($auth->save(false)) {
                         $transaction->commit();
                         Yii::$app->user->login($user);
                     } else {
@@ -173,7 +173,7 @@ class StartController extends Controller
                     'source' => $client->getId(),
                     'source_id' => $attributes['id'],
                 ]);
-                $auth->save();
+                $auth->save(false);
             }
         }
 

@@ -56,7 +56,8 @@ class ActionComplete extends AbstractAction
                     $executor = User::findOne($executorId);
                     $executor->count_feedbacks += 1;
                     $executor->rating = User::getRating($executor);
-                    $executor->save();
+                    $executor->save(false);
+
 
                     $task = Task::findOne($taskId);
                     $task->status = BaseTask::STATUS_COMPLETE;

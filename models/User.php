@@ -177,8 +177,12 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getRate($user)
     {
-        $ids = User::find()->select(['user.id'])->where(['user.role' => self::ROLE_EXECUTOR])->orderBy(['user.rating' => SORT_DESC])->asArray()->all();
+        $ids = User::find()->select(['id'])->where(['role' => self::ROLE_EXECUTOR])->orderBy(['rating' => SORT_DESC])->asArray()->all();
         $arrIds = ArrayHelper::getColumn($ids, 'id');
+
+        if (count($arrIds) === 1) {
+            return 1;
+        }
 
         return array_search($user['id'], $arrIds);
     }
