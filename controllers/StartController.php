@@ -63,11 +63,11 @@ class StartController extends Controller
             if (Yii::$app->request->getIsPost()) {//добавляем роль и город для профиля ВК
                 $authClientForm->load(Yii::$app->request->post());
 
-                if ($this->validate()) {
-                    $cityName = ArrayHelper::getValue($this, 'city');
+                if ($authClientForm->validate()) {
+                    $cityName = ArrayHelper::getValue($authClientForm, 'city');
                     $user = User::findOne($userId);
                     $user->city_id = City::getCityId($cityName, $cities);
-                    $user->role = ArrayHelper::getValue($this, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
+                    $user->role = ArrayHelper::getValue($authClientForm, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
                     $user->save(false);
 
                     $this->redirect('/tasks');

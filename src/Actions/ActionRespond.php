@@ -43,9 +43,9 @@ class ActionRespond extends AbstractAction
                 $response->message = $addResponseForm['message'];
                 $response->price = $addResponseForm['price'];
                 $response->save(false);
+
+                header('Location: /tasks/' . $taskId);
             }
         }
-
-        header('Location: /tasks/' . $taskId);
     }
 }

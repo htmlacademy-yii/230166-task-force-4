@@ -69,9 +69,9 @@ class ActionComplete extends AbstractAction
                     $transaction->rollBack();
                     throw $e;
                 }
+
+                header('Location: /tasks/' . $taskId);
             }
         }
-
-        header('Location: /tasks/' . $taskId);
     }
 }

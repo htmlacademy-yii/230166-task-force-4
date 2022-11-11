@@ -2,6 +2,7 @@
 
 /** @var array $task */
 
+use Taskforce\Services\RelativeDate;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -19,7 +20,7 @@ use yii\helpers\Url;
     </div>
     <p class="info-text">
         <span class="current-time">
-            <?= get_relative_date(Html::encode($task['created_at'])) ?>
+            <?= RelativeDate::get($task['created_at']) ?>
         </span>
         назад
     </p>

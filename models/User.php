@@ -191,19 +191,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function getFeedbacks($user): ?array
     {
-        if (ArrayHelper::getValue($user, 'role') === self::ROLE_EXECUTOR){
-            $tasks = Task::find()->where(['task.executor_id' => $user['id'], 'task.status' => 'done'])->asArray()->all();
-
-            foreach ($tasks as $task) {
-                $feedback = Feedback::find()->where(['feedback.task_id' => $task['id']])->limit(1)->asArray()->one();
-                $feedback['author'] = User::find()->select(['user.id', 'user.avatar'])->where(['user.id' => $task['customer_id']])->asArray()->limit(1)->one();
-                $feedback['task']['id'] = $task['id'];
-                $feedback['task']['title'] = $task['title'];
-                $feedbacks[] = $feedback;
-            }
-        }
-
-        return null;
+        return Feedback::find()->where(['executor_id' => ArrayHelper::getValue($user, 'id')])->with(['task'])->asArray()->all();
     }
 
     /**
