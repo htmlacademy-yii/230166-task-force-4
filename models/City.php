@@ -2,8 +2,8 @@
 
 namespace app\models;
 
-use app\controllers\GeoCoderController;
 use Yii;
+use TaskForce\Services\Location\GeoCoder;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -63,7 +63,7 @@ class City extends \yii\db\ActiveRecord
     public static function getCityId($cityName, $cities)
     {
         if (!ArrayHelper::isIn($cityName, $cities)) {
-            $geoCoder = new GeoCoderController($cityName);
+            $geoCoder = new GeoCoder($cityName);
             $city = new City;
             $city->name = $cityName;
             $city->lat = $geoCoder->getLat();

@@ -27,7 +27,7 @@ use yii\helpers\ArrayHelper;
             ?>
                 <?= $form->field($addResponseForm, 'message')->textarea(); ?>
                 <?= $form->field($addResponseForm, 'price')->textInput(); ?>
-                <?= Html::submitButton('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
+                <?= Html::submitButton('Откликнуться', ['class' => 'button button--pop-up button--blue']) ?>
             <? ActiveForm::end(); ?>
         </div>
         <div class="button-container">

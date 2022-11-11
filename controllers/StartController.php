@@ -13,6 +13,7 @@ use app\models\forms\SignupForm;
 use yii\web\NotFoundHttpException;
 use app\models\forms\AuthClientForm;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 class StartController extends Controller
 {
@@ -62,15 +63,14 @@ class StartController extends Controller
             if (Yii::$app->request->getIsPost()) {//добавляем роль и город для профиля ВК
                 $authClientForm->load(Yii::$app->request->post());
 
-                if ($authClientForm->validate()) {
+                if ($this->validate()) {
+                    $cityName = ArrayHelper::getValue($this, 'city');
                     $user = User::findOne($userId);
-                    $cityName = ArrayHelper::getValue($authClientForm, 'city');
                     $user->city_id = City::getCityId($cityName, $cities);
-                    $user->role = ArrayHelper::getValue($authClientForm, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
+                    $user->role = ArrayHelper::getValue($this, 'role') ? User::ROLE_EXECUTOR : User::ROLE_CUSTOMER;
+                    $user->save(false);
 
-                    if ($user->save(false)) {
-                        $this->redirect('/tasks');
-                    }
+                    $this->redirect('/tasks');
                 }
             }
         }
@@ -142,12 +142,12 @@ class StartController extends Controller
                     $user->password = $password;
                     $user->password_repeat = $password;
 
+                    $transaction = $user->getDb()->beginTransaction();
+
                     if ($user->validate()) {
                         $user->password = Yii::$app->security->generatePasswordHash($user->password);
                         $user->save(false);
                     }
-
-                    $transaction = $user->getDb()->beginTransaction();
 
                     $auth = new Auth([
                         'user_id' => $user->id,
@@ -159,7 +159,7 @@ class StartController extends Controller
                         $transaction->commit();
                         Yii::$app->user->login($user);
                     } else {
-                        throw new NotFoundHttpException($auth->getErrors());
+                        throw new ServerErrorHttpException($auth->getErrors(), 500);
                     }
 
                     // открываем попап с формой для получения роли и города пользователя

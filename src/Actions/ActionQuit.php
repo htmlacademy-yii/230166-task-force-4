@@ -7,6 +7,7 @@ use TaskForce\Models\BaseTask;
 use app\models\Task;
 use app\models\User;
 use Yii;
+use yii\web\ServerErrorHttpException;
 
 class ActionQuit extends AbstractAction
 {
@@ -20,6 +21,13 @@ class ActionQuit extends AbstractAction
             && $currentUser->id === $task->executor_id;
     }
 
+    /**
+     * run
+     *
+     * @param  int $taskId
+     * @param  int $executorId
+     * @throws ServerErrorHttpException
+     */
     public function run(int $taskId, int $executorId)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -35,9 +43,9 @@ class ActionQuit extends AbstractAction
             $task->save(false);
 
             $transaction->commit();
-        } catch(\Exception $e) {
+        } catch(ServerErrorHttpException $e) {
             $transaction->rollBack();
-            throw $e;
+            throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
         } catch (\Throwable $e) {
             $transaction->rollBack();
             throw $e;

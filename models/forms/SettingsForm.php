@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use app\models\User;
 use app\models\Category;
 use app\models\UserCategory;
+use yii\web\ServerErrorHttpException;
 
 /**
  * SettingsForm
@@ -108,8 +109,8 @@ class SettingsForm extends Model
 
         try {
             $this->_user->save(false);
-        } catch(Exception $exception) {
-            throw new $exception('Пользователь не сохранился');
+        } catch(ServerErrorHttpException $e) {
+            $e->getMessage();
         }
     }
 

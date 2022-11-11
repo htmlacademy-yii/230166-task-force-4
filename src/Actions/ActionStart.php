@@ -2,12 +2,13 @@
 
 namespace TaskForce\Actions;
 
+use Yii;
 use TaskForce\Actions\AbstractAction;
 use TaskForce\Models\BaseTask;
 use app\models\Response;
 use app\models\Task;
 use app\models\User;
-use Yii;
+use yii\web\ServerErrorHttpException;
 
 class ActionStart extends AbstractAction
 {
@@ -21,6 +22,13 @@ class ActionStart extends AbstractAction
             && $currentUser->id === $task->customer_id;
     }
 
+    /**
+     * run
+     *
+     * @param  int $taskId
+     * @param  int $executorId
+     * @throws ServerErrorHttpException
+     */
     public function run(int $taskId, int $executorId)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -36,9 +44,9 @@ class ActionStart extends AbstractAction
             $task->save(false);
 
             $transaction->commit();
-        } catch(\Exception $e) {
+        } catch(ServerErrorHttpException $e) {
             $transaction->rollBack();
-            throw $e;
+            throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
         } catch (\Throwable $e) {
             $transaction->rollBack();
             throw $e;
