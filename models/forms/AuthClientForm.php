@@ -3,7 +3,7 @@
 namespace app\models\forms;
 
 use yii\base\Model;
-use TaskForce\Services\Location\GeoCoder;
+use Taskforce\Services\Location\GeoCoder;
 
 class AuthClientForm extends Model
 {

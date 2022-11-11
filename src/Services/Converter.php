@@ -5,8 +5,8 @@ namespace Taskforce\Services;
 use \SplFileObject;
 use \RuntimeException;
 
-use TaskForce\Exceptions\ExceptionWrongParameter;
-use TaskForce\Exceptions\ExceptionFailedToOpenFile;
+use Taskforce\Exceptions\ExceptionWrongParameter;
+use Taskforce\Exceptions\ExceptionFailedToOpenFile;
 
 class Converter {
     private SplFileObject $inputFile;

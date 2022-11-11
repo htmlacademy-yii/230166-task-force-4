@@ -44,7 +44,7 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
                         'class' => 'logo-image',
                         'width' => '227',
                         'height' => '60',
-                        'alt' => 'taskforce'
+                        'alt' => 'Taskforce'
                     ]);
                 ?>
             </a>
@@ -54,7 +54,7 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
                         'class' => 'logo-image',
                         'width' => '227',
                         'height' => '60',
-                        'alt' => 'taskforce'
+                        'alt' => 'Taskforce'
                     ]);
                 ?>
             </a>

@@ -1,11 +1,11 @@
 <?php
 
-namespace TaskForce\Services\Location;
+namespace Taskforce\Services\Location;
 
 use Yii;
 use yii\helpers\ArrayHelper;
 use GuzzleHttp\Client;
-use TaskForce\Services\Location\Interfaces\GeoCoderInterface;
+use Taskforce\Services\Location\Interfaces\GeoCoderInterface;
 
 class GeoCoder implements GeoCoderInterface
 {

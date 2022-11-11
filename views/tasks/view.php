@@ -12,10 +12,10 @@
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use TaskForce\Actions\ActionQuit;
-use TaskForce\Actions\ActionRespond;
-use TaskForce\Actions\ActionComplete;
-use TaskForce\Models\BaseTask;
+use Taskforce\Actions\ActionQuit;
+use Taskforce\Actions\ActionRespond;
+use Taskforce\Actions\ActionComplete;
+use Taskforce\Models\BaseTask;
 
 $price = ArrayHelper::getValue($task, 'price');
 $text = ArrayHelper::getValue($task, 'text');

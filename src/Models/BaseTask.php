@@ -1,16 +1,16 @@
 <?php
 
-namespace TaskForce\Models;
+namespace Taskforce\Models;
 
 use app\models\Task;
 use app\models\User;
-use TaskForce\Actions\AbstractAction;
-use TaskForce\Actions\ActionRefuse;
-use TaskForce\Actions\ActionComplete;
-use TaskForce\Actions\ActionQuit;
-use TaskForce\Actions\ActionRespond;
-use TaskForce\Actions\ActionStart;
-use TaskForce\Exceptions\ExceptionWrongParameter;
+use Taskforce\Actions\AbstractAction;
+use Taskforce\Actions\ActionRefuse;
+use Taskforce\Actions\ActionComplete;
+use Taskforce\Actions\ActionQuit;
+use Taskforce\Actions\ActionRespond;
+use Taskforce\Actions\ActionStart;
+use Taskforce\Exceptions\ExceptionWrongParameter;
 
 class BaseTask
 {

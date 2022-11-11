@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Task;
 use app\models\User;
-use TaskForce\Models\BaseMyTasks;
+use Taskforce\Models\BaseMyTasks;
 use yii\data\Pagination;
 
 class MyTasksController extends SecuredController

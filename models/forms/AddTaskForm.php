@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 use app\models\User;
 use app\models\Category;
 use app\models\File;
-use TaskForce\Services\Location\GeoCoder;
+use Taskforce\Services\Location\GeoCoder;
 
 class AddTaskForm extends Model
 {

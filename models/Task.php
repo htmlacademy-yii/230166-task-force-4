@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use TaskForce\Models\BaseTask as BaseTask;
+use Taskforce\Models\BaseTask as BaseTask;
 use yii\web\NotFoundHttpException;
 use app\models\User;
 use yii\helpers\ArrayHelper;

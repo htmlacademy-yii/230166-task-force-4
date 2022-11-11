@@ -1,9 +1,9 @@
 <?php
 
-namespace TaskForce\Actions;
+namespace Taskforce\Actions;
 
-use TaskForce\Actions\AbstractAction;
-use TaskForce\Models\BaseTask;
+use Taskforce\Actions\AbstractAction;
+use Taskforce\Models\BaseTask;
 use app\models\Task;
 use app\models\User;
 use Yii;

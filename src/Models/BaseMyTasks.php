@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\Models;
+namespace Taskforce\Models;
 
 class BaseMyTasks
 {

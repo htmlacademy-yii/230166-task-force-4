@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use TaskForce\Services\Location\GeoCoder;
+use Taskforce\Services\Location\GeoCoder;
 use yii\helpers\ArrayHelper;
 
 /**
