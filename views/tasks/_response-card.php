@@ -11,6 +11,8 @@ use app\models\Response;
 use TaskForce\Actions\ActionStart;
 use TaskForce\Actions\ActionRefuse;
 use TaskForce\Models\BaseTask;
+use Taskforce\Services\NounPluralForm;
+use Taskforce\Services\RelativeDate;
 
 ?>
 
@@ -32,7 +34,7 @@ use TaskForce\Models\BaseTask;
 
             <?php if (ArrayHelper::getValue($response, 'user_count_feedbacks')) : ?>
                 <p class="reviews">
-                    <?= $response['user_count_feedbacks'] ?> <?= get_noun_plural_form($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
+                    <?= $response['user_count_feedbacks'] ?> <?= NounPluralForm::get($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
                 </p>
             <? endif; ?>
         </div>
@@ -45,7 +47,7 @@ use TaskForce\Models\BaseTask;
         <?php if (ArrayHelper::getValue($response, 'created_at')) : ?>
             <p class="info-text">
                 <span class="current-time">
-                    <?= Html::encode(get_relative_date($response['created_at'])) ?>
+                    <?= Html::encode(RelativeDate::get($response['created_at'])) ?>
                 </span>
                 назад
             </p>

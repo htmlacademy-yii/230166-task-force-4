@@ -7,6 +7,8 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\components\StarsWidget;
 use app\components\AvatarWidget;
+use Taskforce\Services\RelativeDate;
+
 ?>
 
 <div class="response-card">
@@ -22,7 +24,7 @@ use app\components\AvatarWidget;
         <p class="task">
             Задание «
             <?= Html::a(Html::encode(ArrayHelper::getValue($feedback, 'task.title')),
-                    Url::toRoute(['/tasks/view/', 'taskId' => ArrayHelper::getValue($feedback, 'task_id')]),
+                    Url::toRoute(['/tasks/view/', 'taskId' => ArrayHelper::getValue($feedback, 'task.id')]),
                     ['class' => 'link link--small']
                 )
             ?>
@@ -33,7 +35,7 @@ use app\components\AvatarWidget;
         <?= StarsWidget::widget(['class' => 'stars-rating small', 'rating' => ArrayHelper::getValue($feedback, 'rating')]) ?>
         <p class="info-text">
             <span class="current-time">
-                <?= Html::encode(get_relative_date(ArrayHelper::getValue($feedback, 'created_at'))) ?>
+                <?= Html::encode(RelativeDate::get(ArrayHelper::getValue($feedback, 'created_at'))) ?>
             </span>
             назад
         </p>
