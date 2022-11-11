@@ -2,7 +2,8 @@
 
 namespace Taskforce\Services;
 
-use Taskforce\Services\NounPluralForm;
+use Yii;
+use DateTime;
 
 class RelativeDate
 {
@@ -15,31 +16,26 @@ class RelativeDate
     */
     public static function get($date)
     {
-        $cur_date = time();
-        $post_date = strtotime($date);
-        $dif_date = abs($cur_date - $post_date);
+        $now = Yii::$app->formatter->asTimestamp(new DateTime('now'));
+        $postDate = Yii::$app->formatter->asTimestamp($date);
+        $dif = abs($now - $postDate);
 
-        if ($dif_date < 3600 && $dif_date > 60) {
-            $minuts = floor($dif_date / 60);
-            return $minuts . ' ' . NounPluralForm::get($minuts, 'минута', 'минуты', 'минут');
+        if ($dif < 3600 ) {
+            return Yii::$app->inflection->pluralize(floor($dif / 60), 'минута');
         }
 
-        if ($dif_date < 86400) {
-            $hours = floor($dif_date / 3600);
-            return $hours . ' ' . NounPluralForm::get($hours, 'час', 'часа', 'часов');
+        if ($dif < 86400) {
+            return Yii::$app->inflection->pluralize(floor($dif / 3600), 'час');
         }
 
-        if ($dif_date < 604800) {
-            $days = floor($dif_date / 86400);
-            return $days . ' ' . NounPluralForm::get($days, 'день', 'дня', 'дней');
+        if ($dif < 604800) {
+            return Yii::$app->inflection->pluralize(floor($dif / 86400), 'день');
         }
 
-        if ($dif_date < 3024000) {
-            $weeks = floor($dif_date / 604800);
-            return $weeks . ' ' . NounPluralForm::get($weeks, 'неделя', 'недели', 'недель');
+        if ($dif < 3024000) {
+            return Yii::$app->inflection->pluralize(floor($dif / 604800), 'неделя');
         }
 
-        $months = floor($dif_date / 3024000);
-        return $months . ' ' . NounPluralForm::get($months, 'месяц', 'месяца', 'месяцев');
+        return Yii::$app->inflection->pluralize(floor($dif / 3024000), 'месяц');
     }
 }

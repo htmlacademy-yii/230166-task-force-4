@@ -11,7 +11,6 @@ use app\models\Response;
 use Taskforce\Actions\ActionStart;
 use Taskforce\Actions\ActionRefuse;
 use Taskforce\Models\BaseTask;
-use Taskforce\Services\NounPluralForm;
 use Taskforce\Services\RelativeDate;
 
 ?>
@@ -34,7 +33,7 @@ use Taskforce\Services\RelativeDate;
 
             <?php if (ArrayHelper::getValue($response, 'user_count_feedbacks')) : ?>
                 <p class="reviews">
-                    <?= $response['user_count_feedbacks'] ?> <?= NounPluralForm::get($response['user_count_feedbacks'], 'отзыв', 'отзыва', 'отзывов') ?>
+                    <?= Yii::$app->inflection->pluralize($response['user_count_feedbacks'], 'отзыв') ?>
                 </p>
             <? endif; ?>
         </div>

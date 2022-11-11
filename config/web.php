@@ -7,13 +7,17 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'language' => 'ru-RU',
+    'language' => 'ru_RU',
+    'timezone' => 'Europe/Moscow',
     'defaultRoute' => 'start',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'inflection' => [
+            'class' => 'wapmorgan\yii2inflection\Inflection'
+        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
@@ -44,7 +48,7 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
             'loginUrl' => ['/'],
-            'authTimeout' => 864000,
+            'authTimeout' => 604800,
         ],
         'errorHandler' => [
             'errorAction' => 'error/index',
