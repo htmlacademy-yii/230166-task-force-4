@@ -3,7 +3,7 @@
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=127.0.0.1;dbname=taskforce',
-    'username' => 'margo',
+    'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
     'on afterOpen' => function ($event) {
