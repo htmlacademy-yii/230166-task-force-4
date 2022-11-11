@@ -9,6 +9,7 @@ use app\models\Feedback;
 use app\models\forms\AddFeedbackForm;
 use app\models\Task;
 use app\models\User;
+use Exception;
 use yii\web\ServerErrorHttpException;
 
 class ActionComplete extends AbstractAction
@@ -62,7 +63,7 @@ class ActionComplete extends AbstractAction
                     $task->save(false);
 
                     $transaction->commit();
-                } catch(ServerErrorHttpException $e) {
+                } catch(ServerErrorHttpException|Exception $e) {
                     $transaction->rollBack();
                     throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
                 } catch (\Throwable $e) {
