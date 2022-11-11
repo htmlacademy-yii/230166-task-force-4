@@ -22,7 +22,7 @@ class Converter {
             $this->inputFile = new SplFileObject($path);
         }
         catch (RuntimeException $exception) {
-            throw new ExceptionFailedToOpenFile($path);
+            $exception->getMessage();
         }
 
         $query = $this->createQuery($table);

@@ -70,7 +70,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
             [['name', 'email'], 'string', 'max' => 40],
-            [['password', 'avatar', 'telegram'], 'string', 'max' => 200],
+            [['password', 'telegram'], 'string', 'max' => 200],
             [['password'], 'string', 'min' => 6, 'message' => 'Минимальное количество символов 6'],
             [['password'], 'compare'],
             [['phone'], 'match', 'pattern' => '/^[\d]{11}/i', 'message' => 'Номер телефона должен состоять из 11 цифр'],
