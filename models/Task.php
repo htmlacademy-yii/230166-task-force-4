@@ -7,6 +7,7 @@ use TaskForce\Models\BaseTask as BaseTask;
 use yii\web\NotFoundHttpException;
 use app\models\User;
 use yii\helpers\ArrayHelper;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "task".
@@ -140,7 +141,7 @@ class Task extends \yii\db\ActiveRecord
      *
      * @param  Task $task
      * @param  User $executor
-     * @return ?array
+     * @return
      */
     public static function getExecutorResponse(Task $task, User $executor): ?array
     {
@@ -165,15 +166,16 @@ class Task extends \yii\db\ActiveRecord
      * получение новых задач заказчика
      *
      * @param  User $customer
-     * @return ?array
+     * @return ActiveQuery
      */
-    public static function getNewTasksForCustomer(User $customer): ?array
+    public static function getNewTasksForCustomerQuery(User $customer): ActiveQuery
     {
         if ($customer->role === User::ROLE_CUSTOMER) {
-            return self::find()->joinWith(['category'])->where([
-                'customer_id' => ArrayHelper::getValue($customer, 'id'),
-                'status' => BaseTask::STATUS_NEW
-            ])->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'customer_id' => ArrayHelper::getValue($customer, 'id'),
+                    'status' => BaseTask::STATUS_NEW
+                ])->asArray();
         }
 
         return null;
@@ -183,20 +185,22 @@ class Task extends \yii\db\ActiveRecord
      * получение задач в процессе для исполнителя или заказчика
      *
      * @param  User $user
-     * @return ?array
+     * @return ActiveQuery
      */
-    public static function getInProgressTasks(User $user): ?array
+    public static function getInProgressTasksQuery(User $user): ActiveQuery
     {
         if ($user->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where([
-                'executor_id' => ArrayHelper::getValue($user, 'id'),
-                'status' => BaseTask::STATUS_INPROGRESS
-            ])->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'executor_id' => ArrayHelper::getValue($user, 'id'),
+                    'status' => BaseTask::STATUS_INPROGRESS
+                ])->asArray();
         } else {
-            return self::find()->joinWith(['category'])->where([
-                'customer_id' =>ArrayHelper::getValue($user, 'id'),
-                'status' => BaseTask::STATUS_INPROGRESS
-            ])->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'customer_id' =>ArrayHelper::getValue($user, 'id'),
+                    'status' => BaseTask::STATUS_INPROGRESS
+                ])->asArray();
         }
     }
 
@@ -204,20 +208,22 @@ class Task extends \yii\db\ActiveRecord
      * получение закрытых задач
      *
      * @param  User $user
-     * @return ?array
+     * @return ActiveQuery
      */
-    public static function getDoneTasks(User $user): ?array
+    public static function getDoneTasksQuery(User $user): ActiveQuery
     {
         if ($user->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where([
-                'executor_id' => ArrayHelper::getValue($user, 'id'),
-                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED]
-            ])->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'executor_id' => ArrayHelper::getValue($user, 'id'),
+                    'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED]
+                ])->asArray();
         } else {
-            return self::find()->joinWith(['category'])->where([
-                'customer_id' => ArrayHelper::getValue($user, 'id'),
-                'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED, BaseTask::STATUS_CANCELED]
-            ])->orderBy(['created_at' => SORT_DESC])->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'customer_id' => ArrayHelper::getValue($user, 'id'),
+                    'status' => [BaseTask::STATUS_COMPLETE, BaseTask::STATUS_FAILED, BaseTask::STATUS_CANCELED]
+                ])->orderBy(['created_at' => SORT_DESC])->asArray();
         }
     }
 
@@ -225,18 +231,17 @@ class Task extends \yii\db\ActiveRecord
      * получение просроченных задач
      *
      * @param  User $executor
-     * @return ?array
+     * @return ActiveQuery
      */
-    public static function getLateTasksForExecutor(User $executor): ?array
+    public static function getLateTasksForExecutorQuery(User $executor): ActiveQuery
     {
-        $currentDate = time();
-
         if ($executor->role === User::ROLE_EXECUTOR) {
-            return self::find()->joinWith(['category'])->where([
-                'task.executor_id' => ArrayHelper::getValue($executor, 'id'),
-            ])
-            ->where('task.deadline' < 'CURRENT_TIMESTAMP')
-            ->asArray()->all();
+            return self::find()->joinWith(['category'])
+                ->where([
+                    'task.executor_id' => ArrayHelper::getValue($executor, 'id'),
+                ])
+                ->where('task.deadline < NOW()')
+                ->where('deadline <> NULL')->asArray();
         }
 
         return null;
