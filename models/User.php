@@ -66,7 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['created_at', 'date_of_birth'], 'safe'],
             [['count_feedbacks', 'count_failed_tasks', 'city_id'], 'integer'],
-            [['role'], 'string'],
+            [['role', 'avatar'], 'string'],
             [['rating'], 'number'],
             [['email', 'name', 'password', 'password_repeat'], 'required', 'message' => 'Это обязательное поле'],
             [['name', 'email'], 'string', 'max' => 40],
