@@ -20,6 +20,9 @@ class RelativeDate
         $postDate = Yii::$app->formatter->asTimestamp($date);
         $dif = abs($now - $postDate);
 
+        var_dump(date('Y-m-d H:i:s', $postDate));
+        var_dump(date('Y-m-d H:i:s'));
+
         if ($dif < 3600 ) {
             return Yii::$app->inflection->pluralize(floor($dif / 60), 'минута');
         }
