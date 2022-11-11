@@ -11,11 +11,11 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string|null $created_at
  * @property int|null $task_id
- * @property int|null $user_id
  * @property string $url
+ * @property string|null $name
+ * @property int|null $size
  *
  * @property Task $task
- * @property User $user
  */
 class File extends \yii\db\ActiveRecord
 {
@@ -34,10 +34,10 @@ class File extends \yii\db\ActiveRecord
     {
         return [
             [['created_at'], 'safe'],
-            [['task_id', 'user_id'], 'integer'],
+            [['task_id', 'size'], 'integer'],
             [['url'], 'required'],
-            [['url'], 'string', 'max' => 500],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['name'], 'string'],
+            [['url'], 'string', 'max' => 40],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
@@ -56,8 +56,9 @@ class File extends \yii\db\ActiveRecord
             'id' => 'ID',
             'created_at' => 'Created At',
             'task_id' => 'Task ID',
-            'user_id' => 'User ID',
             'url' => 'Url',
+            'name' => 'Name',
+            'size' => 'Size',
         ];
     }
 
@@ -70,15 +71,4 @@ class File extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Task::class, ['id' => 'task_id']);
     }
-
-    /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery|UserQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
 }

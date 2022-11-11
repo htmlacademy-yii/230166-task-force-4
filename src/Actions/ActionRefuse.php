@@ -8,6 +8,7 @@ use Taskforce\Models\BaseTask;
 use app\models\Response;
 use app\models\Task;
 use app\models\User;
+use Exception;
 use yii\web\ServerErrorHttpException;
 
 class ActionRefuse extends AbstractAction
@@ -45,7 +46,7 @@ class ActionRefuse extends AbstractAction
             $task->save(false);
 
             $transaction->commit();
-        } catch(ServerErrorHttpException $e) {
+        } catch(ServerErrorHttpException|Exception $e) {
             $transaction->rollBack();
             throw new ServerErrorHttpException('Сервер не отвечает, попробуйте позже', 500);
         } catch (\Throwable $e) {

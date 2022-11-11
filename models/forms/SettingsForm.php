@@ -109,7 +109,9 @@ class SettingsForm extends Model
 
         try {
             $this->_user->save(false);
-        } catch(ServerErrorHttpException $e) {
+        } catch(ServerErrorHttpException|Exception $e) {
+            $e->getMessage();
+        } catch (\Throwable $e) {
             $e->getMessage();
         }
     }

@@ -2,11 +2,11 @@
 
 namespace Taskforce\Services;
 
+use Exception;
 use \SplFileObject;
 use \RuntimeException;
 
 use Taskforce\Exceptions\ExceptionWrongParameter;
-use Taskforce\Exceptions\ExceptionFailedToOpenFile;
 
 class Converter {
     private SplFileObject $inputFile;
@@ -21,8 +21,8 @@ class Converter {
         try {
             $this->inputFile = new SplFileObject($path);
         }
-        catch (RuntimeException $exception) {
-            throw new ExceptionFailedToOpenFile($path);
+        catch (RuntimeException|Exception $exception) {
+            $exception->getMessage();
         }
 
         $query = $this->createQuery($table);
