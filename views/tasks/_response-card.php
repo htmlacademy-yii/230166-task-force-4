@@ -30,12 +30,9 @@ use Taskforce\Services\RelativeDate;
         <?= Html::a(ArrayHelper::getValue($response, 'user_name'), Url::to(['/profile', 'userId' => ArrayHelper::getValue($response, 'user_id')])) ?>
         <div class="response-wrapper">
             <?= StarsWidget::widget(['className' => 'stars-rating small', 'rating' => ArrayHelper::getValue($response, 'user_rating')]) ?>
-
-            <?php if (ArrayHelper::getValue($response, 'user_count_feedbacks')) : ?>
-                <p class="reviews">
-                    <?= Yii::$app->inflection->pluralize($response['user_count_feedbacks'], 'отзыв') ?>
-                </p>
-            <? endif; ?>
+            <p class="reviews">
+                <?= Yii::$app->inflection->pluralize($response['user_count_feedbacks'], 'отзыв') ?>
+            </p>
         </div>
         <p class="response-message">
             <?= Html::encode(ArrayHelper::getValue($response, 'message')) ?>
