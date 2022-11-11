@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\Menu;
 use app\models\User;
 use TaskForce\Models\BaseMyTasks;
+use yii\widgets\LinkPager;
 
 $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role === User::ROLE_EXECUTOR) ?? null;
 
@@ -42,6 +43,27 @@ $is_executor = (Yii::$app->user->identity && Yii::$app->user->identity->role ===
             <?php foreach ($tasks as $task) : ?>
                 <?= $this->render('../shared/_task-card', compact('task')) ?>
             <? endforeach; ?>
+
+            <!-- пагинация -->
+            <div class="pagination-wrapper">
+                <?= LinkPager::widget([
+                        'pagination' => $pages,
+                        'options' => [
+                            'class' => 'pagination-list',
+                        ],
+                        'linkOptions' => [
+                            'class' => 'link link--page',
+                        ],
+                        'pageCssClass' => 'pagination-item',
+                        'activePageCssClass' => 'pagination-item--active',
+                        'prevPageCssClass' => 'pagination-item mark',
+                        'nextPageCssClass' => 'pagination-item mark',
+                        'prevPageLabel' => '',
+                        'nextPageLabel' => '',
+                        'maxButtonCount' => 3
+                    ]);
+                ?>
+            </div>
         <? else : ?>
             <p class="caption">Список пуст</p>
         <? endif; ?>

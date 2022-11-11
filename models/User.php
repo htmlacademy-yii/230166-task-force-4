@@ -230,12 +230,12 @@ class User extends ActiveRecord implements IdentityInterface
         $countFeedbacks = ArrayHelper::getValue($executor, 'count_feedbacks');
         $countFailedTasks = ArrayHelper::getValue($executor, 'count_failed_tasks');
 
-        if (!$sum) {
+        if ($sum === 0) {
             return 0;
         }
 
         if ($countFeedbacks || $countFailedTasks) {
-            return $sum / $countFeedbacks + $countFailedTasks;
+            return $sum / ($countFeedbacks + $countFailedTasks);
         }
 
         return $sum;
